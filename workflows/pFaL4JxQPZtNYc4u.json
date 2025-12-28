@@ -1,0 +1,2132 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-18T18:25:40.126Z",
+    "createdAt": "2025-12-18T18:25:40.126Z",
+    "versionId": "5544e8a9-7e96-4015-919f-5835515fe136",
+    "workflowId": "pFaL4JxQPZtNYc4u",
+    "nodes": [
+      {
+        "parameters": {
+          "path": "c734cf98-3d5a-4cbd-af97-8ad2da760944"
+        },
+        "id": "17ccfdbf-d121-4ff0-95d4-bb38644d2bb1",
+        "name": "MCP Server Trigger",
+        "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "position": [
+          368,
+          240
+        ],
+        "webhookId": "c734cf98-3d5a-4cbd-af97-8ad2da760944",
+        "typeVersion": 1,
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "name": "validate_busy_time",
+          "description": "Call this tool to validate if the gap of time is already busy. it is useful to validate before creating a new event",
+          "workflowId": {
+            "__rl": true,
+            "value": "pFaL4JxQPZtNYc4u",
+            "mode": "list",
+            "cachedResultName": "MCP SERVER"
+          },
+          "workflowInputs": {
+            "value": {
+              "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+              "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+              "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+              "operation": "=getEvent",
+              "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+            },
+            "schema": [
+              {
+                "id": "operation",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "operation",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "startDate",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "startDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "endDate",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "endDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "eventId",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "eventId",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "timeZone",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "timeZone",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              }
+            ],
+            "mappingMode": "defineBelow",
+            "matchingColumns": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "id": "b8007362-0d41-4875-872b-877f33b74bf8",
+        "name": "validate_busy_time",
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "position": [
+          208,
+          528
+        ],
+        "typeVersion": 2.1
+      },
+      {
+        "parameters": {
+          "name": "create_new_event",
+          "description": "Use this tool to create a new event; always validate if the gap of time is available before creating a new event ",
+          "workflowId": {
+            "__rl": true,
+            "value": "pFaL4JxQPZtNYc4u",
+            "mode": "list",
+            "cachedResultName": "MCP SERVER"
+          },
+          "workflowInputs": {
+            "value": {
+              "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+              "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+              "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+              "operation": "createEvent",
+              "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+            },
+            "schema": [
+              {
+                "id": "operation",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "operation",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "startDate",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "startDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "endDate",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "endDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "eventId",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "eventId",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "timeZone",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "timeZone",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              }
+            ],
+            "mappingMode": "defineBelow",
+            "matchingColumns": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "id": "51f39673-4657-401b-b1bf-34e816318acf",
+        "name": "create_new_event",
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "position": [
+          368,
+          528
+        ],
+        "typeVersion": 2.1
+      },
+      {
+        "parameters": {
+          "name": "delete_event",
+          "description": "Call this tool to delete a event, to delete a event you need the even id. it is required",
+          "workflowId": {
+            "__rl": true,
+            "value": "pFaL4JxQPZtNYc4u",
+            "mode": "list",
+            "cachedResultName": "MCP SERVER"
+          },
+          "workflowInputs": {
+            "value": {
+              "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+              "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+              "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+              "operation": "deleteEvent",
+              "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+            },
+            "schema": [
+              {
+                "id": "operation",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "operation",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "startDate",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "startDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "endDate",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "endDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "eventId",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "eventId",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "timeZone",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "timeZone",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              }
+            ],
+            "mappingMode": "defineBelow",
+            "matchingColumns": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "id": "3587c022-2f57-4bf6-8066-c292bcab5399",
+        "name": "delete_event",
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "position": [
+          656,
+          528
+        ],
+        "typeVersion": 2.1
+      },
+      {
+        "parameters": {
+          "name": "update_event",
+          "description": "Call this tool to update the event name, startDate or endDate. Validate with validate_busy_time before any action",
+          "workflowId": {
+            "__rl": true,
+            "value": "pFaL4JxQPZtNYc4u",
+            "mode": "list",
+            "cachedResultName": "MCP SERVER"
+          },
+          "workflowInputs": {
+            "value": {
+              "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+              "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+              "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+              "operation": "updateEvent",
+              "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+            },
+            "schema": [
+              {
+                "id": "operation",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "operation",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "startDate",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "startDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "endDate",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "endDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "eventId",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "eventId",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "timeZone",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "timeZone",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              }
+            ],
+            "mappingMode": "defineBelow",
+            "matchingColumns": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "id": "1da9a808-b478-47cd-b129-2a11d83d8735",
+        "name": "update_event",
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "position": [
+          512,
+          528
+        ],
+        "typeVersion": 2.1
+      },
+      {
+        "parameters": {
+          "name": "get_events_in_gap_time",
+          "description": "Use this tool to get event data in a gap of time. but if you have just validate the availibity of the time use \"validate_busy_time\" tool this is tool is to get data",
+          "workflowId": {
+            "__rl": true,
+            "value": "pFaL4JxQPZtNYc4u",
+            "mode": "list",
+            "cachedResultName": "MCP SERVER"
+          },
+          "workflowInputs": {
+            "value": {
+              "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+              "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+              "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+              "operation": "getEventData",
+              "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+            },
+            "schema": [
+              {
+                "id": "operation",
+                "type": "string",
+                "display": true,
+                "required": false,
+                "displayName": "operation",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "startDate",
+                "type": "string",
+                "display": true,
+                "required": false,
+                "displayName": "startDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "endDate",
+                "type": "string",
+                "display": true,
+                "required": false,
+                "displayName": "endDate",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "eventId",
+                "type": "string",
+                "display": true,
+                "required": false,
+                "displayName": "eventId",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "timeZone",
+                "type": "string",
+                "display": true,
+                "removed": false,
+                "required": false,
+                "displayName": "timeZone",
+                "defaultMatch": false,
+                "canBeUsedToMatch": true
+              }
+            ],
+            "mappingMode": "defineBelow",
+            "matchingColumns": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "id": "933163a6-5597-48da-95de-7067dd55ad84",
+        "name": "get_events_in_gap_time",
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "position": [
+          816,
+          528
+        ],
+        "typeVersion": 2.1
+      },
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "operation"
+              },
+              {
+                "name": "startDate"
+              },
+              {
+                "name": "endDate"
+              },
+              {
+                "name": "eventId"
+              },
+              {
+                "name": "timeZone"
+              }
+            ]
+          }
+        },
+        "id": "3f85f8dd-dc07-4ab5-96b8-297295addbfc",
+        "name": "When Executed by Another Workflow",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "position": [
+          1136,
+          208
+        ],
+        "typeVersion": 1.1
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "version": 2,
+                    "leftValue": "",
+                    "caseSensitive": true,
+                    "typeValidation": "strict"
+                  },
+                  "combinator": "and",
+                  "conditions": [
+                    {
+                      "id": "81b134bc-d671-4493-b3ad-8df9be3f49a6",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "leftValue": "={{ $json.operation }}",
+                      "rightValue": "getEvent"
+                    }
+                  ]
+                },
+                "renameOutput": true,
+                "outputKey": "getEvent"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "version": 2,
+                    "leftValue": "",
+                    "caseSensitive": true,
+                    "typeValidation": "strict"
+                  },
+                  "combinator": "and",
+                  "conditions": [
+                    {
+                      "id": "8d57914f-6587-4fb3-88e0-aa1de6ba56c1",
+                      "operator": {
+                        "name": "filter.operator.equals",
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "leftValue": "={{ $json.operation }}",
+                      "rightValue": "deleteEvent"
+                    }
+                  ]
+                },
+                "renameOutput": true,
+                "outputKey": "deleteEvent"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "version": 2,
+                    "leftValue": "",
+                    "caseSensitive": true,
+                    "typeValidation": "strict"
+                  },
+                  "combinator": "and",
+                  "conditions": [
+                    {
+                      "id": "7c38f238-213a-46ec-aefe-22e0bcb8dffc",
+                      "operator": {
+                        "name": "filter.operator.equals",
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "leftValue": "={{ $json.operation }}",
+                      "rightValue": "createEvent"
+                    }
+                  ]
+                },
+                "renameOutput": true,
+                "outputKey": "createEvent"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "version": 2,
+                    "leftValue": "",
+                    "caseSensitive": true,
+                    "typeValidation": "strict"
+                  },
+                  "combinator": "and",
+                  "conditions": [
+                    {
+                      "id": "ee9b6783-a0f2-4848-9166-aba6645c1ebc",
+                      "operator": {
+                        "name": "filter.operator.equals",
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "leftValue": "={{ $json.operation }}",
+                      "rightValue": "updateEvent"
+                    }
+                  ]
+                },
+                "renameOutput": true,
+                "outputKey": "updateEvent"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "version": 2,
+                    "leftValue": "",
+                    "caseSensitive": true,
+                    "typeValidation": "strict"
+                  },
+                  "combinator": "and",
+                  "conditions": [
+                    {
+                      "id": "9ea6980d-a7be-4dec-8ddf-d2fcffb00af1",
+                      "operator": {
+                        "name": "filter.operator.equals",
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "leftValue": "getEventData",
+                      "rightValue": "getEventData"
+                    }
+                  ]
+                },
+                "renameOutput": true,
+                "outputKey": "getEventData"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "54a02cd3-cb84-44f1-b0bd-f547ce086a9b",
+        "name": "Operation",
+        "type": "n8n-nodes-base.switch",
+        "position": [
+          1552,
+          160
+        ],
+        "typeVersion": 3.2
+      },
+      {
+        "parameters": {
+          "resource": "calendar",
+          "calendar": {
+            "__rl": true,
+            "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+            "mode": "list",
+            "cachedResultName": "MAHEN TEAM WORKING PLAN"
+          },
+          "timeMin": "={{ $json.startDate }}",
+          "timeMax": "={{ $json.endDate }}",
+          "options": {}
+        },
+        "id": "6978b131-15a9-4b23-804e-e22ac04895ea",
+        "name": "validate_availability_event",
+        "type": "n8n-nodes-base.googleCalendar",
+        "position": [
+          2192,
+          -256
+        ],
+        "typeVersion": 1.3,
+        "credentials": {
+          "googleCalendarOAuth2Api": {
+            "id": "VkDZsOnEyJbsFdoc",
+            "name": "Google Calendar account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "calendar",
+          "calendar": {
+            "__rl": true,
+            "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+            "mode": "list",
+            "cachedResultName": "MAHEN TEAM WORKING PLAN"
+          },
+          "timeMin": "={{ $('map_data').item.json.startDate }}",
+          "timeMax": "={{ $('map_data').item.json.endDate }}",
+          "options": {}
+        },
+        "id": "b72d97ec-e5b3-400e-9467-f2c417e1464f",
+        "name": "check_availability_to_create",
+        "type": "n8n-nodes-base.googleCalendar",
+        "position": [
+          1872,
+          208
+        ],
+        "typeVersion": 1.3,
+        "credentials": {
+          "googleCalendarOAuth2Api": {
+            "id": "VkDZsOnEyJbsFdoc",
+            "name": "Google Calendar account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "version": 2,
+              "leftValue": "",
+              "caseSensitive": true,
+              "typeValidation": "strict"
+            },
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "4ee8a84d-c48a-416f-aa31-0633ee59124b",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true",
+                  "singleValue": true
+                },
+                "leftValue": "={{ $json.available }}",
+                "rightValue": ""
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "eaa9260b-b482-4614-81d4-19fc7d73fb86",
+        "name": "If",
+        "type": "n8n-nodes-base.if",
+        "position": [
+          2080,
+          208
+        ],
+        "typeVersion": 2.2
+      },
+      {
+        "parameters": {
+          "errorMessage": "The time you are trying to create the event is busy"
+        },
+        "id": "722c72ad-5002-473a-a27e-eb66c8e85839",
+        "name": "Stop and Error",
+        "type": "n8n-nodes-base.stopAndError",
+        "position": [
+          2304,
+          304
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "calendar": {
+            "__rl": true,
+            "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+            "mode": "list",
+            "cachedResultName": "MAHEN TEAM WORKING PLAN"
+          },
+          "start": "={{ $('map_data').item.json.startDate }}",
+          "end": "={{ $('map_data').item.json.endDate }}",
+          "additionalFields": {}
+        },
+        "id": "51d800fb-a1d5-4aa3-96dd-205d1c2bd7f1",
+        "name": "create_event",
+        "type": "n8n-nodes-base.googleCalendar",
+        "position": [
+          2304,
+          144
+        ],
+        "typeVersion": 1.3,
+        "credentials": {
+          "googleCalendarOAuth2Api": {
+            "id": "VkDZsOnEyJbsFdoc",
+            "name": "Google Calendar account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "delete",
+          "calendar": {
+            "__rl": true,
+            "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+            "mode": "list",
+            "cachedResultName": "MAHEN TEAM WORKING PLAN"
+          },
+          "eventId": "={{ $('map_data').item.json.eventId }}",
+          "options": {}
+        },
+        "id": "c85595e0-72d1-4b89-99cb-07ffd95e26e6",
+        "name": "delete_event1",
+        "type": "n8n-nodes-base.googleCalendar",
+        "position": [
+          2208,
+          -32
+        ],
+        "typeVersion": 1.3,
+        "credentials": {
+          "googleCalendarOAuth2Api": {
+            "id": "VkDZsOnEyJbsFdoc",
+            "name": "Google Calendar account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "973dfb96-eeda-45be-bc93-668c9118677f",
+                "name": "available",
+                "type": "boolean",
+                "value": "={{ $json.available }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "882450f4-a2fa-4bfb-9bad-c0480188be60",
+        "name": "Edit Fields",
+        "type": "n8n-nodes-base.set",
+        "position": [
+          2400,
+          -256
+        ],
+        "typeVersion": 3.4
+      },
+      {
+        "parameters": {
+          "operation": "getAll",
+          "calendar": {
+            "__rl": true,
+            "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+            "mode": "list",
+            "cachedResultName": "MAHEN TEAM WORKING PLAN"
+          },
+          "timeMin": "={{ $('map_data').item.json.startDate }}",
+          "timeMax": "={{ $('map_data').item.json.endDate }}",
+          "options": {}
+        },
+        "id": "13dda678-0bd8-4f54-b9cd-d9c8d710da25",
+        "name": "get_event_in_time_gap",
+        "type": "n8n-nodes-base.googleCalendar",
+        "position": [
+          1952,
+          688
+        ],
+        "typeVersion": 1.3,
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleCalendarOAuth2Api": {
+            "id": "VkDZsOnEyJbsFdoc",
+            "name": "Google Calendar account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "calendar": {
+            "__rl": true,
+            "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+            "mode": "list",
+            "cachedResultName": "MAHEN TEAM WORKING PLAN"
+          },
+          "eventId": "={{ $json.eventId }}",
+          "updateFields": {
+            "end": "={{ $json.endDate }}",
+            "start": "={{ $json.startDate }}"
+          }
+        },
+        "id": "8f4a2c4a-2cd7-4a0f-aeeb-21231021f53b",
+        "name": "update_calendar",
+        "type": "n8n-nodes-base.googleCalendar",
+        "position": [
+          1952,
+          464
+        ],
+        "typeVersion": 1.3,
+        "credentials": {
+          "googleCalendarOAuth2Api": {
+            "id": "VkDZsOnEyJbsFdoc",
+            "name": "Google Calendar account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "raw",
+          "jsonOutput": "={\n  \"operation\": \"{{ $json.operation }}\",\n  \"startDate\": \"{{ DateTime.fromISO($json.startDate).setZone($json.timeZone).toISO() }}\",\n  \"endDate\": \"{{ DateTime.fromISO($json.endDate).setZone($json.timeZone).toISO() }}\",\n  \"eventId\": \"{{ $json.eventId }}\",\n  \"timeZone\": \"{{ $json.timeZone }}\"\n}\n",
+          "options": {}
+        },
+        "id": "9ff77799-7a54-4239-b098-888f92698ec7",
+        "name": "map_data",
+        "type": "n8n-nodes-base.set",
+        "position": [
+          1312,
+          208
+        ],
+        "typeVersion": 3.4
+      },
+      {
+        "parameters": {
+          "mode": "raw",
+          "jsonOutput": "={\n  \"isAvailableTime\":{{$json.values().length === 0}},\n\"eventData\":{\nid:\"{{ $json.id }}\"\n}\n}\n",
+          "options": {}
+        },
+        "id": "6ebec5bc-d909-42c4-be9d-0aa36e5d10e3",
+        "name": "response_data_get_data",
+        "type": "n8n-nodes-base.set",
+        "position": [
+          2160,
+          688
+        ],
+        "typeVersion": 3.4
+      }
+    ],
+    "connections": {
+      "delete_event": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "update_event": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "create_new_event": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "validate_busy_time": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "get_events_in_gap_time": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "map_data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Operation": {
+        "main": [
+          [
+            {
+              "node": "validate_availability_event",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "delete_event1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "check_availability_to_create",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "update_calendar",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "get_event_in_time_gap",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "validate_availability_event": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "check_availability_to_create": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "create_event",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Stop and Error",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "get_event_in_time_gap": {
+        "main": [
+          [
+            {
+              "node": "response_data_get_data",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "map_data": {
+        "main": [
+          [
+            {
+              "node": "Operation",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "5544e8a9-7e96-4015-919f-5835515fe136",
+  "connections": {
+    "delete_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_new_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_busy_time": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_events_in_gap_time": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "map_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Operation": {
+      "main": [
+        [
+          {
+            "node": "validate_availability_event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "delete_event1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "check_availability_to_create",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "update_calendar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "get_event_in_time_gap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate_availability_event": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_availability_to_create": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "create_event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_event_in_time_gap": {
+      "main": [
+        [
+          {
+            "node": "response_data_get_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "map_data": {
+      "main": [
+        [
+          {
+            "node": "Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-29T04:29:56.433Z",
+  "id": "pFaL4JxQPZtNYc4u",
+  "isArchived": false,
+  "meta": {
+    "templateId": "4231"
+  },
+  "name": "MCP SERVER",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "c734cf98-3d5a-4cbd-af97-8ad2da760944"
+      },
+      "id": "17ccfdbf-d121-4ff0-95d4-bb38644d2bb1",
+      "name": "MCP Server Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        368,
+        240
+      ],
+      "webhookId": "c734cf98-3d5a-4cbd-af97-8ad2da760944",
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "name": "validate_busy_time",
+        "description": "Call this tool to validate if the gap of time is already busy. it is useful to validate before creating a new event",
+        "workflowId": {
+          "__rl": true,
+          "value": "pFaL4JxQPZtNYc4u",
+          "mode": "list",
+          "cachedResultName": "MCP SERVER"
+        },
+        "workflowInputs": {
+          "value": {
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+            "operation": "=getEvent",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "startDate",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "startDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "endDate",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "endDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "eventId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "eventId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timeZone",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "timeZone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "b8007362-0d41-4875-872b-877f33b74bf8",
+      "name": "validate_busy_time",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        208,
+        528
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "name": "create_new_event",
+        "description": "Use this tool to create a new event; always validate if the gap of time is available before creating a new event ",
+        "workflowId": {
+          "__rl": true,
+          "value": "pFaL4JxQPZtNYc4u",
+          "mode": "list",
+          "cachedResultName": "MCP SERVER"
+        },
+        "workflowInputs": {
+          "value": {
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+            "operation": "createEvent",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "startDate",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "startDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "endDate",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "endDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "eventId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "eventId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timeZone",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "timeZone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "51f39673-4657-401b-b1bf-34e816318acf",
+      "name": "create_new_event",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        368,
+        528
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "name": "delete_event",
+        "description": "Call this tool to delete a event, to delete a event you need the even id. it is required",
+        "workflowId": {
+          "__rl": true,
+          "value": "pFaL4JxQPZtNYc4u",
+          "mode": "list",
+          "cachedResultName": "MCP SERVER"
+        },
+        "workflowInputs": {
+          "value": {
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+            "operation": "deleteEvent",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "startDate",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "startDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "endDate",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "endDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "eventId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "eventId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timeZone",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "timeZone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "3587c022-2f57-4bf6-8066-c292bcab5399",
+      "name": "delete_event",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        656,
+        528
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "name": "update_event",
+        "description": "Call this tool to update the event name, startDate or endDate. Validate with validate_busy_time before any action",
+        "workflowId": {
+          "__rl": true,
+          "value": "pFaL4JxQPZtNYc4u",
+          "mode": "list",
+          "cachedResultName": "MCP SERVER"
+        },
+        "workflowInputs": {
+          "value": {
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+            "operation": "updateEvent",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "startDate",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "startDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "endDate",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "endDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "eventId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "eventId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timeZone",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "timeZone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "1da9a808-b478-47cd-b129-2a11d83d8735",
+      "name": "update_event",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        512,
+        528
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "name": "get_events_in_gap_time",
+        "description": "Use this tool to get event data in a gap of time. but if you have just validate the availibity of the time use \"validate_busy_time\" tool this is tool is to get data",
+        "workflowId": {
+          "__rl": true,
+          "value": "pFaL4JxQPZtNYc4u",
+          "mode": "list",
+          "cachedResultName": "MCP SERVER"
+        },
+        "workflowInputs": {
+          "value": {
+            "endDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endDate', ``, 'string') }}",
+            "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('eventId', ``, 'string') }}",
+            "timeZone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timeZone', ``, 'string') }}",
+            "operation": "getEventData",
+            "startDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startDate', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "startDate",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "startDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "endDate",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "endDate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "eventId",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "eventId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timeZone",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "timeZone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "933163a6-5597-48da-95de-7067dd55ad84",
+      "name": "get_events_in_gap_time",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        816,
+        528
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "operation"
+            },
+            {
+              "name": "startDate"
+            },
+            {
+              "name": "endDate"
+            },
+            {
+              "name": "eventId"
+            },
+            {
+              "name": "timeZone"
+            }
+          ]
+        }
+      },
+      "id": "3f85f8dd-dc07-4ab5-96b8-297295addbfc",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        1136,
+        208
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "81b134bc-d671-4493-b3ad-8df9be3f49a6",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "getEvent"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "getEvent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "8d57914f-6587-4fb3-88e0-aa1de6ba56c1",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "deleteEvent"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "deleteEvent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "7c38f238-213a-46ec-aefe-22e0bcb8dffc",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "createEvent"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "createEvent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "ee9b6783-a0f2-4848-9166-aba6645c1ebc",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.operation }}",
+                    "rightValue": "updateEvent"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "updateEvent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "9ea6980d-a7be-4dec-8ddf-d2fcffb00af1",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "getEventData",
+                    "rightValue": "getEventData"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "getEventData"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "54a02cd3-cb84-44f1-b0bd-f547ce086a9b",
+      "name": "Operation",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        1552,
+        160
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "MAHEN TEAM WORKING PLAN"
+        },
+        "timeMin": "={{ $json.startDate }}",
+        "timeMax": "={{ $json.endDate }}",
+        "options": {}
+      },
+      "id": "6978b131-15a9-4b23-804e-e22ac04895ea",
+      "name": "validate_availability_event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        2192,
+        -256
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VkDZsOnEyJbsFdoc",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "MAHEN TEAM WORKING PLAN"
+        },
+        "timeMin": "={{ $('map_data').item.json.startDate }}",
+        "timeMax": "={{ $('map_data').item.json.endDate }}",
+        "options": {}
+      },
+      "id": "b72d97ec-e5b3-400e-9467-f2c417e1464f",
+      "name": "check_availability_to_create",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        1872,
+        208
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VkDZsOnEyJbsFdoc",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "4ee8a84d-c48a-416f-aa31-0633ee59124b",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.available }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "eaa9260b-b482-4614-81d4-19fc7d73fb86",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        2080,
+        208
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "errorMessage": "The time you are trying to create the event is busy"
+      },
+      "id": "722c72ad-5002-473a-a27e-eb66c8e85839",
+      "name": "Stop and Error",
+      "type": "n8n-nodes-base.stopAndError",
+      "position": [
+        2304,
+        304
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "MAHEN TEAM WORKING PLAN"
+        },
+        "start": "={{ $('map_data').item.json.startDate }}",
+        "end": "={{ $('map_data').item.json.endDate }}",
+        "additionalFields": {}
+      },
+      "id": "51d800fb-a1d5-4aa3-96dd-205d1c2bd7f1",
+      "name": "create_event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        2304,
+        144
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VkDZsOnEyJbsFdoc",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "MAHEN TEAM WORKING PLAN"
+        },
+        "eventId": "={{ $('map_data').item.json.eventId }}",
+        "options": {}
+      },
+      "id": "c85595e0-72d1-4b89-99cb-07ffd95e26e6",
+      "name": "delete_event1",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        2208,
+        -32
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VkDZsOnEyJbsFdoc",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "973dfb96-eeda-45be-bc93-668c9118677f",
+              "name": "available",
+              "type": "boolean",
+              "value": "={{ $json.available }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "882450f4-a2fa-4bfb-9bad-c0480188be60",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2400,
+        -256
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "MAHEN TEAM WORKING PLAN"
+        },
+        "timeMin": "={{ $('map_data').item.json.startDate }}",
+        "timeMax": "={{ $('map_data').item.json.endDate }}",
+        "options": {}
+      },
+      "id": "13dda678-0bd8-4f54-b9cd-d9c8d710da25",
+      "name": "get_event_in_time_gap",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        1952,
+        688
+      ],
+      "typeVersion": 1.3,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VkDZsOnEyJbsFdoc",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "MAHEN TEAM WORKING PLAN"
+        },
+        "eventId": "={{ $json.eventId }}",
+        "updateFields": {
+          "end": "={{ $json.endDate }}",
+          "start": "={{ $json.startDate }}"
+        }
+      },
+      "id": "8f4a2c4a-2cd7-4a0f-aeeb-21231021f53b",
+      "name": "update_calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        1952,
+        464
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VkDZsOnEyJbsFdoc",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"operation\": \"{{ $json.operation }}\",\n  \"startDate\": \"{{ DateTime.fromISO($json.startDate).setZone($json.timeZone).toISO() }}\",\n  \"endDate\": \"{{ DateTime.fromISO($json.endDate).setZone($json.timeZone).toISO() }}\",\n  \"eventId\": \"{{ $json.eventId }}\",\n  \"timeZone\": \"{{ $json.timeZone }}\"\n}\n",
+        "options": {}
+      },
+      "id": "9ff77799-7a54-4239-b098-888f92698ec7",
+      "name": "map_data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1312,
+        208
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"isAvailableTime\":{{$json.values().length === 0}},\n\"eventData\":{\nid:\"{{ $json.id }}\"\n}\n}\n",
+        "options": {}
+      },
+      "id": "6ebec5bc-d909-42c4-be9d-0aa36e5d10e3",
+      "name": "response_data_get_data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2160,
+        688
+      ],
+      "typeVersion": 3.4
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "shared": [
+    {
+      "updatedAt": "2025-08-29T04:29:56.433Z",
+      "createdAt": "2025-08-29T04:29:56.433Z",
+      "role": "workflow:owner",
+      "workflowId": "pFaL4JxQPZtNYc4u",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-09-03T09:01:42.550Z",
+  "versionId": "5544e8a9-7e96-4015-919f-5835515fe136"
+}
