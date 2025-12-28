@@ -1,0 +1,80 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Tạo QR code đăng nhập Zalo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-06T08:34:04.984Z",
+  "id": "i3bSS0M2LRdBMnQu",
+  "isArchived": true,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "My workflow 4",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "05f95a9e-474a-4f82-86ad-dedbd323a3f1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "get",
+        "operation": "getQRCode"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6abf209d-4864-4c63-8791-327ead17a0c3",
+      "name": "Tạo QR code đăng nhập Zalo",
+      "credentials": {
+        "n8nApi": {
+          "id": "FqC7UlrgxxDxMcp2",
+          "name": "n8n zalo x"
+        },
+        "zaloUserCredentialsApi": {
+          "id": "WUpoyHut3Blt9uG7",
+          "name": "Zalo It Bot - 2025-10-04T06:56:30.226Z"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-06T08:34:04.984Z",
+      "createdAt": "2025-12-06T08:34:04.984Z",
+      "role": "workflow:owner",
+      "workflowId": "i3bSS0M2LRdBMnQu",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-08T07:25:12.542Z",
+  "versionId": "cd375cdb-0053-4bdc-8b10-a1b5a10696e4"
+}
