@@ -1,0 +1,190 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-06T04:04:22.288Z",
+  "id": "zHNCyTo30UqlF5dJ",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "WEEKLY PO REPORT",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -720,
+        0
+      ],
+      "id": "ba730b50-e32d-46e7-aebb-ba472c5aed90",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Iqva0NJgul5qU_qfBirwNCtK67y36IrRWoWCwdF-wNc/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Iqva0NJgul5qU_qfBirwNCtK67y36IrRWoWCwdF-wNc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -496,
+        0
+      ],
+      "id": "0e6f81f2-7c87-47e2-9566-aadc9c3785c6",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HAuycisc2CDPvPSS",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// Hôm nay\nconst today = new Date();\ntoday.setHours(0,0,0,0);\n\n// Tính ngày đầu tuần (Monday)\nconst day = today.getDay(); // 0=Sun, 1=Mon...\nconst diffToMonday = (day === 0 ? -6 : 1 - day);\nconst monday = new Date(today);\nmonday.setDate(today.getDate() + diffToMonday);\n\n// Tính ngày cuối tuần (Sunday)\nconst sunday = new Date(monday);\nsunday.setDate(monday.getDate() + 6);\nsunday.setHours(23,59,59,999);\n\n// Tạo mảng kết quả\nconst result = [];\n\nfor (const item of items) {\n  const etdRaw = item.json[\"ETD Date\"];\n  if (!etdRaw) continue;\n\n  const etd = new Date(etdRaw);\n  if (isNaN(etd)) continue;\n\n  // Lọc ETD trong tuần này\n  if (etd >= monday && etd <= sunday) {\n    result.push(item);\n  }\n}\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        0
+      ],
+      "id": "b02bda28-424f-4f33-bc0e-d03093c58917",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {
+          "fileName": "Weekly PO.xlsx"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -80,
+        0
+      ],
+      "id": "cf1a9eb3-5fe1-4824-a55b-8ee4ed853d52",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "sendTo": "hanh.nt@pro-sports.com.vn",
+        "subject": "WEEKLY PO REPORT",
+        "message": "Hi Julia,\n\nPlease find weekly PO of this week as attached file.\n\nThank you",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        128,
+        0
+      ],
+      "id": "d1dc97a6-85c2-4975-b038-bf8189d7591f",
+      "name": "Send a message",
+      "webhookId": "3ac84430-3514-4a7d-90f0-c19a2358dbd7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Zjn1pCHJ9PHlNT8x",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-06T04:04:22.288Z",
+      "createdAt": "2025-12-06T04:04:22.288Z",
+      "role": "workflow:owner",
+      "workflowId": "zHNCyTo30UqlF5dJ",
+      "projectId": "0KvFWNFJcnQ9XdQQ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-06T04:23:37.901Z",
+  "versionId": "e58f5887-0832-4c16-95a7-2630af5a3336"
+}
