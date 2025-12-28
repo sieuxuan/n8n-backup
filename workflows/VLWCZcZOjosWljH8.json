@@ -1,0 +1,117 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "CUSTOMER LIST": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-11-17T11:12:42.138Z",
+  "id": "VLWCZcZOjosWljH8",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Auto email to customers",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1XQg8QOsjxxS4ZgHaYCsxLQv6CZiJozFauUbso5eYCAE",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1078348407,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XQg8QOsjxxS4ZgHaYCsxLQv6CZiJozFauUbso5eYCAE/edit#gid=1078348407"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        -80
+      ],
+      "id": "7ff7d19a-f1f7-49d1-917d-86ec46908962",
+      "name": "CUSTOMER LIST",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "EX5innt2Z2BVaOtJ",
+          "name": "Google Sheets Trigger account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "ĐẶT HÀNG THÀNH CÔNG",
+        "message": "=Thank {{ $json.Name }} for your purchase:\nYour item: {{ $json.Item }}\nAge: {{ $json.Age }}\nYour item will be delivered within 3-5 days.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -240,
+        -80
+      ],
+      "id": "d39082f7-ec30-4965-bb9f-d7b0eb0444b2",
+      "name": "Send a message",
+      "webhookId": "7a959a01-cc89-4a7d-975d-dc52adfff39d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Zjn1pCHJ9PHlNT8x",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "VLWCZcZOjosWljH8"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-11-17T11:12:42.138Z",
+      "createdAt": "2025-11-17T11:12:42.138Z",
+      "role": "workflow:owner",
+      "workflowId": "VLWCZcZOjosWljH8",
+      "projectId": "0KvFWNFJcnQ9XdQQ"
+    }
+  ],
+  "staticData": {
+    "node:CUSTOMER LIST": {
+      "documentId": "1XQg8QOsjxxS4ZgHaYCsxLQv6CZiJozFauUbso5eYCAE",
+      "sheetId": 1078348407,
+      "lastIndexChecked": 3
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-03T02:44:19.834Z",
+  "versionId": "3c0f541a-349d-4c5f-8ff7-8b0e361a9184"
+}
