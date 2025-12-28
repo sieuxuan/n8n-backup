@@ -1,0 +1,176 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-09-03T09:12:31.161Z",
+  "id": "OVVto6UEXjddha6m",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "THONG BAO WFX",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "THÔNG BÁO UPDATE",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Date",
+              "fieldType": "date",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Start time",
+              "placeholder": "HH:MM",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "End time",
+              "placeholder": "HH:MM",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Reason",
+              "placeholder": "Nếu có hãng điền không mặc định sẽ update hệ thống"
+            },
+            {
+              "fieldLabel": "Thông báo ở",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "IT TEST"
+                  },
+                  {
+                    "option": "THÔNG BÁO WFX CHUNG"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "useWorkflowTimezone": true
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d9ab0957-d362-46ff-bb41-17895b0e43a9",
+      "name": "On form submission",
+      "webhookId": "12a12e7b-f506-4a22-b2b2-ac2f2ed00c34"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Chỉ tạo ra nội dung thông báo bảo trì hệ thống WFX, không viết bất kỳ phần mở đầu hoặc giải thích nào khác.  \n\nThông tin đầu vào:  \n- Ngày: {{$json[\"Date\"]}}  \n- Thời gian bắt đầu: {{$json[\"Start time\"]}}  \n- Thời gian kết thúc: {{$json[\"End time\"]}}  \n- Lý do: {{$json[\"Reason\"]}}  \n\nYêu cầu:  \n1. Tiêu đề: \"📢 THÔNG BÁO BẢO TRÌ HỆ THỐNG WFX\".  \n2. Mở đầu bằng \"Kính gửi anh/chị/em,\".  \n3. Trình bày lý do và thời gian bảo trì từ dữ liệu đầu vào.  \n4. Không nhắc tên công ty hoặc tổ chức.  \n5. Không có tên người gửi ở cuối.  \n6. Viết phần lưu ý khác nhau mỗi lần nhưng vẫn giữ ý chính:    \n   - Hệ thống không thể truy cập trong thời gian bảo trì.  \n   - Người dùng cần hoàn tất công việc và lưu dữ liệu trước khi bắt đầu.\n7. Kết thúc bằng lời cảm ơn trang trọng.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7355d73b-8347-4467-8cdc-1c65fad57cd3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        208,
+        176
+      ],
+      "id": "8152f805-b868-4eba-8c8d-4b233b5a27c3",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "cJX4QyuPXhS6ep58",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "2091898082743203663",
+        "message": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "529274cf-7bf3-4d2d-8f39-5eb62e12281d",
+      "name": "Gửi tin nhắn",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-09-03T09:12:31.161Z",
+      "createdAt": "2025-09-03T09:12:31.161Z",
+      "role": "workflow:owner",
+      "workflowId": "OVVto6UEXjddha6m",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-09-03T09:34:23.615Z",
+  "versionId": "c4ccdd07-dafc-4ebe-bf44-c51b502d1993"
+}
