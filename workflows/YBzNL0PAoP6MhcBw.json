@@ -1,0 +1,526 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-01T07:01:07.782Z",
+    "createdAt": "2025-12-01T07:01:07.782Z",
+    "versionId": "ba2101cc-16c4-409a-8c3f-874d29a1467a",
+    "workflowId": "YBzNL0PAoP6MhcBw",
+    "nodes": [
+      {
+        "parameters": {
+          "event": "newChatMessage",
+          "watchAllChats": true
+        },
+        "type": "n8n-nodes-base.microsoftTeamsTrigger",
+        "typeVersion": 1,
+        "position": [
+          368,
+          -112
+        ],
+        "id": "f771df09-4604-4c75-a182-92c15e7df751",
+        "name": "Microsoft Teams Trigger",
+        "webhookId": "f26b4626-07cf-4b19-a7f8-2d11e38e70b8",
+        "credentials": {
+          "microsoftTeamsOAuth2Api": {
+            "id": "Iqzyk9veJ1J8eXou",
+            "name": "Microsoft Teams account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "chatMessage",
+          "operation": "get",
+          "chatId": {
+            "__rl": true,
+            "value": "={{ $json[\"@odata.id\"].split(\"'\")[1] }}",
+            "mode": "id"
+          },
+          "messageId": "={{ $json.id }}"
+        },
+        "type": "n8n-nodes-base.microsoftTeams",
+        "typeVersion": 2,
+        "position": [
+          592,
+          -112
+        ],
+        "id": "781941ca-6dce-479a-a120-0293d1f23915",
+        "name": "Get chat message",
+        "webhookId": "2b7d6204-4fe8-4528-a28e-8e90ec4a1ea0",
+        "credentials": {
+          "microsoftTeamsOAuth2Api": {
+            "id": "Iqzyk9veJ1J8eXou",
+            "name": "Microsoft Teams account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "Q155AxMmPU3euzY2",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/Q155AxMmPU3euzY2",
+            "cachedResultName": "IT WF"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {}
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          1040,
+          -112
+        ],
+        "id": "531bef5e-c651-4e32-b23d-6610832e75c3",
+        "name": "Call 'IT WF'"
+      },
+      {
+        "parameters": {
+          "resource": "chatMessage",
+          "chatId": {
+            "__rl": true,
+            "value": "={{ $('Input').item.json.threadId }}",
+            "mode": "id"
+          },
+          "message": "={{ $json.answer }}",
+          "options": {
+            "includeLinkToWorkflow": false
+          }
+        },
+        "type": "n8n-nodes-base.microsoftTeams",
+        "typeVersion": 2,
+        "position": [
+          1264,
+          -112
+        ],
+        "id": "6c39a5b4-f3a1-4521-894c-97d28840ecbd",
+        "name": "Create chat message4",
+        "webhookId": "70c3c798-192c-4a9e-b9e8-45d84a3398bc",
+        "credentials": {
+          "microsoftTeamsOAuth2Api": {
+            "id": "Iqzyk9veJ1J8eXou",
+            "name": "Microsoft Teams account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ecd382fe-bf4f-4162-adc2-85b0d135258a",
+                "name": "data.msgType",
+                "value": "={{ $json.messageType }}",
+                "type": "string"
+              },
+              {
+                "id": "1ff437d8-c2f0-43f2-b1c8-2b22dffb1bb3",
+                "name": "data.uidFrom",
+                "value": "={{ $json.from.user.id }}",
+                "type": "string"
+              },
+              {
+                "id": "85d11d06-3e60-4460-aa4c-1674ab1848b3",
+                "name": "data.dName",
+                "value": "={{ $json.from.user.displayName }}",
+                "type": "string"
+              },
+              {
+                "id": "a683b995-c591-4070-b7c8-67043f120c31",
+                "name": "threadId",
+                "value": "={{ $json.chatId }}",
+                "type": "string"
+              },
+              {
+                "id": "344202d8-6e91-4f31-9cb0-61a504bc8494",
+                "name": "type",
+                "value": "=",
+                "type": "number"
+              },
+              {
+                "id": "90a76cc6-c6d6-47c6-9bbc-5d9f4dc437d0",
+                "name": "data.content",
+                "value": "={{ $json.body.content }}",
+                "type": "object"
+              },
+              {
+                "id": "c72b4809-95be-42b6-aee9-630a2daf2af8",
+                "name": "data.quote.msg",
+                "value": "={{ $json.mentions }}",
+                "type": "string"
+              },
+              {
+                "id": "81d2a1cd-802e-4317-908c-e8205a921069",
+                "name": "data.quote.globalMsgId",
+                "value": "=",
+                "type": "number"
+              },
+              {
+                "id": "d66ea45f-54f2-47d7-8a09-f728a06e783a",
+                "name": "data.quote.fromD",
+                "value": "=",
+                "type": "string"
+              },
+              {
+                "id": "b6338456-71da-40a4-99c8-47972b865f8c",
+                "name": "data.quote.cliMsgType",
+                "value": "=",
+                "type": "number"
+              },
+              {
+                "id": "f8b89a52-744e-4853-96bc-e3619926c41b",
+                "name": "data.quote.ts",
+                "value": "=",
+                "type": "number"
+              },
+              {
+                "id": "f341cb6c-bcab-44f1-b758-a8eea7c76feb",
+                "name": "data.quote.attach",
+                "value": "={{ $json.attachments }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {
+            "ignoreConversionErrors": true
+          }
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          816,
+          -112
+        ],
+        "id": "a5dadf32-fdf4-41d2-9b3d-4dcd2da159e9",
+        "name": "Input"
+      }
+    ],
+    "connections": {
+      "Microsoft Teams Trigger": {
+        "main": [
+          [
+            {
+              "node": "Get chat message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get chat message": {
+        "main": [
+          [
+            {
+              "node": "Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Call 'IT WF'": {
+        "main": [
+          [
+            {
+              "node": "Create chat message4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Input": {
+        "main": [
+          [
+            {
+              "node": "Call 'IT WF'",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "ba2101cc-16c4-409a-8c3f-874d29a1467a",
+  "connections": {
+    "Microsoft Teams Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get chat message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get chat message": {
+      "main": [
+        [
+          {
+            "node": "Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'IT WF'": {
+      "main": [
+        [
+          {
+            "node": "Create chat message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input": {
+      "main": [
+        [
+          {
+            "node": "Call 'IT WF'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-09-17T04:34:11.980Z",
+  "id": "YBzNL0PAoP6MhcBw",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "IT HELPDESK TEAM",
+  "nodes": [
+    {
+      "parameters": {
+        "event": "newChatMessage",
+        "watchAllChats": true
+      },
+      "type": "n8n-nodes-base.microsoftTeamsTrigger",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -112
+      ],
+      "id": "f771df09-4604-4c75-a182-92c15e7df751",
+      "name": "Microsoft Teams Trigger",
+      "webhookId": "f26b4626-07cf-4b19-a7f8-2d11e38e70b8",
+      "credentials": {
+        "microsoftTeamsOAuth2Api": {
+          "id": "Iqzyk9veJ1J8eXou",
+          "name": "Microsoft Teams account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chatMessage",
+        "operation": "get",
+        "chatId": {
+          "__rl": true,
+          "value": "={{ $json[\"@odata.id\"].split(\"'\")[1] }}",
+          "mode": "id"
+        },
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.microsoftTeams",
+      "typeVersion": 2,
+      "position": [
+        592,
+        -112
+      ],
+      "id": "781941ca-6dce-479a-a120-0293d1f23915",
+      "name": "Get chat message",
+      "webhookId": "2b7d6204-4fe8-4528-a28e-8e90ec4a1ea0",
+      "credentials": {
+        "microsoftTeamsOAuth2Api": {
+          "id": "Iqzyk9veJ1J8eXou",
+          "name": "Microsoft Teams account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Q155AxMmPU3euzY2",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Q155AxMmPU3euzY2",
+          "cachedResultName": "IT WF"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1040,
+        -112
+      ],
+      "id": "531bef5e-c651-4e32-b23d-6610832e75c3",
+      "name": "Call 'IT WF'"
+    },
+    {
+      "parameters": {
+        "resource": "chatMessage",
+        "chatId": {
+          "__rl": true,
+          "value": "={{ $('Input').item.json.threadId }}",
+          "mode": "id"
+        },
+        "message": "={{ $json.answer }}",
+        "options": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.microsoftTeams",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        -112
+      ],
+      "id": "6c39a5b4-f3a1-4521-894c-97d28840ecbd",
+      "name": "Create chat message4",
+      "webhookId": "70c3c798-192c-4a9e-b9e8-45d84a3398bc",
+      "credentials": {
+        "microsoftTeamsOAuth2Api": {
+          "id": "Iqzyk9veJ1J8eXou",
+          "name": "Microsoft Teams account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ecd382fe-bf4f-4162-adc2-85b0d135258a",
+              "name": "data.msgType",
+              "value": "={{ $json.messageType }}",
+              "type": "string"
+            },
+            {
+              "id": "1ff437d8-c2f0-43f2-b1c8-2b22dffb1bb3",
+              "name": "data.uidFrom",
+              "value": "={{ $json.from.user.id }}",
+              "type": "string"
+            },
+            {
+              "id": "85d11d06-3e60-4460-aa4c-1674ab1848b3",
+              "name": "data.dName",
+              "value": "={{ $json.from.user.displayName }}",
+              "type": "string"
+            },
+            {
+              "id": "a683b995-c591-4070-b7c8-67043f120c31",
+              "name": "threadId",
+              "value": "={{ $json.chatId }}",
+              "type": "string"
+            },
+            {
+              "id": "344202d8-6e91-4f31-9cb0-61a504bc8494",
+              "name": "type",
+              "value": "=",
+              "type": "number"
+            },
+            {
+              "id": "90a76cc6-c6d6-47c6-9bbc-5d9f4dc437d0",
+              "name": "data.content",
+              "value": "={{ $json.body.content }}",
+              "type": "object"
+            },
+            {
+              "id": "c72b4809-95be-42b6-aee9-630a2daf2af8",
+              "name": "data.quote.msg",
+              "value": "={{ $json.mentions }}",
+              "type": "string"
+            },
+            {
+              "id": "81d2a1cd-802e-4317-908c-e8205a921069",
+              "name": "data.quote.globalMsgId",
+              "value": "=",
+              "type": "number"
+            },
+            {
+              "id": "d66ea45f-54f2-47d7-8a09-f728a06e783a",
+              "name": "data.quote.fromD",
+              "value": "=",
+              "type": "string"
+            },
+            {
+              "id": "b6338456-71da-40a4-99c8-47972b865f8c",
+              "name": "data.quote.cliMsgType",
+              "value": "=",
+              "type": "number"
+            },
+            {
+              "id": "f8b89a52-744e-4853-96bc-e3619926c41b",
+              "name": "data.quote.ts",
+              "value": "=",
+              "type": "number"
+            },
+            {
+              "id": "f341cb6c-bcab-44f1-b758-a8eea7c76feb",
+              "name": "data.quote.attach",
+              "value": "={{ $json.attachments }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": true
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        -112
+      ],
+      "id": "a5dadf32-fdf4-41d2-9b3d-4dcd2da159e9",
+      "name": "Input"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-09-17T04:34:11.980Z",
+      "createdAt": "2025-09-17T04:34:11.980Z",
+      "role": "workflow:owner",
+      "workflowId": "YBzNL0PAoP6MhcBw",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": {
+    "node:Microsoft Teams Trigger": {
+      "subscriptionIds": [
+        "9f2b705b-5c4c-4010-8066-fd9e28f02c0c"
+      ]
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-18T17:00:17.556Z",
+  "versionId": "ba2101cc-16c4-409a-8c3f-874d29a1467a"
+}
