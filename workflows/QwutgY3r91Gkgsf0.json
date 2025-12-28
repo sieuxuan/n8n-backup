@@ -1,0 +1,1122 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-11-28T04:17:46.086Z",
+    "createdAt": "2025-11-28T04:17:46.086Z",
+    "versionId": "1787cf84-09c6-465e-85a4-748b77430657",
+    "workflowId": "QwutgY3r91Gkgsf0",
+    "nodes": [
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            },
+            "conditions": [
+              {
+                "id": "cf862fcb-d690-438f-b3f1-25583284957f",
+                "leftValue": "={{ $json.id }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "number",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "id": "68140637-1e75-47a3-a59c-0fa9abd424cc",
+        "name": "IF (Has Items)",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          768,
+          128
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "toText",
+          "sourceProperty": "html",
+          "options": {
+            "fileName": "={{ $json.name }}.html"
+          }
+        },
+        "id": "593c887c-d09c-4e4d-838d-85ff7f8422eb",
+        "name": "Convert to File",
+        "type": "n8n-nodes-base.convertToFile",
+        "typeVersion": 1.1,
+        "position": [
+          1216,
+          128
+        ]
+      },
+      {
+        "parameters": {
+          "fileName": "=",
+          "parentId": "={{ $('Loop Over Items').item.json.folderID }}",
+          "binaryData": true
+        },
+        "id": "d904e6ea-5cfc-494b-aac2-92f75f81b089",
+        "name": "Upload a file",
+        "type": "n8n-nodes-base.microsoftOneDrive",
+        "typeVersion": 1,
+        "position": [
+          1440,
+          128
+        ],
+        "credentials": {
+          "microsoftOneDriveOAuth2Api": {
+            "id": "ldks68x9rwwj4G7v",
+            "name": "Microsoft Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1360248325,
+            "mode": "list",
+            "cachedResultName": "Links",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit#gid=1360248325"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Link": "={{ $json.url }}",
+              "Status": "Done"
+            },
+            "matchingColumns": [
+              "Link"
+            ],
+            "schema": [
+              {
+                "id": "Link",
+                "displayName": "Link",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "row_number",
+                "displayName": "row_number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "readOnly": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "id": "9c6e5af4-c4e2-49f3-aa79-18bd82f1153b",
+        "name": "Update row in sheet",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          1664,
+          -64
+        ],
+        "executeOnce": false,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "X1UBt5tMcyjhPYqy",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "dataTableId": {
+            "__rl": true,
+            "value": "n2LDGEC3sJYcffrp",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+          },
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "status",
+                "condition": "neq",
+                "keyValue": "done"
+              }
+            ]
+          },
+          "limit": 1000
+        },
+        "type": "n8n-nodes-base.dataTable",
+        "typeVersion": 1,
+        "position": [
+          544,
+          128
+        ],
+        "id": "65181287-fa0e-4c0c-91fb-e2823125a126",
+        "name": "Get row(s)"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          992,
+          128
+        ],
+        "id": "3ed727e5-d42d-4325-8a3d-4f496e04c171",
+        "name": "Loop Over Items"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "dataTableId": {
+            "__rl": true,
+            "value": "n2LDGEC3sJYcffrp",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+          },
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "key",
+                "keyValue": "={{ $('Loop Over Items').item.json.key }}"
+              }
+            ]
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "status": "done"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "key",
+                "displayName": "key",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "url",
+                "displayName": "url",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "html",
+                "displayName": "html",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "name",
+                "displayName": "name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "series",
+                "displayName": "series",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "ts",
+                "displayName": "ts",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "status",
+                "displayName": "status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "folderID",
+                "displayName": "folderID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.dataTable",
+        "typeVersion": 1,
+        "position": [
+          1664,
+          200
+        ],
+        "id": "4603ad7a-a857-43f3-ad78-384f3921645e",
+        "name": "Update row(s)1"
+      },
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          96,
+          128
+        ],
+        "id": "351d0329-baf1-4c7d-a542-96cbe5d2fcd2",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "dataTableId": {
+            "__rl": true,
+            "value": "n2LDGEC3sJYcffrp",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+          },
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "status",
+                "keyValue": "done"
+              }
+            ]
+          },
+          "limit": 1000
+        },
+        "type": "n8n-nodes-base.dataTable",
+        "typeVersion": 1,
+        "position": [
+          1440,
+          -64
+        ],
+        "id": "f031907a-5da8-4e6e-b339-e5ec67734991",
+        "name": "Get row(s)1"
+      },
+      {
+        "parameters": {
+          "operation": "deleteRows",
+          "dataTableId": {
+            "__rl": true,
+            "value": "n2LDGEC3sJYcffrp",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+          },
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "status",
+                "keyValue": "done"
+              }
+            ]
+          },
+          "options": {
+            "dryRun": false
+          }
+        },
+        "type": "n8n-nodes-base.dataTable",
+        "typeVersion": 1,
+        "position": [
+          1888,
+          -64
+        ],
+        "id": "041eee3c-f258-4972-8872-d00e3ed5f63c",
+        "name": "Delete row(s)"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.limit",
+        "typeVersion": 1,
+        "position": [
+          1216,
+          -64
+        ],
+        "id": "512baabd-7bcd-46eb-9175-4678454e4bdb",
+        "name": "Limit"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.limit",
+        "typeVersion": 1,
+        "position": [
+          320,
+          128
+        ],
+        "id": "6f111677-2813-4ef6-83a8-b3c28e0961c8",
+        "name": "Limit1"
+      }
+    ],
+    "connections": {
+      "IF (Has Items)": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Convert to File": {
+        "main": [
+          [
+            {
+              "node": "Upload a file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload a file": {
+        "main": [
+          [
+            {
+              "node": "Update row(s)1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s)": {
+        "main": [
+          [
+            {
+              "node": "IF (Has Items)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [
+            {
+              "node": "Limit",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Convert to File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update row(s)1": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Limit1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update row in sheet": {
+        "main": [
+          [
+            {
+              "node": "Delete row(s)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s)1": {
+        "main": [
+          [
+            {
+              "node": "Update row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Limit": {
+        "main": [
+          [
+            {
+              "node": "Get row(s)1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Limit1": {
+        "main": [
+          [
+            {
+              "node": "Get row(s)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "1787cf84-09c6-465e-85a4-748b77430657",
+  "connections": {
+    "IF (Has Items)": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload a file": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "IF (Has Items)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row(s)1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Delete row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-27T09:59:16.534Z",
+  "id": "QwutgY3r91Gkgsf0",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Vozer Crawl Processor",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "cf862fcb-d690-438f-b3f1-25583284957f",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "68140637-1e75-47a3-a59c-0fa9abd424cc",
+      "name": "IF (Has Items)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        768,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html",
+        "options": {
+          "fileName": "={{ $json.name }}.html"
+        }
+      },
+      "id": "593c887c-d09c-4e4d-838d-85ff7f8422eb",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1216,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "=",
+        "parentId": "={{ $('Loop Over Items').item.json.folderID }}",
+        "binaryData": true
+      },
+      "id": "d904e6ea-5cfc-494b-aac2-92f75f81b089",
+      "name": "Upload a file",
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        128
+      ],
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "ldks68x9rwwj4G7v",
+          "name": "Microsoft Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1360248325,
+          "mode": "list",
+          "cachedResultName": "Links",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit#gid=1360248325"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Link": "={{ $json.url }}",
+            "Status": "Done"
+          },
+          "matchingColumns": [
+            "Link"
+          ],
+          "schema": [
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "9c6e5af4-c4e2-49f3-aa79-18bd82f1153b",
+      "name": "Update row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1664,
+        -64
+      ],
+      "executeOnce": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "n2LDGEC3sJYcffrp",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "condition": "neq",
+              "keyValue": "done"
+            }
+          ]
+        },
+        "limit": 1000
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        544,
+        128
+      ],
+      "id": "65181287-fa0e-4c0c-91fb-e2823125a126",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        992,
+        128
+      ],
+      "id": "3ed727e5-d42d-4325-8a3d-4f496e04c171",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "n2LDGEC3sJYcffrp",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "key",
+              "keyValue": "={{ $('Loop Over Items').item.json.key }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "done"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "key",
+              "displayName": "key",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "html",
+              "displayName": "html",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "series",
+              "displayName": "series",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ts",
+              "displayName": "ts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "folderID",
+              "displayName": "folderID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1664,
+        200
+      ],
+      "id": "4603ad7a-a857-43f3-ad78-384f3921645e",
+      "name": "Update row(s)1"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        96,
+        128
+      ],
+      "id": "351d0329-baf1-4c7d-a542-96cbe5d2fcd2",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "n2LDGEC3sJYcffrp",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "keyValue": "done"
+            }
+          ]
+        },
+        "limit": 1000
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        -64
+      ],
+      "id": "f031907a-5da8-4e6e-b339-e5ec67734991",
+      "name": "Get row(s)1"
+    },
+    {
+      "parameters": {
+        "operation": "deleteRows",
+        "dataTableId": {
+          "__rl": true,
+          "value": "n2LDGEC3sJYcffrp",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "keyValue": "done"
+            }
+          ]
+        },
+        "options": {
+          "dryRun": false
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1888,
+        -64
+      ],
+      "id": "041eee3c-f258-4972-8872-d00e3ed5f63c",
+      "name": "Delete row(s)"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        -64
+      ],
+      "id": "512baabd-7bcd-46eb-9175-4678454e4bdb",
+      "name": "Limit"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        320,
+        128
+      ],
+      "id": "6f111677-2813-4ef6-83a8-b3c28e0961c8",
+      "name": "Limit1"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-27T09:59:16.534Z",
+      "createdAt": "2025-08-27T09:59:16.534Z",
+      "role": "workflow:owner",
+      "workflowId": "QwutgY3r91Gkgsf0",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-10-29T04:27:55.040Z",
+  "versionId": "1787cf84-09c6-465e-85a4-748b77430657"
+}
