@@ -1,0 +1,2387 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "WF download videos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        []
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gửi tin nhắn5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WF download videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF ERROR": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gửi tin nhắn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF ERROR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WF download videos": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zalo Event Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch3": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet3": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gửi tin nhắn7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF ERROR1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Switch4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch4": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-26T08:09:23.434Z",
+  "id": "012mOIo2ynbtnnOc",
+  "isArchived": true,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "IT HELPDESK",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "webchat",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "df7020ce-6c12-4446-b5c0-8f6c24e62127"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cc6c6754-b520-480e-9e3f-14363f31167d",
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "chat.photo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9f8f970d-9265-4e17-a2fb-3e8031dea125",
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "chat.recommended",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "30236288-2ea4-4b61-ac47-7ab3bc2555a8",
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "chat.video.msg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f6d6afe4-fa38-424e-a6c5-62666ac36f40",
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "share.file",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -592,
+        688
+      ],
+      "id": "de5e1cf9-5b51-45d8-b80e-651e72940eea",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.content.toLowerCase().includes(\"check\") || $json.data.content.toLowerCase().includes(\"check\") }}",
+                    "rightValue": "=",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "e517034a-2dd0-42cc-9a18-c40fd2db382c"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cdbbe62c-a93b-44ec-91de-1c91797507df",
+                    "leftValue": "={{ $json.data.content.toLowerCase() }}",
+                    "rightValue": "done",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6ca65423-b222-4ee0-9280-c8c27f8c715e",
+                    "leftValue": "={{ $json.data.content.toLowerCase() }}",
+                    "rightValue": "id group",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b9b48cff-6542-49c8-923b-ec6598aafc3e",
+                    "leftValue": "={{ $json.data.content.toLowerCase().includes(\"@it bot\") || $json.data.content.toLowerCase().includes(\"xb\") }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8b9c7841-7975-4743-912d-a74179e06a15",
+                    "leftValue": "={{ $json.data.content.toLowerCase() }}",
+                    "rightValue": "download",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -368,
+        544
+      ],
+      "id": "433dac23-96af-4302-a959-3d35e0e2a5d5",
+      "name": "Switch",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "/***** RÚT GỌN THÔNG ĐIỆP *****/\nfunction trimText(s, max = 150) {\n  if (!s) return \"\";\n  let t = String(s).replace(/\\s+/g, \" \").trim();\n  if (t.length <= max) return t;\n  return t.slice(0, max - 1) + \"…\";\n}\n\nconst pendingItems = items.filter(item => {\n  const status = (item.json.Status || item.json[\"Status\"] || \"\").toLowerCase();\n  return status !== \"done\";\n});\n\n// Header: chỉ hiển thị số lượng ID pending\nconst header = pendingItems.length\n  ? `🔔 Có ${pendingItems.length} yêu cầu pending`\n  : \"✅ Không có yêu cầu chưa hoàn thành.\";\n\n// Chi tiết ngắn gọn từng ID (mỗi ID 1 dòng + 1 dòng trống)\nconst details = pendingItems.map(item => {\n  const data = item.json;\n\n  const id          = data.ID || \"Không có ID\";\n  const department  = (data[\"BỘ PHẬN\"] ?? data[\"BỘ PHẬN \"] ?? data[\"Department\"] ?? \"\").toString().trim();\n  const creator     = (data[\"TÊN BẠN LÀ\"] || data[\"Người tạo\"] || \"\").toString().trim();\n  const category    = (data[\"PHÂN LOẠI\"] ?? data[\"PHÂN LOẠI \"] ?? data[\"Issues Category\"] ?? \"\").toString().trim();\n  const description = data.Description || data[\"Description\"] || \"\";\n  const timestamp   = data.Timestamp || data[\"Timestamp\"] || \"\";\n\n  const shortDesc = trimText(\n    (category ? `[${category}] ` : \"\") + (description ? description : \"\"),\n    150\n  );\n\n  return `• ${id} | ${timestamp} | ${creator}${department ? \" (\" + department + \")\" : \"\"} | ${shortDesc}`;\n});\n\n// Thêm dòng trống giữa các ID\nconst body = pendingItems.length\n  ? `${header}\\n\\n${details.join(\"\\n\\n\")}`\n  : header;\n\nconst threadId = $('Switch').first().json.threadId;\nconst type     = $('Switch').first().json.type;\n\nreturn [{\n  json: {\n    message: body.replace(/(?:\\r\\n|\\r|\\n)+$/g, ''),\n    threadId,\n    type\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        -224
+      ],
+      "id": "aec914ef-d4b7-438e-9509-8a55dbd93700",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+          "mode": "list",
+          "cachedResultName": "IT HELP DESK",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        208,
+        -224
+      ],
+      "id": "e8273c40-cb53-43fd-92e3-61adf9244bb3",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy nội dung tin nhắn và uid người gửi\nconst message = $json.data?.content || '';\nconst uidFrom = $json.data?.uidFrom || '';\n\n// Tách từ để lấy status cuối câu\nconst parts = message.trim().split(/\\s+/);\n\n// ✅ Bắt đúng chuỗi ID-***** (bắt đầu bằng \"ID-\")\nconst idMatch = message.match(/\\bID-[A-Za-z0-9_-]+\\b/i);\nconst ID = idMatch ? idMatch[0].toUpperCase() : 'unknown';\n\n// ✅ Giả sử status luôn nằm ở cuối chuỗi, loại dấu câu nếu có\nconst statusRaw = parts[parts.length - 1] || '';\nconst cleanedStatus = statusRaw.replace(/[.,;:!?]+$/g, ''); // bỏ dấu câu cuối\nconst doneSynonyms = ['done', 'xong'];\nlet status = 'unknown';\nif (cleanedStatus) {\n  const normalized = cleanedStatus.toLowerCase();\n  status = doneSynonyms.includes(normalized)\n    ? 'Done'\n    : normalized.charAt(0).toUpperCase() + normalized.slice(1);\n}\n\nconst theardID = $json.threadId;   // giữ nguyên tên biến như bạn đang dùng\nconst type = $json.type;\n\n// Danh sách tên cho phép\nconst allowedNames = [\"Tùng\", \"Xuân\", \"Phương\"];\n\n// 🔎 Tìm tên trong message (loại ký tự lạ ở đầu/cuối từ trước khi so)\nlet nameFromMessage = null;\nfor (const w of parts) {\n  const word = w.replace(/^[^A-Za-zÀ-ỹ]+|[^A-Za-zÀ-ỹ]+$/gi, '');\n  if (allowedNames.includes(word)) {\n    nameFromMessage = word;\n    break;\n  }\n}\n\n// Map uidFrom → name (fallback)\nconst nameMap = {\n  \"9150902062671965622\": \"Tùng\",\n  \"2091898082743203663\": \"Xuân\",\n  \"3266757489410168093\": \"Phương\"\n};\n\nconst name = nameFromMessage || nameMap[uidFrom] || 'unknown';\n\n// Trả kết quả\nreturn [\n  {\n    json: {\n      ID,\n      status,\n      name,\n      theardID,\n      type\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        160
+      ],
+      "id": "df74ea19-4d08-4b68-a9d5-c55fa5b45674",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+          "mode": "list",
+          "cachedResultName": "IT HELP DESK",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "ID",
+              "lookupValue": "={{ $json.ID }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        656,
+        160
+      ],
+      "id": "41d0cd47-746b-44f2-ad2d-ffae3f529bdb",
+      "name": "Get row(s) in sheet1",
+      "alwaysOutputData": true,
+      "notesInFlow": false,
+      "retryOnFail": false,
+      "executeOnce": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "78267e7c-df06-46b4-90cd-dabb35110b16",
+              "name": "ID",
+              "value": "={{ $json.ID }}",
+              "type": "string"
+            },
+            {
+              "id": "189ccc3c-0f9c-49aa-b0b9-505c1ca8b12e",
+              "name": "ID_Status",
+              "value": "={{ $json.Status }}",
+              "type": "string"
+            },
+            {
+              "id": "a6f1e968-73d6-4c35-a861-c76eabfa6ad1",
+              "name": "Chat_status",
+              "value": "={{ \n  $if($(\"Code2\").isExecuted, $(\"Code2\").item.json.status, \n    $if($(\"Code4\").isExecuted, $(\"Code4\").item.json.status, \"\")\n  ) \n}}",
+              "type": "string"
+            },
+            {
+              "id": "cbd6f9b1-0124-4e3a-812e-74967830798c",
+              "name": "name",
+              "value": "={{ \n  $if($(\"Code2\").isExecuted, $(\"Code2\").item.json.name, \n    $if($(\"Code4\").isExecuted, $(\"Code4\").item.json.name, \"\")\n  ) \n}}",
+              "type": "string"
+            },
+            {
+              "id": "2b8e5ad5-51bb-48d9-baca-f84010fdfa66",
+              "name": "Finish time",
+              "value": "={{ (() => { const d = new Date(new Date().toLocaleString(\"en-US\",{ timeZone: \"Asia/Ho_Chi_Minh\"})); const p=n=>n.toString().padStart(2,'0'); return `${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}` })() }}",
+              "type": "string"
+            },
+            {
+              "id": "426e14d3-9f41-4dc8-8f82-886d2601ebd5",
+              "name": "Timestamp",
+              "value": "={{ $json.Timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "a00e4dd4-1a9a-433f-8ef5-9b03da19e1cc",
+              "name": "Process time",
+              "value": "={{\n(() => {\n  // ===== CẤU HÌNH =====\n  const TZ = 'Asia/Ho_Chi_Minh';      // Múi giờ Việt Nam\n  const WS = { h: 8,  m: 15 };        // Giờ bắt đầu làm việc: 08:15\n  const WE = { h: 17, m: 30 };        // Giờ kết thúc làm việc: 17:30\n  const LS = { h: 11, m: 45 };        // Bắt đầu nghỉ trưa: 11:45\n  const LE = { h: 13, m: 0  };        // Kết thúc nghỉ trưa: 13:00\n  const SKIP_SUNDAY = true;           // Bỏ qua Chủ nhật\n\n  // ===== LẤY THỜI GIAN KẾT THÚC (HIỆN TẠI THEO GIỜ VN) =====\n  const finishStr = (() => {\n    const d = new Date(new Date().toLocaleString(\"en-US\", { timeZone: TZ }));\n    const p = n => n.toString().padStart(2,'0');\n    return `${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;\n  })();\n\n  // ===== HÀM PARSE STRING -> DATE THEO \"GIỜ VN\" =====\n  const parseAsVN = (s) => {\n    if (s == null) return NaN;\n    const str = String(s).trim();\n\n    // Nếu là ISO có timezone/Z -> để JS parse\n    if (/T.+(Z|[+\\-]\\d{2}:\\d{2})$/.test(str)) {\n      const d = new Date(str);\n      return isNaN(d) ? NaN : d;\n    }\n\n    // Hỗ trợ \"MM/dd/yyyy HH:mm:ss\" hoặc \"dd/MM/yyyy HH:mm:ss\"\n    const m = str.match(/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})[ T](\\d{1,2}):(\\d{2}):(\\d{2})$/);\n    if (m) {\n      let [, A, B, Y, H, M, S] = m.map(Number);\n      // Nếu A>12 => coi là dd/MM\n      let MM = A > 12 ? B : A;\n      let DD = A > 12 ? A : B;\n      const iso = `${Y}-${String(MM).padStart(2,'0')}-${String(DD).padStart(2,'0')}T${String(H).padStart(2,'0')}:${String(M).padStart(2,'0')}:${String(S).padStart(2,'0')}+07:00`;\n      const d = new Date(iso);\n      return isNaN(d) ? NaN : d;\n    }\n\n    // Thử parse trực tiếp (trường hợp là ISO không TZ)\n    const d = new Date(str);\n    return isNaN(d) ? NaN : d;\n  };\n\n  // ===== CHUYỂN 1 \"INSTANT\" -> GIỜ TƯỜNG MINH VN (WALL CLOCK) =====\n  const toTZWallClock = (dateLike) => {\n    const d = new Date(dateLike);\n    if (isNaN(d)) return NaN;\n    const fmt = new Intl.DateTimeFormat('en-GB', {\n      timeZone: TZ,\n      year:'numeric', month:'2-digit', day:'2-digit',\n      hour:'2-digit', minute:'2-digit', second:'2-digit',\n      hour12:false\n    });\n    const p = Object.fromEntries(fmt.formatToParts(d).map(x => [x.type, x.value]));\n    return new Date(+p.year, +p.month-1, +p.day, +p.hour, +p.minute, +p.second, 0);\n  };\n\n  // ===== TIỆN ÍCH NGÀY/GIỜ =====\n  const setHM  = (d,h,m)=>{ const x=new Date(d); x.setHours(h,m,0,0); return x; };\n  const addDay = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); x.setHours(0,0,0,0); return x; };\n\n  // ===== TÍNH GIÂY LÀM VIỆC GIỮA HAI THỜI ĐIỂM (CÓ NGHỈ TRƯA) =====\n  const workingSecondsBetween = (startRaw, endRaw) => {\n    let start = toTZWallClock(startRaw);\n    const end = toTZWallClock(endRaw);\n    if (isNaN(start) || isNaN(end) || start >= end) return 0;\n\n    let sec = 0;\n    let day = new Date(start); day.setHours(0,0,0,0);\n    const last = new Date(end); last.setHours(0,0,0,0);\n\n    while (day <= last) {\n      const isSunday = day.getDay() === 0;\n      if (!(SKIP_SUNDAY && isSunday)) {\n        // Định nghĩa ca sáng & ca chiều\n        const morningStart   = setHM(day, WS.h, WS.m);  // 08:15\n        const morningEnd     = setHM(day, LS.h, LS.m);  // 11:45\n        const afternoonStart = setHM(day, LE.h, LE.m);  // 13:00\n        const afternoonEnd   = setHM(day, WE.h, WE.m);  // 17:30\n\n        const isStartDay = day.toDateString() === start.toDateString();\n        const isEndDay   = day.toDateString() === end.toDateString();\n\n        // Cộng phần giao nhau giữa [segStart, segEnd] với [start,end] (nếu cùng ngày)\n        const addSeg = (segStart, segEnd) => {\n          const realStart = new Date(Math.max(segStart, isStartDay ? start : segStart));\n          const realEnd   = new Date(Math.min(segEnd,   isEndDay   ? end   : segEnd));\n          if (realStart < realEnd) sec += Math.floor((realEnd - realStart)/1000);\n        };\n\n        // Cộng ca sáng và ca chiều (tự động trừ giờ nghỉ trưa)\n        addSeg(morningStart, morningEnd);\n        addSeg(afternoonStart, afternoonEnd);\n      }\n\n      // Sang ngày tiếp theo\n      day = addDay(day, 1);\n      if (day > start) start = setHM(day, WS.h, WS.m); // reset mốc start sang đầu giờ làm việc ngày mới\n    }\n    return sec;\n  };\n\n  // ===== THỰC THI =====\n  const startParsed = parseAsVN($json.Timestamp);   // ép hiểu là giờ VN\n  const endParsed   = parseAsVN(finishStr);         // giờ hiện tại VN (finish)\n  if (isNaN(startParsed) || isNaN(endParsed)) return '0h 0m 0s';\n\n  const totalSec = workingSecondsBetween(startParsed, endParsed);\n\n  // Định dạng kết quả \"Xd Yh Zm Ts\"\n  const d = Math.floor(totalSec / 86400);\n  const h = Math.floor((totalSec % 86400) / 3600);\n  const m = Math.floor((totalSec % 3600) / 60);\n  const s = totalSec % 60;\n\n  return `${d>0 ? d+'d ' : ''}${h}h ${m}m ${s}s`;\n})()\n}}",
+              "type": "string"
+            },
+            {
+              "id": "7ef3dd87-630e-4251-ba99-7a5bef536c15",
+              "name": "=theardID",
+              "value": "={{ \n  $if($(\"Code2\").isExecuted, $(\"Code2\").item.json.theardID, \n    $if($(\"Code4\").isExecuted, $(\"Code4\").item.json.theardID, \"\")\n  ) \n}}",
+              "type": "string"
+            },
+            {
+              "id": "b3c4684d-ed45-4aa5-9164-a16905b38a4a",
+              "name": "type",
+              "value": "={{ \n  $if($(\"Code2\").isExecuted, $(\"Code2\").item.json.type, \n    $if($(\"Code4\").isExecuted, $(\"Code4\").item.json.type, \"\")\n  ) \n}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1104,
+        128
+      ],
+      "id": "8d799855-ca61-4adf-b3af-b683f46f2983",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3af87cc4-1176-4d0a-9050-c03f834711db",
+              "name": "answer",
+              "value": "Không tìm thấy ID vui lòng kiểm tra lại",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1104,
+        320
+      ],
+      "id": "d5c506bd-7d2a-4489-a6e7-57fa9c36b269",
+      "name": "IF ERROR"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "fdfd4e91-0228-4f47-9696-2af5b0509e4f",
+              "leftValue": "={{ $json.ID_Status }}",
+              "rightValue": "Done",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "4bfe94a3-464e-4cf2-892e-3ef33bf47695",
+              "leftValue": "={{ $json.Chat_status }}",
+              "rightValue": "Done",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1328,
+        128
+      ],
+      "id": "88e78e0c-4b6a-430e-980e-1bb2d7dfe49d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+          "mode": "list",
+          "cachedResultName": "IT HELP DESK",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "={{ $json.Chat_status }}",
+            "Finish time": "={{ $json['Finish time'] }}",
+            "PIC": "={{ $json.name }}",
+            "Process time": "={{ $('If').item.json['Process time'] }}",
+            "ID": "={{ $json.ID }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "BỘ PHẬN ",
+              "displayName": "BỘ PHẬN ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "TÊN BẠN LÀ",
+              "displayName": "TÊN BẠN LÀ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "SỐ ĐIỆN THOẠI",
+              "displayName": "SỐ ĐIỆN THOẠI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "PHÂN LOẠI",
+              "displayName": "PHÂN LOẠI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Attachment File",
+              "displayName": "Attachment File",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Issues Category",
+              "displayName": "Issues Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Finish time",
+              "displayName": "Finish time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PIC",
+              "displayName": "PIC",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Comment",
+              "displayName": "Comment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Process time",
+              "displayName": "Process time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1552,
+        32
+      ],
+      "id": "82c1b85c-87ea-4cfb-ba66-50615a258924",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5815e844-29c7-45d6-ac19-5dc87d60350a",
+              "name": "answer",
+              "value": "={{ $json.ID }} đã hoàn thành bởi {{ $json.PIC }} mất {{ $('If').item.json['Process time'] }} để hoàn thành",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1776,
+        32
+      ],
+      "id": "e74651ad-3465-4374-8159-ee7b72fd8394",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "629ade4b-1cdd-489d-94a4-0dfe3acdf064",
+              "leftValue": "={{ $json.ID }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        160
+      ],
+      "id": "0399a086-fca7-4150-914a-171cb73dccad",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ \n  (\n    $json.data.content.replace(/(@it bot|xb)\\s*/gi, '') +\n    (\n      $json.data.quote && $json.data.quote.msg\n        ? ' ' + $json.data.quote.msg\n        : ''\n    )\n  ).trim()\n}}",
+        "options": {
+          "systemMessage": "Bạn là một trợ lý toàn năng\nNgôn ngữ: Nhận diện ngôn ngữ tin nhắn và trả lời bằng chính ngôn ngữ đó.\nXưng hô: Luôn xưng “em” với người dùng.\nGiọng điệu: Ngọt ngào, dễ chịu, thân thiện; thi thoảng thêm chút dí dỏm nhẹ nhàng nhưng không châm chọc.\n\nNgắn gọn: Đi thẳng vào câu trả lời, không dài dòng, không lan man.\n\nChi tiết quan trọng: Giữ nguyên tên, số, ngày giờ, link…\n\nEmoji: Thêm tự nhiên khi phù hợp, không lạm dụng.\n\nNếu là dịch: Chỉ dịch chính xác, không thêm gì khác.\n\nVí dụ\n\nUser: \"Họp mấy giờ vậy?\"\nAI: \"3h chiều nha anh/chị, để em nhắc trước cho đỡ quên nhé 🌸\"\n\nUser: \"Xong báo cáo chưa?\"\nAI: \"Dạ xong rồi ạ, em gửi luôn cho anh/chị nhé 📄\"\n\nUser: \"Cà phê đâu?\"\nAI: \"Em để sẵn ngoài bếp rồi nè ☕\"\n\nUser: \"What time is lunch?\"\nAI: \"12 sharp, em sẽ đợi anh/chị nha 😊\"\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -144,
+        1080
+      ],
+      "id": "1d8131ea-b15a-4538-bb29-592650169499",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -136,
+        1304
+      ],
+      "id": "fe37e7d9-6f08-4207-b361-48d4283e5715",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "cJX4QyuPXhS6ep58",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "EUwqzHcYgOUu9zLU",
+          "mode": "list",
+          "cachedResultName": "youtube download"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        784
+      ],
+      "id": "0e8e1c10-f8ba-4850-aa88-bfc31073b041",
+      "name": "WF download videos"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-social-zalo.zaloUser",
+      "typeVersion": 1,
+      "position": [
+        -816,
+        736
+      ],
+      "id": "7fea5ba8-eca5-400a-a67f-ac543d203f3d",
+      "name": "Zalo Event Trigger",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $('Zalo Event Trigger').item.json.threadId }}",
+        "message": "={{ $json.output }}",
+        "threadType": "={{ $('Zalo Event Trigger').item.json.type }}",
+        "mentionsParameter": {
+          "mentionValues": [
+            {
+              "uid": "={{ $json.data.uidFrom }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        208,
+        1080
+      ],
+      "id": "acc98cf1-579c-4aca-91ad-0a0f7cddef31",
+      "name": "Gửi tin nhắn4",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $json.threadId }}",
+        "message": "=Type: {{ $json.type }}\nID: {{ $json.threadId }}",
+        "threadType": "={{ $json.type }}",
+        "mentionsParameter": {
+          "mentionValues": [
+            {
+              "uid": "={{ $json.data.uidFrom }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        592
+      ],
+      "id": "1ce0c292-aeb2-4ee4-9e3e-26f4aac33894",
+      "name": "Gửi tin nhắn5",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $('Zalo Event Trigger').item.json.threadId }}",
+        "message": "=Link download của bạn đây:\n{{ $json.directUrl }}",
+        "threadType": "={{ $('Zalo Event Trigger').item.json.type }}",
+        "attachmentsParameter": {
+          "attachmentPaths": [
+            {
+              "attachmentPath": "={{ $json.filePath }}"
+            }
+          ]
+        },
+        "mentionsParameter": {
+          "mentionValues": [
+            {
+              "uid": "={{ $json.data.uidFrom }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        208,
+        784
+      ],
+      "id": "1d01bbe3-2c97-421c-bbe1-46427453e265",
+      "name": "Gửi tin nhắn6",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $json.theardID }}",
+        "message": "={{ $json.ID }} đã được hoàn thành rồi, vui lòng kiểm tra lại.",
+        "threadType": "={{ $json.type }}",
+        "mentionsParameter": {
+          "mentionValues": [
+            {
+              "uid": "={{ $json.data.uidFrom }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        1552,
+        224
+      ],
+      "id": "286433b5-d351-4af0-86ba-ad4f9b55c588",
+      "name": "Gửi tin nhắn",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $('Edit Fields2').item.json.theardID }}",
+        "message": "={{ $json.answer }}",
+        "threadType": "={{ $('Edit Fields2').item.json.type }}",
+        "mentionsParameter": {
+          "mentionValues": [
+            {
+              "uid": "={{ $json.data.uidFrom }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        32
+      ],
+      "id": "dfc22939-dc84-4feb-bd7c-24298e44e4a2",
+      "name": "Gửi tin nhắn2",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $json.threadId }}",
+        "message": "={{ $json.message }}",
+        "threadType": "={{ $json.type }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        656,
+        -224
+      ],
+      "id": "6f48f924-85d3-47eb-a715-941bbf95d638",
+      "name": "Gửi tin nhắn1",
+      "executeOnce": true,
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "{{ $('Switch1').item.json.data.content }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -8,
+        1304
+      ],
+      "id": "42b34a86-1bc9-4c5e-8c9f-21e73f10ba4e",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "FrfYE3BUWGJafJtT",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.content.toLowerCase().includes(\"check pending\") }}",
+                    "rightValue": "=",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "6f973fed-ceca-4b3d-a658-eef70d9d05cd"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b75611bb-323d-4211-8dbc-f7d5824a4aec",
+                    "leftValue": "={{ /ID-\\d+/i.test($json.data.content) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -80,
+        -224
+      ],
+      "id": "d2e404c9-8a8e-4d4b-bde7-4dafd9db4d1a",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+          "mode": "list",
+          "cachedResultName": "IT HELP DESK",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "ID",
+              "lookupValue": "={{ $json.ID }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        432,
+        -32
+      ],
+      "id": "193ed462-a1f5-4edf-ac6c-48e899cbde08",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1862ebe7-c297-4594-bc15-2d3f8ba0c31c",
+              "name": "ID",
+              "value": "={{ $json.data.content.match(/ID-\\d+/i)?.[0] || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "1ee1700f-7caf-4f4e-ba22-4fcec3bd6c37",
+              "name": "threadId",
+              "value": "={{ $json.threadId }}",
+              "type": "string"
+            },
+            {
+              "id": "3522450f-dbd7-4c27-8379-9092fc7a187a",
+              "name": "type",
+              "value": "={{ $json.type }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        -32
+      ],
+      "id": "e5a0f62f-f9af-4cb6-af8c-7d6587ac0e61",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Hàm tạo message cho 1 item\nfunction buildMessage(data = {}) {\n  const lines = [];\n  const get = (k) => data?.[k] ?? data?.[String(k).trim()];\n\n  if (get(\"ID\")) lines.push(`🆔 ID: ${get(\"ID\")}`);\n  if (get(\"TÊN BẠN LÀ\")) lines.push(`👤 Người yêu cầu: ${get(\"TÊN BẠN LÀ\")}`);\n  if (get(\"BỘ PHẬN \")) lines.push(`🏢 Bộ phận: ${get(\"BỘ PHẬN \")}`);\n  if (get(\"PHÂN LOẠI\")) lines.push(`🗂️ Phân loại: ${get(\"PHÂN LOẠI\")}`);\n  if (get(\"SỐ ĐIỆN THOẠI\")) lines.push(`📞 Điện thoại: ${get(\"SỐ ĐIỆN THOẠI\")}`);\n  if (get(\"Description\")) lines.push(`🔧 Mô tả: ${get(\"Description\")}`);\n  if (get(\"Priority\")) lines.push(`⚠️ Mức độ ưu tiên: ${get(\"Priority\")}`);\n  if (get(\"Status\")) lines.push(`📌 Trạng thái: ${get(\"Status\")}`);\n  if (get(\"PIC\")) lines.push(`👨‍🔧 PIC: ${get(\"PIC\")}`);\n  if (get(\"Timestamp\")) lines.push(`🕒 Thời gian tạo: ${get(\"Timestamp\")}`);\n  if (get(\"Finish time\")) lines.push(`🕒 Thời gian hoàn thành: ${get(\"Finish time\")}`);\n\n  // Attachment File: hỗ trợ string nhiều dòng hoặc array\n  const attRaw = get(\"Attachment File\");\n  if (attRaw) {\n    let attachments = Array.isArray(attRaw)\n      ? attRaw.map(x => String(x).trim()).filter(Boolean)\n      : String(attRaw).split(/\\r?\\n/).map(x => x.trim()).filter(Boolean);\n\n    if (attachments.length) {\n      lines.push(\"📎 File đính kèm:\");\n      lines.push(...attachments);\n    }\n  }\n\n  if (get(\"Comment\")) lines.push(`📝 Ghi chú: ${get(\"Comment\")}`);\n\n  return lines.join(\"\\n\");\n}\n\n// Trả ra đúng số lượng item đầu vào (1 input → 1 output)\nreturn items.map(it => {\n  const data = it.json || {};\n  const message = buildMessage(data);\n  return {\n    json: {\n      ...data,      // giữ lại dữ liệu gốc cho node sau\n      message       // thêm message\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        -32
+      ],
+      "id": "8cf48a8d-b66b-4cc2-9a85-b1d88416d46f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $('Edit Fields').item.json.threadId }}",
+        "message": "={{ $json.message }}",
+        "threadType": "={{ $('Edit Fields').item.json.type }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -32
+      ],
+      "id": "991d89e8-06e5-4b3d-a012-9bc84c1653a4",
+      "name": "Gửi tin nhắn3",
+      "executeOnce": true,
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ /ID-\\d+/i.test($json.data.content) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "82b957a4-8cf2-40ed-956e-aa036aec5303"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f247ed1c-99f5-460a-a899-904dc6e62338",
+                    "leftValue": "={{ /SUP-\\d+/i.test($json.data.content) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3e28319a-0e41-473b-b1e1-e0f0629ae2d2",
+                    "leftValue": "={{ !!$json.data.quote.msg.match(/(ID|SUP)-\\d+/i) }}",
+                    "rightValue": "={{ $json.data.content.match(/ID-\\d+/i)?.[0] }}",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -80,
+        320
+      ],
+      "id": "60ba55ed-13de-4b19-9ada-40439962f91e",
+      "name": "Switch3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy nội dung tin nhắn và uid người gửi\nconst message = $json.data?.content || '';\nconst uidFrom = $json.data?.uidFrom || '';\n\n// Tách từ để lấy status cuối câu\nconst parts = message.trim().split(/\\s+/);\n\n// ✅ Bắt đúng chuỗi SUP-***** (bắt đầu bằng \"SUP-\")\nconst supMatch = message.match(/\\bSUP-[A-Za-z0-9_-]+\\b/i);\nconst SUP = supMatch ? supMatch[0].toUpperCase() : 'unknown';\n\n// ✅ Giả sử status luôn nằm ở cuối chuỗi, loại dấu câu nếu có\nconst statusRaw = parts[parts.length - 1] || '';\nconst cleanedStatus = statusRaw.replace(/[.,;:!?]+$/g, ''); // bỏ dấu câu cuối\nconst doneSynonyms = ['done', 'xong'];\nlet status = 'unknown';\nif (cleanedStatus) {\n  const normalized = cleanedStatus.toLowerCase();\n  status = doneSynonyms.includes(normalized)\n    ? 'Done'\n    : normalized.charAt(0).toUpperCase() + normalized.slice(1);\n}\n\nconst theardID = $json.threadId;   // giữ nguyên tên biến như bạn đang dùng\nconst type = $json.type;\n\n// Danh sách tên cho phép\nconst allowedNames = [\"Tùng\", \"Xuân\", \"Phương\"];\n\n// 🔎 Tìm tên trong message (loại ký tự lạ ở đầu/cuối từ trước khi so)\nlet nameFromMessage = null;\nfor (const w of parts) {\n  const word = w.replace(/^[^A-Za-zÀ-ỹ]+|[^A-Za-zÀ-ỹ]+$/gi, '');\n  if (allowedNames.includes(word)) {\n    nameFromMessage = word;\n    break;\n  }\n}\n\n// Map uidFrom → name (fallback)\nconst nameMap = {\n  \"9150902062671965622\": \"Tùng\",\n  \"2091898082743203663\": \"Xuân\",\n  \"3266757489410168093\": \"Phương\"\n};\n\nconst name = nameFromMessage || nameMap[uidFrom] || 'unknown';\n\n// Trả kết quả\nreturn [\n  {\n    json: {\n      SUP,\n      status,\n      name,\n      theardID,\n      type\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        640
+      ],
+      "id": "2853ec7c-7b42-4594-be2e-a2b645be79fc",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+          "mode": "list",
+          "cachedResultName": "IT HELP DESK",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1979763952,
+          "mode": "list",
+          "cachedResultName": "ADD NEW SUPPLIER",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit#gid=1979763952"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "SUPPLIER_ID",
+              "lookupValue": "={{ $json.SUP }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        656,
+        544
+      ],
+      "id": "b0979a02-7806-430e-b450-3e6a76924eab",
+      "name": "Get row(s) in sheet3",
+      "alwaysOutputData": true,
+      "notesInFlow": false,
+      "retryOnFail": false,
+      "executeOnce": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "78267e7c-df06-46b4-90cd-dabb35110b16",
+              "name": "ID",
+              "value": "={{ $json.SUPPLIER_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "189ccc3c-0f9c-49aa-b0b9-505c1ca8b12e",
+              "name": "ID_Status",
+              "value": "={{ $json.STATUS }}",
+              "type": "string"
+            },
+            {
+              "id": "a6f1e968-73d6-4c35-a861-c76eabfa6ad1",
+              "name": "Chat_status",
+              "value": "={{ \n  $if($(\"Code3\").isExecuted, $(\"Code3\").item.json.status, \n    $if($(\"Code4\").isExecuted, $(\"Code4\").item.json.status, \"\")\n  ) \n}}",
+              "type": "string"
+            },
+            {
+              "id": "cbd6f9b1-0124-4e3a-812e-74967830798c",
+              "name": "name",
+              "value": "={{ \n  $if($(\"Code3\").isExecuted, $(\"Code3\").item.json.name, \n    $if($(\"Code4\").isExecuted, $(\"Code4\").item.json.name, \"\")\n  ) \n}}",
+              "type": "string"
+            },
+            {
+              "id": "2b8e5ad5-51bb-48d9-baca-f84010fdfa66",
+              "name": "Finish time",
+              "value": "={{ (() => { const d = new Date(new Date().toLocaleString(\"en-US\",{ timeZone: \"Asia/Ho_Chi_Minh\"})); const p=n=>n.toString().padStart(2,'0'); return `${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}` })() }}",
+              "type": "string"
+            },
+            {
+              "id": "426e14d3-9f41-4dc8-8f82-886d2601ebd5",
+              "name": "Timestamp",
+              "value": "={{ $json.Timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "a00e4dd4-1a9a-433f-8ef5-9b03da19e1cc",
+              "name": "Process time",
+              "value": "={{\n(() => {\n  // ===== CẤU HÌNH =====\n  const TZ = 'Asia/Ho_Chi_Minh';      // Múi giờ Việt Nam\n  const WS = { h: 8,  m: 15 };        // Giờ bắt đầu làm việc: 08:15\n  const WE = { h: 17, m: 30 };        // Giờ kết thúc làm việc: 17:30\n  const LS = { h: 11, m: 45 };        // Bắt đầu nghỉ trưa: 11:45\n  const LE = { h: 13, m: 0  };        // Kết thúc nghỉ trưa: 13:00\n  const SKIP_SUNDAY = true;           // Bỏ qua Chủ nhật\n\n  // ===== LẤY THỜI GIAN KẾT THÚC (HIỆN TẠI THEO GIỜ VN) =====\n  const finishStr = (() => {\n    const d = new Date(new Date().toLocaleString(\"en-US\", { timeZone: TZ }));\n    const p = n => n.toString().padStart(2,'0');\n    return `${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;\n  })();\n\n  // ===== HÀM PARSE STRING -> DATE THEO \"GIỜ VN\" =====\n  const parseAsVN = (s) => {\n    if (s == null) return NaN;\n    const str = String(s).trim();\n\n    // Nếu là ISO có timezone/Z -> để JS parse\n    if (/T.+(Z|[+\\-]\\d{2}:\\d{2})$/.test(str)) {\n      const d = new Date(str);\n      return isNaN(d) ? NaN : d;\n    }\n\n    // Hỗ trợ \"MM/dd/yyyy HH:mm:ss\" hoặc \"dd/MM/yyyy HH:mm:ss\"\n    const m = str.match(/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4})[ T](\\d{1,2}):(\\d{2}):(\\d{2})$/);\n    if (m) {\n      let [, A, B, Y, H, M, S] = m.map(Number);\n      // Nếu A>12 => coi là dd/MM\n      let MM = A > 12 ? B : A;\n      let DD = A > 12 ? A : B;\n      const iso = `${Y}-${String(MM).padStart(2,'0')}-${String(DD).padStart(2,'0')}T${String(H).padStart(2,'0')}:${String(M).padStart(2,'0')}:${String(S).padStart(2,'0')}+07:00`;\n      const d = new Date(iso);\n      return isNaN(d) ? NaN : d;\n    }\n\n    // Thử parse trực tiếp (trường hợp là ISO không TZ)\n    const d = new Date(str);\n    return isNaN(d) ? NaN : d;\n  };\n\n  // ===== CHUYỂN 1 \"INSTANT\" -> GIỜ TƯỜNG MINH VN (WALL CLOCK) =====\n  const toTZWallClock = (dateLike) => {\n    const d = new Date(dateLike);\n    if (isNaN(d)) return NaN;\n    const fmt = new Intl.DateTimeFormat('en-GB', {\n      timeZone: TZ,\n      year:'numeric', month:'2-digit', day:'2-digit',\n      hour:'2-digit', minute:'2-digit', second:'2-digit',\n      hour12:false\n    });\n    const p = Object.fromEntries(fmt.formatToParts(d).map(x => [x.type, x.value]));\n    return new Date(+p.year, +p.month-1, +p.day, +p.hour, +p.minute, +p.second, 0);\n  };\n\n  // ===== TIỆN ÍCH NGÀY/GIỜ =====\n  const setHM  = (d,h,m)=>{ const x=new Date(d); x.setHours(h,m,0,0); return x; };\n  const addDay = (d,n)=>{ const x=new Date(d); x.setDate(x.getDate()+n); x.setHours(0,0,0,0); return x; };\n\n  // ===== TÍNH GIÂY LÀM VIỆC GIỮA HAI THỜI ĐIỂM (CÓ NGHỈ TRƯA) =====\n  const workingSecondsBetween = (startRaw, endRaw) => {\n    let start = toTZWallClock(startRaw);\n    const end = toTZWallClock(endRaw);\n    if (isNaN(start) || isNaN(end) || start >= end) return 0;\n\n    let sec = 0;\n    let day = new Date(start); day.setHours(0,0,0,0);\n    const last = new Date(end); last.setHours(0,0,0,0);\n\n    while (day <= last) {\n      const isSunday = day.getDay() === 0;\n      if (!(SKIP_SUNDAY && isSunday)) {\n        // Định nghĩa ca sáng & ca chiều\n        const morningStart   = setHM(day, WS.h, WS.m);  // 08:15\n        const morningEnd     = setHM(day, LS.h, LS.m);  // 11:45\n        const afternoonStart = setHM(day, LE.h, LE.m);  // 13:00\n        const afternoonEnd   = setHM(day, WE.h, WE.m);  // 17:30\n\n        const isStartDay = day.toDateString() === start.toDateString();\n        const isEndDay   = day.toDateString() === end.toDateString();\n\n        // Cộng phần giao nhau giữa [segStart, segEnd] với [start,end] (nếu cùng ngày)\n        const addSeg = (segStart, segEnd) => {\n          const realStart = new Date(Math.max(segStart, isStartDay ? start : segStart));\n          const realEnd   = new Date(Math.min(segEnd,   isEndDay   ? end   : segEnd));\n          if (realStart < realEnd) sec += Math.floor((realEnd - realStart)/1000);\n        };\n\n        // Cộng ca sáng và ca chiều (tự động trừ giờ nghỉ trưa)\n        addSeg(morningStart, morningEnd);\n        addSeg(afternoonStart, afternoonEnd);\n      }\n\n      // Sang ngày tiếp theo\n      day = addDay(day, 1);\n      if (day > start) start = setHM(day, WS.h, WS.m); // reset mốc start sang đầu giờ làm việc ngày mới\n    }\n    return sec;\n  };\n\n  // ===== THỰC THI =====\n  const startParsed = parseAsVN($json.Timestamp);   // ép hiểu là giờ VN\n  const endParsed   = parseAsVN(finishStr);         // giờ hiện tại VN (finish)\n  if (isNaN(startParsed) || isNaN(endParsed)) return '0h 0m 0s';\n\n  const totalSec = workingSecondsBetween(startParsed, endParsed);\n\n  // Định dạng kết quả \"Xd Yh Zm Ts\"\n  const d = Math.floor(totalSec / 86400);\n  const h = Math.floor((totalSec % 86400) / 3600);\n  const m = Math.floor((totalSec % 3600) / 60);\n  const s = totalSec % 60;\n\n  return `${d>0 ? d+'d ' : ''}${h}h ${m}m ${s}s`;\n})()\n}}",
+              "type": "string"
+            },
+            {
+              "id": "7ef3dd87-630e-4251-ba99-7a5bef536c15",
+              "name": "theardID",
+              "value": "={{ \n  $if($(\"Code3\").isExecuted, $(\"Code3\").item.json.theardID, \n    $if($(\"Code4\").isExecuted, $(\"Code4\").item.json.theardID, \"\")\n  ) \n}}",
+              "type": "string"
+            },
+            {
+              "id": "b3c4684d-ed45-4aa5-9164-a16905b38a4a",
+              "name": "type",
+              "value": "={{ \n  $if($(\"Code3\").isExecuted, $(\"Code3\").item.json.type, \n    $if($(\"Code4\").isExecuted, $(\"Code4\").item.json.type, \"\")\n  ) \n}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1104,
+        512
+      ],
+      "id": "4538607f-51e6-4903-893a-fb715a5bda1a",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3af87cc4-1176-4d0a-9050-c03f834711db",
+              "name": "answer",
+              "value": "Không tìm thấy ID vui lòng kiểm tra lại",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1104,
+        704
+      ],
+      "id": "71712d5b-e222-40a6-9455-88e6b5fe49d4",
+      "name": "IF ERROR1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "fdfd4e91-0228-4f47-9696-2af5b0509e4f",
+              "leftValue": "={{ $json.ID_Status }}",
+              "rightValue": "Done",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "4bfe94a3-464e-4cf2-892e-3ef33bf47695",
+              "leftValue": "={{ $json.Chat_status }}",
+              "rightValue": "Done",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1328,
+        512
+      ],
+      "id": "b32274ad-adc3-48a2-9a6e-c448c06ef670",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+          "mode": "list",
+          "cachedResultName": "IT HELP DESK",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1979763952,
+          "mode": "list",
+          "cachedResultName": "ADD NEW SUPPLIER",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit#gid=1979763952"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "PIC": "={{ $json.name }}",
+            "STATUS": "={{ $json.Chat_status }}",
+            "FINISH TIME": "={{ $json[\"Finish time\"] }}",
+            "SUPPLIER_ID": "={{ $json.ID }}"
+          },
+          "matchingColumns": [
+            "SUPPLIER_ID"
+          ],
+          "schema": [
+            {
+              "id": "STATUS",
+              "displayName": "STATUS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "USER NAME",
+              "displayName": "USER NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "TEAM",
+              "displayName": "TEAM",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CÔNG TY THUỘC CATALOG TYPE GÌ:",
+              "displayName": "CÔNG TY THUỘC CATALOG TYPE GÌ:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CÔNG TY LÀ TRONG NƯỚC HAY NƯỚC NGOÀI",
+              "displayName": "CÔNG TY LÀ TRONG NƯỚC HAY NƯỚC NGOÀI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "TÊN CÔNG TY",
+              "displayName": "TÊN CÔNG TY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "TÊN VIẾT TẮT",
+              "displayName": "TÊN VIẾT TẮT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ĐỊA CHỈ",
+              "displayName": "ĐỊA CHỈ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "NGƯỜI LIÊN LẠC",
+              "displayName": "NGƯỜI LIÊN LẠC",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "EMAIL",
+              "displayName": "EMAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CURRENCY",
+              "displayName": "CURRENCY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "MÃ SỐ THUẾ CÔNG TY",
+              "displayName": "MÃ SỐ THUẾ CÔNG TY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "THÊM LỜI NHẮN NHỦ VỚI ADMIN",
+              "displayName": "THÊM LỜI NHẮN NHỦ VỚI ADMIN",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "SUPPLIER_ID",
+              "displayName": "SUPPLIER_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "PIC",
+              "displayName": "PIC",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FINISH TIME",
+              "displayName": "FINISH TIME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TYPE",
+              "displayName": "TYPE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1552,
+        416
+      ],
+      "id": "41151fac-90f2-4e9d-b5e9-1885513f61a1",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5815e844-29c7-45d6-ac19-5dc87d60350a",
+              "name": "answer",
+              "value": "={{ $json.SUPPLIER_ID }} đã hoàn thành bởi {{ $json.PIC }} mất {{ $('If2').item.json['Process time'] }} để hoàn thành",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1776,
+        416
+      ],
+      "id": "37b6401d-bf07-4a8f-ba41-d70b9d0b1ab0",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "629ade4b-1cdd-489d-94a4-0dfe3acdf064",
+              "leftValue": "={{ $json.SUPPLIER_ID }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        544
+      ],
+      "id": "112dd971-3e39-4424-8556-1d130b0d5ff7",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $json.theardID }}",
+        "message": "={{ $json.ID }} đã được hoàn thành rồi, vui lòng kiểm tra lại.",
+        "threadType": "={{ $json.type }}",
+        "mentionsParameter": {
+          "mentionValues": [
+            {
+              "uid": "={{ $json.data.uidFrom }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        1552,
+        608
+      ],
+      "id": "6549c1e9-eda7-429f-bd94-f3a008934c65",
+      "name": "Gửi tin nhắn7",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $('Edit Fields4').item.json.theardID }}",
+        "message": "={{ $json.answer }}",
+        "threadType": "={{ $('Edit Fields4').item.json.type }}",
+        "mentionsParameter": {
+          "mentionValues": [
+            {
+              "uid": "={{ $json.data.uidFrom }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        416
+      ],
+      "id": "cd9e4188-81e6-4469-a7f8-eda69b214a67",
+      "name": "Gửi tin nhắn8",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy nội dung tin nhắn và uid người gửi\nconst message = $json.data?.content || '';\nconst quoteMsg = $json.data?.quote?.msg || '';\nconst uidFrom = $json.data?.uidFrom || '';\n\n// Tách từ để lấy status cuối câu\nconst parts = message.trim().split(/\\s+/);\n\n// ✅ Bắt đúng chuỗi ID-**** hoặc SUP-**** trong quoteMsg\nconst codeMatch = quoteMsg.match(/\\b(?:ID|SUP)-[A-Za-z0-9_-]+\\b/i);\nconst ID = codeMatch ? codeMatch[0].toUpperCase() : 'unknown';\n\n// ✅ Giả sử status luôn nằm ở cuối chuỗi content\nconst statusRaw = parts[parts.length - 1] || '';\nconst cleanedStatus = statusRaw.replace(/[.,;:!?]+$/g, ''); // bỏ dấu câu cuối\nconst doneSynonyms = ['done', 'xong'];\nlet status = 'unknown';\nif (cleanedStatus) {\n  const normalized = cleanedStatus.toLowerCase();\n  status = doneSynonyms.includes(normalized)\n    ? 'Done'\n    : normalized.charAt(0).toUpperCase() + normalized.slice(1);\n}\n\nconst theardID = $json.threadId;   // giữ nguyên tên biến như bạn đang dùng\nconst type = $json.type;\n\n// Danh sách tên cho phép\nconst allowedNames = [\"Tùng\", \"Xuân\", \"Phương\"];\n\n// 🔎 Tìm tên trong message (loại ký tự lạ ở đầu/cuối từ trước khi so)\nlet nameFromMessage = null;\nfor (const w of parts) {\n  const word = w.replace(/^[^A-Za-zÀ-ỹ]+|[^A-Za-zÀ-ỹ]+$/gi, '');\n  if (allowedNames.includes(word)) {\n    nameFromMessage = word;\n    break;\n  }\n}\n\n// Map uidFrom → name (fallback)\nconst nameMap = {\n  \"9150902062671965622\": \"Tùng\",\n  \"2091898082743203663\": \"Xuân\",\n  \"3266757489410168093\": \"Phương\"\n};\n\nconst name = nameFromMessage || nameMap[uidFrom] || 'unknown';\n\n// Trả kết quả\nreturn [\n  {\n    json: {\n      ID,\n      status,\n      name,\n      theardID,\n      type\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        384
+      ],
+      "id": "dee1b718-9c92-4648-b3e7-15b97062403a",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ /ID-\\d+/i.test($json.ID) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "4bc80561-71d6-441e-8c58-c33a97040b9d"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "be4b73e3-f789-4fda-896d-696a686aa646",
+                    "leftValue": "={{ /SUP-\\d+/i.test($json.ID) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        432,
+        384
+      ],
+      "id": "d6b2dd87-cd2b-4c85-8653-8d0248dc8c39",
+      "name": "Switch4"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "hkWDdyzZ3C1RV4XT"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-26T08:09:23.434Z",
+      "createdAt": "2025-08-26T08:09:23.434Z",
+      "role": "workflow:owner",
+      "workflowId": "012mOIo2ynbtnnOc",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-10-04T07:10:58.088Z",
+  "versionId": "0722011f-0dbb-4724-9884-b828fe46cb6c"
+}
