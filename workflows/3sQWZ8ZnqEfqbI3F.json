@@ -1,0 +1,2252 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-04T16:55:08.431Z",
+    "createdAt": "2025-12-04T16:55:08.431Z",
+    "versionId": "451560f6-0a3a-4d4e-a906-1e68bb73080c",
+    "workflowId": "3sQWZ8ZnqEfqbI3F",
+    "nodes": [
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ba8b259c-2864-4e70-ad61-915b23e91d74",
+                "name": "Name",
+                "value": "={{ $json.data.dName }}",
+                "type": "string"
+              },
+              {
+                "id": "ed31ebd5-9ebd-4850-8150-b1d28dd76141",
+                "name": "content",
+                "value": "={{ $json.data.content }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          416,
+          240
+        ],
+        "id": "9faa7e15-61da-41d7-9483-6c155a86bb25",
+        "name": "parser text"
+      },
+      {
+        "parameters": {
+          "operation": "sendPhoto",
+          "chatId": "-4755652985",
+          "file": "={{ $json.link }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          416,
+          624
+        ],
+        "id": "9b0dc11f-d67a-487a-a43a-83ecb169d78b",
+        "name": "send_photo",
+        "webhookId": "b59114c4-6480-4b52-ba68-4f17cbd8f4c4",
+        "retryOnFail": true,
+        "credentials": {
+          "telegramApi": {
+            "id": "5KNkhdEfvJfjBw6P",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ba8b259c-2864-4e70-ad61-915b23e91d74",
+                "name": "Name",
+                "value": "={{ $json.data.dName }}",
+                "type": "string"
+              },
+              {
+                "id": "ed31ebd5-9ebd-4850-8150-b1d28dd76141",
+                "name": "content",
+                "value": "={{ $json.data.title }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          416,
+          432
+        ],
+        "id": "3de76817-6784-49cb-b226-e2ba42987569",
+        "name": "parser text1"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ba8b259c-2864-4e70-ad61-915b23e91d74",
+                "name": "Name",
+                "value": "={{ $json.data.dName }}",
+                "type": "string"
+              },
+              {
+                "id": "ed31ebd5-9ebd-4850-8150-b1d28dd76141",
+                "name": "content",
+                "value": "={{ $json.title }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          416,
+          816
+        ],
+        "id": "fe1982ab-b8df-4f37-a709-e6c4cf6af0d3",
+        "name": "parser text2"
+      },
+      {
+        "parameters": {
+          "chatId": "-4755652985",
+          "text": "={{ $('Edit Fields').item.json.groupName ? 'Group: ' + $('Edit Fields').item.json.groupName + ' / ' : '' }}{{ $json.Name }}: {{ $json.content }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          640,
+          240
+        ],
+        "id": "9fa2d8eb-f7b9-465f-8964-6d1ab6aef3fc",
+        "name": "send_chat",
+        "webhookId": "c619ecf5-13b2-4296-a0d9-469aed172bdd",
+        "retryOnFail": true,
+        "credentials": {
+          "telegramApi": {
+            "id": "5KNkhdEfvJfjBw6P",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "-4755652985",
+          "text": "={{ $('Edit Fields').item.json.groupName ? 'Group: ' + $('Edit Fields').item.json.groupName + ' / ' : '' }}{{ $json.Name }}: {{ $json.content }}",
+          "additionalFields": {
+            "appendAttribution": false,
+            "parse_mode": "HTML"
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          640,
+          432
+        ],
+        "id": "1cbce7bd-16e0-4e9c-8e61-3b81e5e03b10",
+        "name": "send_text_photo",
+        "webhookId": "c619ecf5-13b2-4296-a0d9-469aed172bdd",
+        "retryOnFail": true,
+        "credentials": {
+          "telegramApi": {
+            "id": "5KNkhdEfvJfjBw6P",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "-4755652985",
+          "text": "={{ $('Edit Fields').item.json.groupName ? 'Group: ' + $('Edit Fields').item.json.groupName + ' / ' : '' }}{{ $json.Name }}: {{ $json.content }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          640,
+          816
+        ],
+        "id": "c3be23ab-3ff5-430f-8f98-92168bef43f5",
+        "name": "send-link",
+        "webhookId": "c619ecf5-13b2-4296-a0d9-469aed172bdd",
+        "retryOnFail": true,
+        "credentials": {
+          "telegramApi": {
+            "id": "5KNkhdEfvJfjBw6P",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ba8b259c-2864-4e70-ad61-915b23e91d74",
+                "name": "Name",
+                "value": "={{ $json.data.dName }}",
+                "type": "string"
+              },
+              {
+                "id": "ed31ebd5-9ebd-4850-8150-b1d28dd76141",
+                "name": "content",
+                "value": "={{ $json.link }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          416,
+          1008
+        ],
+        "id": "57ac2e61-19ca-4b97-90b6-a14bd2b352b5",
+        "name": "parser text4"
+      },
+      {
+        "parameters": {
+          "operation": "sendDocument",
+          "chatId": "-4755652985",
+          "binaryData": true,
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          864,
+          1008
+        ],
+        "id": "230dcee4-53c7-4f19-adad-3012e20030c9",
+        "name": "send_file",
+        "webhookId": "c619ecf5-13b2-4296-a0d9-469aed172bdd",
+        "retryOnFail": true,
+        "credentials": {
+          "telegramApi": {
+            "id": "5KNkhdEfvJfjBw6P",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.data.msgType }}",
+                      "rightValue": "webchat",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "df7020ce-6c12-4446-b5c0-8f6c24e62127"
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "cc6c6754-b520-480e-9e3f-14363f31167d",
+                      "leftValue": "={{ $json.data.msgType }}",
+                      "rightValue": "chat.photo",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "9f8f970d-9265-4e17-a2fb-3e8031dea125",
+                      "leftValue": "={{ $json.data.msgType }}",
+                      "rightValue": "chat.recommended",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "30236288-2ea4-4b61-ac47-7ab3bc2555a8",
+                      "leftValue": "={{ $json.data.msgType }}",
+                      "rightValue": "chat.video.msg",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "f6d6afe4-fa38-424e-a6c5-62666ac36f40",
+                      "leftValue": "={{ $json.data.msgType }}",
+                      "rightValue": "share.file",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          192,
+          576
+        ],
+        "id": "c5bc81b8-d151-4662-b983-10627712f4e0",
+        "name": "Switch1"
+      },
+      {
+        "parameters": {
+          "blockedThreadIds": " 8365915651230947130,1703026374833278849,3356568035487383735,1008461986430470621,7811985118292229962,7993766210314386380,6017536463820581793,"
+        },
+        "type": "n8n-nodes-social-zalo.zaloUser",
+        "typeVersion": 1,
+        "position": [
+          -1152,
+          240
+        ],
+        "id": "b4dcd6db-f030-4e3e-ad6c-8b2d151d92e2",
+        "name": "Zalo Event Trigger",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "gfZNfo551orsNMqh",
+            "name": "Zalo Xuân Nguyễn - 2025-08-27T07:02:15.037Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "6853afcb-40fa-4389-8f23-8493ab76e5e4",
+                "name": "type",
+                "value": "={{ $json.type }}",
+                "type": "number"
+              },
+              {
+                "id": "b41a522a-d04d-4d3b-8f82-44c766f0c5de",
+                "name": "data.msgType",
+                "value": "={{ $json.data.msgType }}",
+                "type": "string"
+              },
+              {
+                "id": "81e3366a-fa82-4a3e-aa1d-f9ad52eba3ed",
+                "name": "userId",
+                "value": "={{ $json.data.uidFrom }}",
+                "type": "string"
+              },
+              {
+                "id": "89edb219-ed56-4469-b0af-c7b1b2452b57",
+                "name": "data.dName",
+                "value": "={{ $json.data.dName }}",
+                "type": "string"
+              },
+              {
+                "id": "fdfd6db4-5717-488a-9a91-d86a88d4401f",
+                "name": "data.content",
+                "value": "={{ \n(() => { \n  try { \n    const c = typeof $json.data.content === 'object' ? $json.data.content : JSON.parse($json.data.content); \n    return c.title && c.title.trim() !== '' ? c.title : (c.href || ''); \n  } catch(e) { \n    return $json.data.content; \n  } \n})() \n}}",
+                "type": "string"
+              },
+              {
+                "id": "3701f84e-4d1a-4710-8938-84ef703a3e39",
+                "name": "threadId",
+                "value": "={{ $json.threadId }}",
+                "type": "string"
+              },
+              {
+                "id": "ef9b9699-b0fe-423c-bfe3-1cae31788909",
+                "name": "link",
+                "value": "={{ $json.data.content.href }}",
+                "type": "string"
+              },
+              {
+                "id": "751b2156-3409-4175-81ef-5e79cca8545c",
+                "name": "title",
+                "value": "={{ $json.data.content.title }}",
+                "type": "string"
+              },
+              {
+                "id": "7fc2741b-d64c-4999-a5e7-1b9d9685d9a4",
+                "name": "groupName",
+                "value": "={{ $json.groupName }}",
+                "type": "string"
+              },
+              {
+                "id": "a5f3c17d-801d-4445-829e-3871956907a0",
+                "name": "timestamps",
+                "value": "={{ (() => { const d = new Date(new Date().toLocaleString(\"en-US\",{ timeZone: \"Asia/Ho_Chi_Minh\"})); const p=n=>n.toString().padStart(2,'0'); return `${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}` })() }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -32,
+          320
+        ],
+        "id": "2c816101-f6be-4738-ad93-2a9cbc6ae07f",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.content }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          640,
+          1008
+        ],
+        "id": "7577479e-0167-4017-90dc-be1410af8254",
+        "name": "HTTP Request1"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "7044f054-ba9f-4924-af9e-6352212b888e",
+                "leftValue": "={{ $json.type }}",
+                "rightValue": 1,
+                "operator": {
+                  "type": "number",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -928,
+          320
+        ],
+        "id": "b3c31d64-d6ff-44eb-a470-6f9f059327ba",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "resource": "get",
+          "operation": "getGroupInfo",
+          "groupIdsParameter": {
+            "groupIdValues": [
+              {
+                "groupId": "={{ $json.threadId }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          -704,
+          384
+        ],
+        "id": "b45337c2-e527-48aa-8a2e-807102fc120a",
+        "name": "Lấy thông tin nhóm",
+        "retryOnFail": true,
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "gfZNfo551orsNMqh",
+            "name": "Zalo Xuân Nguyễn - 2025-08-27T07:02:15.037Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "4a29f439-80d5-4247-9e86-24af8340212f",
+                "name": "groupName",
+                "value": "={{ $json.response.gridInfoMap[$json.response.gridInfoMap[Object.keys($json.response.gridInfoMap)[0]].groupId].name }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -480,
+          384
+        ],
+        "id": "83f96cd1-09e0-459e-bf4e-a8598c09b33e",
+        "name": "Edit Fields2"
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "combineBy": "combineByPosition",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          -256,
+          320
+        ],
+        "id": "f6a3b4bf-ad15-47d2-9c0e-2324ae1f5808",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "17lCZJyYNlAQsTtycaOSXy0ljlgiWcEPL2DAH1J8BU9Y",
+            "mode": "list",
+            "cachedResultName": "ZALO SAVE DATA",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17lCZJyYNlAQsTtycaOSXy0ljlgiWcEPL2DAH1J8BU9Y/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "DATA",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17lCZJyYNlAQsTtycaOSXy0ljlgiWcEPL2DAH1J8BU9Y/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Timestamps": "={{ $json.timestamps }}",
+              "type": "={{ $json.type }}",
+              "data.msgType": "={{ $json.data.msgType }}",
+              "userId": "={{ $json.userId }}",
+              "UserName": "={{ $json.data.dName }}",
+              "data.content": "={{ $json.data.content }}",
+              "threadId": "={{ $json.threadId }}",
+              "link": "={{ $json.link }}",
+              "groupName": "={{ $json.groupName }}",
+              "title": "={{ $json.title }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Timestamps",
+                "displayName": "Timestamps",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "type",
+                "displayName": "type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "data.msgType",
+                "displayName": "data.msgType",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "groupName",
+                "displayName": "groupName",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "userId",
+                "displayName": "userId",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "UserName",
+                "displayName": "UserName",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "data.content",
+                "displayName": "data.content",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "threadId",
+                "displayName": "threadId",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "link",
+                "displayName": "link",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "title",
+                "displayName": "title",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          416,
+          48
+        ],
+        "id": "9ad3736a-1fe8-4660-ac41-cfd5c25f7032",
+        "name": "Append row in sheet",
+        "retryOnFail": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "X1UBt5tMcyjhPYqy",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "22ccee70-85a7-4a0b-b7e6-247ef4ae37da",
+                "leftValue": "={{ $json.data.msgType }}",
+                "rightValue": "chat.sticker",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              },
+              {
+                "id": "a509faf1-7523-4797-8a5e-cdc3aee32696",
+                "leftValue": "={{ $json.data.msgType }}",
+                "rightValue": "group.poll",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "or"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          192,
+          -48
+        ],
+        "id": "4785ba3b-19d9-4928-bc29-2ab16235dd4b",
+        "name": "If1"
+      },
+      {
+        "parameters": {
+          "dataTableId": {
+            "__rl": true,
+            "value": "lk0Wcpv5AjLDnfww",
+            "mode": "list",
+            "cachedResultName": "ZALO CHAT SAVE",
+            "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/lk0Wcpv5AjLDnfww"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "type": "={{ $json.type }}",
+              "msgType": "={{ $json.data.msgType }}",
+              "groupName": "={{ $json.groupName }}",
+              "userId": "={{ $json.userId }}",
+              "UserName": "={{ $json.data.dName }}",
+              "content": "={{ $json.data.content }}",
+              "threadId": "={{ $json.threadId }}",
+              "link": "={{ $json.link }}",
+              "title": "={{ $json.title }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "type",
+                "displayName": "type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "msgType",
+                "displayName": "msgType",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "groupName",
+                "displayName": "groupName",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "userId",
+                "displayName": "userId",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "UserName",
+                "displayName": "UserName",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "content",
+                "displayName": "content",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "threadId",
+                "displayName": "threadId",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "link",
+                "displayName": "link",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "title",
+                "displayName": "title",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.dataTable",
+        "typeVersion": 1,
+        "position": [
+          416,
+          -144
+        ],
+        "id": "d1f4672e-6e5c-488a-af31-289ee4a67803",
+        "name": "Insert row"
+      }
+    ],
+    "connections": {
+      "parser text": {
+        "main": [
+          [
+            {
+              "node": "send_chat",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "send_photo": {
+        "main": [
+          []
+        ]
+      },
+      "parser text1": {
+        "main": [
+          [
+            {
+              "node": "send_text_photo",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "parser text2": {
+        "main": [
+          [
+            {
+              "node": "send-link",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "parser text4": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch1": {
+        "main": [
+          [
+            {
+              "node": "parser text",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "parser text1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "send_photo",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "parser text2",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "parser text4",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "parser text4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Zalo Event Trigger": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Switch1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "If1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request1": {
+        "main": [
+          [
+            {
+              "node": "send_file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Lấy thông tin nhóm",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Lấy thông tin nhóm": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields2": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If1": {
+        "main": [
+          [],
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Insert row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "451560f6-0a3a-4d4e-a906-1e68bb73080c",
+  "connections": {
+    "parser text": {
+      "main": [
+        [
+          {
+            "node": "send_chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_photo": {
+      "main": [
+        []
+      ]
+    },
+    "parser text1": {
+      "main": [
+        [
+          {
+            "node": "send_text_photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parser text2": {
+      "main": [
+        [
+          {
+            "node": "send-link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "parser text4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "parser text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "parser text1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "send_photo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "parser text2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "parser text4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "parser text4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zalo Event Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "send_file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Lấy thông tin nhóm",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Lấy thông tin nhóm": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-27T07:02:02.437Z",
+  "id": "3sQWZ8ZnqEfqbI3F",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "XUAN ZALO SAVED DATA",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ba8b259c-2864-4e70-ad61-915b23e91d74",
+              "name": "Name",
+              "value": "={{ $json.data.dName }}",
+              "type": "string"
+            },
+            {
+              "id": "ed31ebd5-9ebd-4850-8150-b1d28dd76141",
+              "name": "content",
+              "value": "={{ $json.data.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        240
+      ],
+      "id": "9faa7e15-61da-41d7-9483-6c155a86bb25",
+      "name": "parser text"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "-4755652985",
+        "file": "={{ $json.link }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        624
+      ],
+      "id": "9b0dc11f-d67a-487a-a43a-83ecb169d78b",
+      "name": "send_photo",
+      "webhookId": "b59114c4-6480-4b52-ba68-4f17cbd8f4c4",
+      "retryOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "5KNkhdEfvJfjBw6P",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ba8b259c-2864-4e70-ad61-915b23e91d74",
+              "name": "Name",
+              "value": "={{ $json.data.dName }}",
+              "type": "string"
+            },
+            {
+              "id": "ed31ebd5-9ebd-4850-8150-b1d28dd76141",
+              "name": "content",
+              "value": "={{ $json.data.title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        432
+      ],
+      "id": "3de76817-6784-49cb-b226-e2ba42987569",
+      "name": "parser text1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ba8b259c-2864-4e70-ad61-915b23e91d74",
+              "name": "Name",
+              "value": "={{ $json.data.dName }}",
+              "type": "string"
+            },
+            {
+              "id": "ed31ebd5-9ebd-4850-8150-b1d28dd76141",
+              "name": "content",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        816
+      ],
+      "id": "fe1982ab-b8df-4f37-a709-e6c4cf6af0d3",
+      "name": "parser text2"
+    },
+    {
+      "parameters": {
+        "chatId": "-4755652985",
+        "text": "={{ $('Edit Fields').item.json.groupName ? 'Group: ' + $('Edit Fields').item.json.groupName + ' / ' : '' }}{{ $json.Name }}: {{ $json.content }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        240
+      ],
+      "id": "9fa2d8eb-f7b9-465f-8964-6d1ab6aef3fc",
+      "name": "send_chat",
+      "webhookId": "c619ecf5-13b2-4296-a0d9-469aed172bdd",
+      "retryOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "5KNkhdEfvJfjBw6P",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "-4755652985",
+        "text": "={{ $('Edit Fields').item.json.groupName ? 'Group: ' + $('Edit Fields').item.json.groupName + ' / ' : '' }}{{ $json.Name }}: {{ $json.content }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        432
+      ],
+      "id": "1cbce7bd-16e0-4e9c-8e61-3b81e5e03b10",
+      "name": "send_text_photo",
+      "webhookId": "c619ecf5-13b2-4296-a0d9-469aed172bdd",
+      "retryOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "5KNkhdEfvJfjBw6P",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "-4755652985",
+        "text": "={{ $('Edit Fields').item.json.groupName ? 'Group: ' + $('Edit Fields').item.json.groupName + ' / ' : '' }}{{ $json.Name }}: {{ $json.content }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        816
+      ],
+      "id": "c3be23ab-3ff5-430f-8f98-92168bef43f5",
+      "name": "send-link",
+      "webhookId": "c619ecf5-13b2-4296-a0d9-469aed172bdd",
+      "retryOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "5KNkhdEfvJfjBw6P",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ba8b259c-2864-4e70-ad61-915b23e91d74",
+              "name": "Name",
+              "value": "={{ $json.data.dName }}",
+              "type": "string"
+            },
+            {
+              "id": "ed31ebd5-9ebd-4850-8150-b1d28dd76141",
+              "name": "content",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        1008
+      ],
+      "id": "57ac2e61-19ca-4b97-90b6-a14bd2b352b5",
+      "name": "parser text4"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "-4755652985",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        864,
+        1008
+      ],
+      "id": "230dcee4-53c7-4f19-adad-3012e20030c9",
+      "name": "send_file",
+      "webhookId": "c619ecf5-13b2-4296-a0d9-469aed172bdd",
+      "retryOnFail": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "5KNkhdEfvJfjBw6P",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "webchat",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "df7020ce-6c12-4446-b5c0-8f6c24e62127"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cc6c6754-b520-480e-9e3f-14363f31167d",
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "chat.photo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9f8f970d-9265-4e17-a2fb-3e8031dea125",
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "chat.recommended",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "30236288-2ea4-4b61-ac47-7ab3bc2555a8",
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "chat.video.msg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f6d6afe4-fa38-424e-a6c5-62666ac36f40",
+                    "leftValue": "={{ $json.data.msgType }}",
+                    "rightValue": "share.file",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        192,
+        576
+      ],
+      "id": "c5bc81b8-d151-4662-b983-10627712f4e0",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "blockedThreadIds": " 8365915651230947130,1703026374833278849,3356568035487383735,1008461986430470621,7811985118292229962,7993766210314386380,6017536463820581793,"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUser",
+      "typeVersion": 1,
+      "position": [
+        -1152,
+        240
+      ],
+      "id": "b4dcd6db-f030-4e3e-ad6c-8b2d151d92e2",
+      "name": "Zalo Event Trigger",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "gfZNfo551orsNMqh",
+          "name": "Zalo Xuân Nguyễn - 2025-08-27T07:02:15.037Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6853afcb-40fa-4389-8f23-8493ab76e5e4",
+              "name": "type",
+              "value": "={{ $json.type }}",
+              "type": "number"
+            },
+            {
+              "id": "b41a522a-d04d-4d3b-8f82-44c766f0c5de",
+              "name": "data.msgType",
+              "value": "={{ $json.data.msgType }}",
+              "type": "string"
+            },
+            {
+              "id": "81e3366a-fa82-4a3e-aa1d-f9ad52eba3ed",
+              "name": "userId",
+              "value": "={{ $json.data.uidFrom }}",
+              "type": "string"
+            },
+            {
+              "id": "89edb219-ed56-4469-b0af-c7b1b2452b57",
+              "name": "data.dName",
+              "value": "={{ $json.data.dName }}",
+              "type": "string"
+            },
+            {
+              "id": "fdfd6db4-5717-488a-9a91-d86a88d4401f",
+              "name": "data.content",
+              "value": "={{ \n(() => { \n  try { \n    const c = typeof $json.data.content === 'object' ? $json.data.content : JSON.parse($json.data.content); \n    return c.title && c.title.trim() !== '' ? c.title : (c.href || ''); \n  } catch(e) { \n    return $json.data.content; \n  } \n})() \n}}",
+              "type": "string"
+            },
+            {
+              "id": "3701f84e-4d1a-4710-8938-84ef703a3e39",
+              "name": "threadId",
+              "value": "={{ $json.threadId }}",
+              "type": "string"
+            },
+            {
+              "id": "ef9b9699-b0fe-423c-bfe3-1cae31788909",
+              "name": "link",
+              "value": "={{ $json.data.content.href }}",
+              "type": "string"
+            },
+            {
+              "id": "751b2156-3409-4175-81ef-5e79cca8545c",
+              "name": "title",
+              "value": "={{ $json.data.content.title }}",
+              "type": "string"
+            },
+            {
+              "id": "7fc2741b-d64c-4999-a5e7-1b9d9685d9a4",
+              "name": "groupName",
+              "value": "={{ $json.groupName }}",
+              "type": "string"
+            },
+            {
+              "id": "a5f3c17d-801d-4445-829e-3871956907a0",
+              "name": "timestamps",
+              "value": "={{ (() => { const d = new Date(new Date().toLocaleString(\"en-US\",{ timeZone: \"Asia/Ho_Chi_Minh\"})); const p=n=>n.toString().padStart(2,'0'); return `${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}` })() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        320
+      ],
+      "id": "2c816101-f6be-4738-ad93-2a9cbc6ae07f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        640,
+        1008
+      ],
+      "id": "7577479e-0167-4017-90dc-be1410af8254",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7044f054-ba9f-4924-af9e-6352212b888e",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -928,
+        320
+      ],
+      "id": "b3c31d64-d6ff-44eb-a470-6f9f059327ba",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "get",
+        "operation": "getGroupInfo",
+        "groupIdsParameter": {
+          "groupIdValues": [
+            {
+              "groupId": "={{ $json.threadId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        384
+      ],
+      "id": "b45337c2-e527-48aa-8a2e-807102fc120a",
+      "name": "Lấy thông tin nhóm",
+      "retryOnFail": true,
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "gfZNfo551orsNMqh",
+          "name": "Zalo Xuân Nguyễn - 2025-08-27T07:02:15.037Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4a29f439-80d5-4247-9e86-24af8340212f",
+              "name": "groupName",
+              "value": "={{ $json.response.gridInfoMap[$json.response.gridInfoMap[Object.keys($json.response.gridInfoMap)[0]].groupId].name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        384
+      ],
+      "id": "83f96cd1-09e0-459e-bf4e-a8598c09b33e",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -256,
+        320
+      ],
+      "id": "f6a3b4bf-ad15-47d2-9c0e-2324ae1f5808",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "17lCZJyYNlAQsTtycaOSXy0ljlgiWcEPL2DAH1J8BU9Y",
+          "mode": "list",
+          "cachedResultName": "ZALO SAVE DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17lCZJyYNlAQsTtycaOSXy0ljlgiWcEPL2DAH1J8BU9Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "DATA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17lCZJyYNlAQsTtycaOSXy0ljlgiWcEPL2DAH1J8BU9Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamps": "={{ $json.timestamps }}",
+            "type": "={{ $json.type }}",
+            "data.msgType": "={{ $json.data.msgType }}",
+            "userId": "={{ $json.userId }}",
+            "UserName": "={{ $json.data.dName }}",
+            "data.content": "={{ $json.data.content }}",
+            "threadId": "={{ $json.threadId }}",
+            "link": "={{ $json.link }}",
+            "groupName": "={{ $json.groupName }}",
+            "title": "={{ $json.title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamps",
+              "displayName": "Timestamps",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data.msgType",
+              "displayName": "data.msgType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "groupName",
+              "displayName": "groupName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "UserName",
+              "displayName": "UserName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data.content",
+              "displayName": "data.content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "threadId",
+              "displayName": "threadId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        48
+      ],
+      "id": "9ad3736a-1fe8-4660-ac41-cfd5c25f7032",
+      "name": "Append row in sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "22ccee70-85a7-4a0b-b7e6-247ef4ae37da",
+              "leftValue": "={{ $json.data.msgType }}",
+              "rightValue": "chat.sticker",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "a509faf1-7523-4797-8a5e-cdc3aee32696",
+              "leftValue": "={{ $json.data.msgType }}",
+              "rightValue": "group.poll",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        192,
+        -48
+      ],
+      "id": "4785ba3b-19d9-4928-bc29-2ab16235dd4b",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "lk0Wcpv5AjLDnfww",
+          "mode": "list",
+          "cachedResultName": "ZALO CHAT SAVE",
+          "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/lk0Wcpv5AjLDnfww"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "type": "={{ $json.type }}",
+            "msgType": "={{ $json.data.msgType }}",
+            "groupName": "={{ $json.groupName }}",
+            "userId": "={{ $json.userId }}",
+            "UserName": "={{ $json.data.dName }}",
+            "content": "={{ $json.data.content }}",
+            "threadId": "={{ $json.threadId }}",
+            "link": "={{ $json.link }}",
+            "title": "={{ $json.title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "msgType",
+              "displayName": "msgType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "groupName",
+              "displayName": "groupName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "UserName",
+              "displayName": "UserName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "threadId",
+              "displayName": "threadId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        416,
+        -144
+      ],
+      "id": "d1f4672e-6e5c-488a-af31-289ee4a67803",
+      "name": "Insert row"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-27T07:02:02.437Z",
+      "createdAt": "2025-08-27T07:02:02.437Z",
+      "role": "workflow:owner",
+      "workflowId": "3sQWZ8ZnqEfqbI3F",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-18T17:00:02.864Z",
+  "versionId": "451560f6-0a3a-4d4e-a906-1e68bb73080c"
+}
