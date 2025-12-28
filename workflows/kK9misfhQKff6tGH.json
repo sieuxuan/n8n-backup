@@ -1,0 +1,242 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-18T18:25:40.136Z",
+    "createdAt": "2025-12-18T18:25:40.136Z",
+    "versionId": "bf91dd17-1b07-491e-87d3-09c3880fbbd2",
+    "workflowId": "kK9misfhQKff6tGH",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -224,
+          -256
+        ],
+        "id": "d267cdec-00bb-43b7-83a0-5f282858c146",
+        "name": "When clicking ‘Execute workflow’",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -224,
+          -32
+        ],
+        "id": "59c06325-5156-4b31-afdd-d7e4b88b8125",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "resource": "report",
+          "operation": "exportToFile",
+          "groupId": "me",
+          "reportId": "7a549119-651a-42f2-b589-7321eb564331",
+          "downloadFile": true,
+          "additionalFields": {},
+          "powerBIReportConfig": {}
+        },
+        "type": "n8n-nodes-powerbi.powerBi",
+        "typeVersion": 1,
+        "position": [
+          -16,
+          -32
+        ],
+        "id": "57684e04-20e8-4e9a-a688-8fbcba255366",
+        "name": "Export report to file",
+        "credentials": {
+          "powerBiApiOAuth2Api": {
+            "id": "HBFEK4Ickndib4OC",
+            "name": "Power BI account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "toImage",
+          "dpi": 300,
+          "pageRanges": "1"
+        },
+        "type": "@prokodo/n8n-nodes-pdf-toolkit.prokodoPdfToolkit",
+        "typeVersion": 1,
+        "position": [
+          192,
+          -32
+        ],
+        "id": "9edc9146-45df-4e41-ac89-1f4f9320ab77",
+        "name": "PDF Toolkit"
+      }
+    ],
+    "connections": {
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Export report to file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Export report to file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Export report to file": {
+        "main": [
+          [
+            {
+              "node": "PDF Toolkit",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "bf91dd17-1b07-491e-87d3-09c3880fbbd2",
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Export report to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Export report to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Export report to file": {
+      "main": [
+        [
+          {
+            "node": "PDF Toolkit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-10-27T07:00:28.612Z",
+  "id": "kK9misfhQKff6tGH",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        -256
+      ],
+      "id": "d267cdec-00bb-43b7-83a0-5f282858c146",
+      "name": "When clicking ‘Execute workflow’",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -224,
+        -32
+      ],
+      "id": "59c06325-5156-4b31-afdd-d7e4b88b8125",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "report",
+        "operation": "exportToFile",
+        "groupId": "me",
+        "reportId": "7a549119-651a-42f2-b589-7321eb564331",
+        "downloadFile": true,
+        "additionalFields": {},
+        "powerBIReportConfig": {}
+      },
+      "type": "n8n-nodes-powerbi.powerBi",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        -32
+      ],
+      "id": "57684e04-20e8-4e9a-a688-8fbcba255366",
+      "name": "Export report to file",
+      "credentials": {
+        "powerBiApiOAuth2Api": {
+          "id": "HBFEK4Ickndib4OC",
+          "name": "Power BI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toImage",
+        "dpi": 300,
+        "pageRanges": "1"
+      },
+      "type": "@prokodo/n8n-nodes-pdf-toolkit.prokodoPdfToolkit",
+      "typeVersion": 1,
+      "position": [
+        192,
+        -32
+      ],
+      "id": "9edc9146-45df-4e41-ac89-1f4f9320ab77",
+      "name": "PDF Toolkit"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-10-27T07:00:28.612Z",
+      "createdAt": "2025-10-27T07:00:28.612Z",
+      "role": "workflow:owner",
+      "workflowId": "kK9misfhQKff6tGH",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-11-17T10:46:25.777Z",
+  "versionId": "bf91dd17-1b07-491e-87d3-09c3880fbbd2"
+}
