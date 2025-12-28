@@ -1,0 +1,395 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-09T16:15:49.817Z",
+    "createdAt": "2025-12-09T16:15:49.817Z",
+    "versionId": "fd0b2284-25b6-4b93-a7a4-dbf4616ece63",
+    "workflowId": "kPmmeLbNiEIzq4lJ",
+    "nodes": [
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          0,
+          -96
+        ],
+        "id": "43e8a583-8cc6-40f5-91e2-2e1018d33615",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "unit": "minutes"
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          224,
+          -96
+        ],
+        "id": "0baac808-5422-4e88-ae89-57a011480d84",
+        "name": "Wait",
+        "webhookId": "c3e882f7-6ad0-4ed2-aac5-29f2bda8abbe"
+      },
+      {
+        "parameters": {
+          "command": "=cd /data/shared/WFX_TOOL && /opt/venv/bin/python runner.py --mode ON --type {{ $('Wait').item.json.type }}"
+        },
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [
+          528,
+          -96
+        ],
+        "id": "22c6a49d-fb4d-472f-8747-da9fbb1feba4",
+        "name": "Execute Command1",
+        "retryOnFail": true,
+        "alwaysOutputData": false,
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "jsCode": "const typ = $('When Executed by Another Workflow').first().json.type;\nconst name = $('When Executed by Another Workflow').first().json.Name || \"\";\nconst threadId = $('When Executed by Another Workflow').first().json.threadId || $json.uidFrom || \"\";\n\nconst onStdout = ($input.first().json.stdout || \"\").toString();\nconst onExitCode = Number($input.first().json.exitCode ?? 1);\n\n// lấy FINAL line nếu có\nfunction pickFinalLine(text) {\n  const lines = (text || \"\").split(/\\r?\\n/).map(s => s.trim()).filter(Boolean);\n  for (let i = lines.length - 1; i >= 0; i--) {\n    if (/^FINAL\\s*:/i.test(lines[i])) return lines[i];\n  }\n  return \"\";\n}\n\nconst finalLine = pickFinalLine(onStdout);\nconst ok = onExitCode === 0;\n\nlet msg;\nif (ok) {\n  msg =\n`✅ Hệ thống đã tự ON lại ${typ} do sau 5 phút chưa bật lại.`;\n} else {\n  msg =\n`❌ Không thể tự ON lại ${typ}.\n${finalLine ? `Kết quả: ${finalLine.replace(/^FINAL:\\s*/i,\"\")}` : `exitCode=${onExitCode}`}`;\n}\n\nreturn [{\n  threadId,\n  typechat: $json.typechat ?? 0,\n  ok,\n  answer: msg,\n}];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1120,
+          -96
+        ],
+        "id": "025d4cf2-c6b6-4492-8983-c7f69d43e324",
+        "name": "Code in JavaScript1"
+      },
+      {
+        "parameters": {
+          "threadId": "={{ $('When Executed by Another Workflow').item.json.threadId }}",
+          "message": "={{ $json.answer }}",
+          "threadType": "={{ $('When Executed by Another Workflow').item.json.typechat }}"
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          1328,
+          -96
+        ],
+        "id": "0e8b1f39-2c50-4e52-bb7f-2c668cd90c36",
+        "name": "Gửi tin nhắn",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "6c1df083-e7b0-4267-98d6-dd6462001821",
+                "leftValue": "={{ $json.stdout }}",
+                "rightValue": "ALREADY",
+                "operator": {
+                  "type": "string",
+                  "operation": "contains"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          848,
+          -112
+        ],
+        "id": "fc3cf71f-0932-4b5a-ae2f-bd4df7e11e1f",
+        "name": "If1"
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "Execute Command1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute Command1": {
+        "main": [
+          [
+            {
+              "node": "If1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          []
+        ]
+      },
+      "Code in JavaScript1": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If1": {
+        "main": [
+          [],
+          [
+            {
+              "node": "Code in JavaScript1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "fd0b2284-25b6-4b93-a7a4-dbf4616ece63",
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-04T07:07:27.223Z",
+  "id": "kPmmeLbNiEIzq4lJ",
+  "isArchived": false,
+  "meta": null,
+  "name": "AUTO ON CODE",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        -96
+      ],
+      "id": "43e8a583-8cc6-40f5-91e2-2e1018d33615",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        -96
+      ],
+      "id": "0baac808-5422-4e88-ae89-57a011480d84",
+      "name": "Wait",
+      "webhookId": "c3e882f7-6ad0-4ed2-aac5-29f2bda8abbe"
+    },
+    {
+      "parameters": {
+        "command": "=cd /data/shared/WFX_TOOL && /opt/venv/bin/python runner.py --mode ON --type {{ $('Wait').item.json.type }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        528,
+        -96
+      ],
+      "id": "22c6a49d-fb4d-472f-8747-da9fbb1feba4",
+      "name": "Execute Command1",
+      "retryOnFail": true,
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const typ = $('When Executed by Another Workflow').first().json.type;\nconst name = $('When Executed by Another Workflow').first().json.Name || \"\";\nconst threadId = $('When Executed by Another Workflow').first().json.threadId || $json.uidFrom || \"\";\n\nconst onStdout = ($input.first().json.stdout || \"\").toString();\nconst onExitCode = Number($input.first().json.exitCode ?? 1);\n\n// lấy FINAL line nếu có\nfunction pickFinalLine(text) {\n  const lines = (text || \"\").split(/\\r?\\n/).map(s => s.trim()).filter(Boolean);\n  for (let i = lines.length - 1; i >= 0; i--) {\n    if (/^FINAL\\s*:/i.test(lines[i])) return lines[i];\n  }\n  return \"\";\n}\n\nconst finalLine = pickFinalLine(onStdout);\nconst ok = onExitCode === 0;\n\nlet msg;\nif (ok) {\n  msg =\n`✅ Hệ thống đã tự ON lại ${typ} do sau 5 phút chưa bật lại.`;\n} else {\n  msg =\n`❌ Không thể tự ON lại ${typ}.\n${finalLine ? `Kết quả: ${finalLine.replace(/^FINAL:\\s*/i,\"\")}` : `exitCode=${onExitCode}`}`;\n}\n\nreturn [{\n  threadId,\n  typechat: $json.typechat ?? 0,\n  ok,\n  answer: msg,\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        -96
+      ],
+      "id": "025d4cf2-c6b6-4492-8983-c7f69d43e324",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $('When Executed by Another Workflow').item.json.threadId }}",
+        "message": "={{ $json.answer }}",
+        "threadType": "={{ $('When Executed by Another Workflow').item.json.typechat }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        -96
+      ],
+      "id": "0e8b1f39-2c50-4e52-bb7f-2c668cd90c36",
+      "name": "Gửi tin nhắn",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "OMssdW79ELA0RV06",
+          "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6c1df083-e7b0-4267-98d6-dd6462001821",
+              "leftValue": "={{ $json.stdout }}",
+              "rightValue": "ALREADY",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        848,
+        -112
+      ],
+      "id": "fc3cf71f-0932-4b5a-ae2f-bd4df7e11e1f",
+      "name": "If1"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "Name": "Lương Hà Yuri Simple",
+          "uidFrom": "2779514215993481690",
+          "mode": "OFF",
+          "type": "STYLE",
+          "status": "SUCCESS",
+          "timestamps": "2025-12-09 13:56:33",
+          "threadId": "6075261485404698119",
+          "typechat": 1
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-04T07:07:27.223Z",
+      "createdAt": "2025-12-04T07:07:27.223Z",
+      "role": "workflow:owner",
+      "workflowId": "kPmmeLbNiEIzq4lJ",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-18T18:28:43.880Z",
+  "versionId": "fd0b2284-25b6-4b93-a7a4-dbf4616ece63"
+}
