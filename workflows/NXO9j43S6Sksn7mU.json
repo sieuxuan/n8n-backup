@@ -1,0 +1,322 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [],
+        [],
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-12-03T10:59:40.504Z",
+  "id": "NXO9j43S6Sksn7mU",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "REMINDING SUPPLIER ETD -optimize",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        -16
+      ],
+      "id": "e794649b-b1b8-45e4-b883-6e9231f27578",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Iqva0NJgul5qU_qfBirwNCtK67y36IrRWoWCwdF-wNc/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Iqva0NJgul5qU_qfBirwNCtK67y36IrRWoWCwdF-wNc/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -384,
+        -16
+      ],
+      "id": "842c2560-1e2f-4f37-84a4-c28d04a10fd5",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HAuycisc2CDPvPSS",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy tất cả input items từ node trước\nconst items = $input.all();\n\n// Parser linh hoạt cho định dạng như \"23-Aug-2026\", \"22-Mar-2026\" hoặc ISO \"2026-08-23\"\nfunction parseDDMonYYYY(s) {\n  if (!s) return null;\n  if (s instanceof Date) return s;\n  const str = String(s).trim();\n\n  // thử parse ISO/standard trước\n  const tryIso = new Date(str);\n  if (!isNaN(tryIso.getTime())) return tryIso;\n\n  // match \"DD-MMM-YYYY\" or \"D-MMM-YYYY\" (ví dụ 23-Aug-2026)\n  const m = str.match(/^(\\d{1,2})-([A-Za-z]{3})-(\\d{2,4})$/);\n  if (m) {\n    const day = parseInt(m[1], 10);\n    const monStr = m[2].toLowerCase();\n    const yearStr = m[3];\n    const months = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};\n    const mon = months[monStr.slice(0,3)];\n    if (mon === undefined) return null;\n    let year = parseInt(yearStr, 10);\n    if (yearStr.length === 2) {\n      // nếu gặp 2 chữ số năm, mặc định là 20xx (cần chỉnh nếu bạn muốn 19xx)\n      year += (year < 70 ? 2000 : 1900);\n    }\n    return new Date(year, mon, day);\n  }\n\n  // fallback: thử các dạng ngày/tháng/năm \"DD/MM/YYYY\" hoặc \"DD-MM-YYYY\"\n  const m2 = str.match(/^(\\d{1,2})[\\/\\-](\\d{1,2})[\\/\\-](\\d{2,4})$/);\n  if (m2) {\n    const d = parseInt(m2[1], 10);\n    const mm = parseInt(m2[2], 10) - 1;\n    let yy = parseInt(m2[3], 10);\n    if (String(m2[3]).length === 2) yy += (yy < 70 ? 2000 : 1900);\n    return new Date(yy, mm, d);\n  }\n\n  return null;\n}\n\n// Khoảng thời gian: hôm nay (00:00) -> 7 ngày sau (23:59:59)\nconst today = new Date();\ntoday.setHours(0,0,0,0);\nconst sevenDaysLater = new Date(today);\nsevenDaysLater.setDate(today.getDate() + 7);\nsevenDaysLater.setHours(23,59,59,999);\n\nconst output = [];\n\nfor (const item of items) {\n  // đổi key nếu header sheet khác\n  const raw = item.json[\"ETD Date\"] || item.json[\"ETD\"] || item.json[\"Date In House\"];\n  if (!raw) continue;\n\n  const etd = parseDDMonYYYY(raw);\n  if (!etd) continue;\n\n  // kiểm tra nằm trong khoảng từ hôm nay đến 7 ngày tới\n  if (etd >= today && etd <= sevenDaysLater) {\n    output.push(item);\n  }\n}\n\n// trả về các dòng đã lọc để xử lý tiếp (Switch/Convert/Email...)\nreturn output;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        -16
+      ],
+      "id": "80f85fab-88c5-4068-b562-697d40cd3419",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7d74ce5c-eb7c-4d72-b799-a59281f49b68",
+                    "leftValue": "={{ $json.Supplier }}",
+                    "rightValue": "=CNS",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CNS"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4264cc45-6848-4f60-a356-87206998f74f",
+                    "leftValue": "={{ $json.Supplier }}",
+                    "rightValue": "YKK",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "YKK"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "64ecd900-0e46-4b6d-a874-4746a22d6331",
+                    "leftValue": "={{ $json.Supplier }}",
+                    "rightValue": "JUNMAY",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "JUNMAY"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fe2863d4-1b57-43e5-b0a3-b6dfd3208afa",
+                    "leftValue": "={{ $json.Supplier }}",
+                    "rightValue": "WORLD WIDE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "WWT"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0a4d9d8a-c079-4996-b170-f735adfdc769",
+                    "leftValue": "={{ $json.Supplier }}",
+                    "rightValue": "TAK",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TAK"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        32,
+        -16
+      ],
+      "id": "c27c501c-d87a-4570-b02d-7e54f1c52ffa",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7b2fbfb8-c24f-4f7a-99d6-67aa2e53f14b",
+              "name": "EMAIL",
+              "value": "hanh.nt@pro-sports.com.vn",
+              "type": "string"
+            },
+            {
+              "id": "ced81a85-504b-442a-b49c-327840ebb764",
+              "name": "filename",
+              "value": "=ETD_report_{{$json[\"supplierName\"].replace(/\\s+/g,'_')}}.xlsx",
+              "type": "string"
+            },
+            {
+              "id": "c12c17b9-1486-4d30-a99a-771b68386973",
+              "name": "supplierName",
+              "value": "CNS",
+              "type": "string"
+            },
+            {
+              "id": "b850ec43-b503-4ad8-a135-6f8f2054c9a6",
+              "name": "subject",
+              "value": "=Reminder–ETD in next 7 days - {{$json[\"supplierName\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "a38bb9ae-07e6-47a6-9a1f-2e5bc0abd573",
+              "name": "messageHtml",
+              "value": "=<p>Dear team {{$json[\"supplierName\"]}},</p> <p>Please find attached POs with ETD in the next 7 days. Kindly confirm shipment.</p> <p>Thanks,<br/>Procurement</p>",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        -128
+      ],
+      "id": "8e951bbd-87b8-4809-be4a-b34bde044110",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-03T10:59:40.504Z",
+      "createdAt": "2025-12-03T10:59:40.504Z",
+      "role": "workflow:owner",
+      "workflowId": "NXO9j43S6Sksn7mU",
+      "projectId": "0KvFWNFJcnQ9XdQQ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-04T09:32:55.952Z",
+  "versionId": "d7ae1e69-6eee-4185-8dbf-d61182d2b41f"
+}
