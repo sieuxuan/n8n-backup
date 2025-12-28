@@ -1,0 +1,66 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-11-28T04:17:46.086Z",
+    "createdAt": "2025-11-28T04:17:46.086Z",
+    "versionId": "d5e9633e-62aa-4bee-8799-fb15866627d9",
+    "workflowId": "hkWDdyzZ3C1RV4XT",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.errorTrigger",
+        "typeVersion": 1,
+        "position": [
+          -320,
+          -16
+        ],
+        "id": "8ef918dd-adcb-445a-9514-9a2611ce5343",
+        "name": "Error Trigger"
+      }
+    ],
+    "connections": {},
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "d5e9633e-62aa-4bee-8799-fb15866627d9",
+  "connections": {},
+  "createdAt": "2025-09-11T01:32:20.701Z",
+  "id": "hkWDdyzZ3C1RV4XT",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "ERROR TRIGGER",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -16
+      ],
+      "id": "8ef918dd-adcb-445a-9514-9a2611ce5343",
+      "name": "Error Trigger"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-09-11T01:32:20.701Z",
+      "createdAt": "2025-09-11T01:32:20.701Z",
+      "role": "workflow:owner",
+      "workflowId": "hkWDdyzZ3C1RV4XT",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-09-18T03:21:08.334Z",
+  "versionId": "d5e9633e-62aa-4bee-8799-fb15866627d9"
+}
