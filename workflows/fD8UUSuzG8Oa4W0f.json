@@ -1,0 +1,252 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token": {
+      "main": [
+        [
+          {
+            "node": "Set Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-27T02:21:08.455Z",
+  "id": "fD8UUSuzG8Oa4W0f",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "zalo bot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "zalobot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        80
+      ],
+      "id": "0fa9bbc3-9f04-4425-befb-ae99bc9b4433",
+      "name": "Webhook",
+      "webhookId": "7397ee0d-02b0-4f03-ae40-ba6703308dd5"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Webhook').item.json.body.message.text }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        -176
+      ],
+      "id": "4d864553-24a3-46f5-acbf-800f1f8d5b99",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        672,
+        64
+      ],
+      "id": "398c4486-61f5-4619-97ce-1d718f6c167e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "cJX4QyuPXhS6ep58",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook').item.json.body.message.text }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        784,
+        48
+      ],
+      "id": "a1e2fd26-385c-4fd3-9c2d-218a75984c03",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://bot-api.zapps.me/bot{{ $('Token').item.json.token }}/sendMessage",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "={{ $('Webhook').item.json.body.message.chat.id }}"
+            },
+            {
+              "name": "=text",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        -80
+      ],
+      "id": "dd52fee8-0ce1-433e-962b-45261009d36a",
+      "name": "Gửi tin nhắn"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://bot-api.zapps.me/bot{{ $json.token }}/setWebhook",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "{{ $json.url }}"
+            },
+            {
+              "name": "secret_token",
+              "value": "{{ $json.secret_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        240
+      ],
+      "id": "be7f065a-f685-437a-ab72-7be19f0abf48",
+      "name": "Set Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3f0bae0c-a86e-48f0-988b-2de79190c0fb",
+              "name": "token",
+              "value": "610059277348568798:LwuEHyPXTgblVGqbozygDwBRvvuUbHXLWjOKSjiYVwavfUXBposYAwXzVuDvwwIC",
+              "type": "string"
+            },
+            {
+              "id": "1c7197bc-d6f5-48e4-95e1-9a2c432e9ee2",
+              "name": "url",
+              "value": "https://n8n.itprs.xyz/webhook/zalobot",
+              "type": "string"
+            },
+            {
+              "id": "7419f1d4-f082-4b85-8a09-642fa0687534",
+              "name": "secret_token",
+              "value": "khongbiet",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        464,
+        80
+      ],
+      "id": "16028b77-9106-43a7-80f2-5994ed5e63f6",
+      "name": "Token"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-27T02:21:08.455Z",
+      "createdAt": "2025-08-27T02:21:08.455Z",
+      "role": "workflow:owner",
+      "workflowId": "fD8UUSuzG8Oa4W0f",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-04T16:52:49.389Z",
+  "versionId": "0e180683-a10b-46d4-825a-dd9e2073a5b0"
+}
