@@ -1,0 +1,276 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-11-28T04:17:46.086Z",
+    "createdAt": "2025-11-28T04:17:46.086Z",
+    "versionId": "664f830a-c27b-4920-ae1b-f9b93feb2a41",
+    "workflowId": "4F1BbvTp8ttp6COX",
+    "nodes": [
+      {
+        "parameters": {
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "tableName": {
+            "__rl": true,
+            "value": "n8n_chat_histories",
+            "mode": "list",
+            "cachedResultName": "n8n_chat_histories"
+          },
+          "additionalFields": {},
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgresTrigger",
+        "typeVersion": 1,
+        "position": [
+          -160,
+          -16
+        ],
+        "id": "67a96e43-abc4-4315-bc2a-6a3450dab15c",
+        "name": "Postgres Trigger",
+        "credentials": {
+          "postgres": {
+            "id": "FrfYE3BUWGJafJtT",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "dataTableId": {
+            "__rl": true,
+            "value": "qr8SUTKv8KGCR8Oz",
+            "mode": "list",
+            "cachedResultName": "CHAT BOT AI",
+            "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/qr8SUTKv8KGCR8Oz"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "session_id": "={{ $json.payload.session_id }}",
+              "content": "={{ $json.payload.message.content }}",
+              "type": "={{ $json.payload.message.type }}",
+              "id_no": "={{ $json.payload.id }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "session_id",
+                "displayName": "session_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "id_no",
+                "displayName": "id_no",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "type",
+                "displayName": "type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "content",
+                "displayName": "content",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.dataTable",
+        "typeVersion": 1,
+        "position": [
+          48,
+          -16
+        ],
+        "id": "71bfdf23-634f-4c79-a269-1cdd08c34e69",
+        "name": "Insert row"
+      }
+    ],
+    "connections": {
+      "Postgres Trigger": {
+        "main": [
+          [
+            {
+              "node": "Insert row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "664f830a-c27b-4920-ae1b-f9b93feb2a41",
+  "connections": {
+    "Postgres Trigger": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-10-15T17:16:15.559Z",
+  "id": "4F1BbvTp8ttp6COX",
+  "isArchived": false,
+  "meta": null,
+  "name": "SAVE CHATBOT",
+  "nodes": [
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "tableName": {
+          "__rl": true,
+          "value": "n8n_chat_histories",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories"
+        },
+        "additionalFields": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTrigger",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -16
+      ],
+      "id": "67a96e43-abc4-4315-bc2a-6a3450dab15c",
+      "name": "Postgres Trigger",
+      "credentials": {
+        "postgres": {
+          "id": "FrfYE3BUWGJafJtT",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "qr8SUTKv8KGCR8Oz",
+          "mode": "list",
+          "cachedResultName": "CHAT BOT AI",
+          "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/qr8SUTKv8KGCR8Oz"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.payload.session_id }}",
+            "content": "={{ $json.payload.message.content }}",
+            "type": "={{ $json.payload.message.type }}",
+            "id_no": "={{ $json.payload.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "id_no",
+              "displayName": "id_no",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        48,
+        -16
+      ],
+      "id": "71bfdf23-634f-4c79-a269-1cdd08c34e69",
+      "name": "Insert row"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-10-15T17:16:15.559Z",
+      "createdAt": "2025-10-15T17:16:15.559Z",
+      "role": "workflow:owner",
+      "workflowId": "4F1BbvTp8ttp6COX",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-10-15T18:01:53.582Z",
+  "versionId": "664f830a-c27b-4920-ae1b-f9b93feb2a41"
+}
