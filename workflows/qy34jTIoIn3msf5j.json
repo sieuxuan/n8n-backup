@@ -1,0 +1,124 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Lấy danh sách bạn bè",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lấy danh sách bạn bè": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-09-03T09:49:18.214Z",
+  "id": "qy34jTIoIn3msf5j",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "ZALO USER LIST",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fb0d3c47-7e74-420b-b5f8-032705f8a0ae",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "get"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "9a693489-ee78-49e5-8b54-e0a25373d305",
+      "name": "Lấy danh sách bạn bè",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "gfZNfo551orsNMqh",
+          "name": "Zalo Xuân Nguyễn - 2025-08-27T07:02:15.037Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy dữ liệu đầu vào\nconst data = $input.all()[0].json;\n\n// Map response thành danh sách mới chỉ với các trường cần thiết\nconst result = data.response.map(item => {\n  return {\n    json: {\n      userId: item.userId,\n      displayName: item.displayName,\n      avatar: item.avatar,\n      gender: item.gender\n    }\n  };\n});\n\nreturn result;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "148c246f-28fa-41ff-8fe2-656f88b4e0ad",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "29d70323-6cbf-485c-a145-adf11e058b91",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-09-03T09:49:18.214Z",
+      "createdAt": "2025-09-03T09:49:18.214Z",
+      "role": "workflow:owner",
+      "workflowId": "qy34jTIoIn3msf5j",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-09-04T07:43:28.004Z",
+  "versionId": "83220dde-73ce-4089-8ef0-370727712984"
+}
