@@ -1,0 +1,439 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-06T08:38:26.250Z",
+    "createdAt": "2025-12-06T08:38:26.250Z",
+    "versionId": "0cf50e53-8340-4d28-8075-3fd381404640",
+    "workflowId": "J9B9BqpYuqa6p8d0",
+    "nodes": [
+      {
+        "parameters": {
+          "pollTimes": {
+            "item": [
+              {
+                "mode": "everyMinute"
+              }
+            ]
+          },
+          "documentId": {
+            "__rl": true,
+            "value": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+            "mode": "list",
+            "cachedResultName": "IT HELP DESK",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit#gid=0"
+          },
+          "event": "rowAdded",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "1732399d-dbaf-4f33-84b9-f68c01494172",
+        "name": "Google Sheets Trigger",
+        "credentials": {
+          "googleSheetsTriggerOAuth2Api": {
+            "id": "3KLUaAaxMncvxTT2",
+            "name": "Google Sheets Trigger account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Hàm tạo message cho 1 item\nfunction buildMessage(data = {}) {\n  const lines = [];\n  const get = (k) => data?.[k] ?? data?.[String(k).trim()];\n\n  lines.push(\"📢 [IT Ticket Mới]\");\n\n  if (get(\"ID\")) lines.push(`🆔 ${get(\"ID\")}`);\n  if (get(\"TÊN BẠN LÀ\")) lines.push(`👤 Người yêu cầu: ${get(\"TÊN BẠN LÀ\")}`);\n  if (get(\"BỘ PHẬN \")) lines.push(`🏢 Bộ phận: ${get(\"BỘ PHẬN \")}`);\n  if (get(\"PHÂN LOẠI\")) lines.push(`🗂️ Phân loại: ${get(\"PHÂN LOẠI\")}`);\n  if (get(\"SỐ ĐIỆN THOẠI\")) lines.push(`📞 Điện thoại: ${get(\"SỐ ĐIỆN THOẠI\")}`);\n  if (get(\"Description\")) lines.push(`🔧 Mô tả: ${get(\"Description\")}`);\n  if (get(\"Priority\")) lines.push(`⚠️ Mức độ ưu tiên: ${get(\"Priority\")}`);\n  if (get(\"Status\")) lines.push(`📌 Trạng thái: ${get(\"Status\")}`);\n  if (get(\"PIC\")) lines.push(`👨‍🔧 PIC: ${get(\"PIC\")}`);\n  if (get(\"Timestamp\")) lines.push(`🕒 Thời gian tạo: ${get(\"Timestamp\")}`);\n\n  // Attachment File: hỗ trợ string nhiều dòng hoặc array\n  const attRaw = get(\"Attachment File\");\n  if (attRaw) {\n    let attachments = Array.isArray(attRaw)\n      ? attRaw.map(x => String(x).trim()).filter(Boolean)\n      : String(attRaw).split(/\\r?\\n/).map(x => x.trim()).filter(Boolean);\n\n    if (attachments.length) {\n      lines.push(\"📎 File đính kèm:\");\n      lines.push(...attachments);\n    }\n  }\n\n  if (get(\"Comment\")) lines.push(`📝 Ghi chú: ${get(\"Comment\")}`);\n\n  return lines.join(\"\\n\");\n}\n\n// Trả ra đúng số lượng item đầu vào (1 input → 1 output)\nreturn items.map(it => {\n  const data = it.json || {};\n  const message = buildMessage(data);\n  return {\n    json: {\n      ...data,      // giữ lại dữ liệu gốc cho node sau\n      message       // thêm message\n    }\n  };\n});"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          640,
+          -16
+        ],
+        "id": "c6267910-5996-4cc6-bbb3-ef6583512c5d",
+        "name": "Code"
+      },
+      {
+        "parameters": {
+          "threadId": "4798747745907374032",
+          "message": "={{ $json.message }}",
+          "threadType": 1
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          848,
+          -16
+        ],
+        "id": "8db06d5b-0eda-4d01-977c-347ca1074969",
+        "name": "Gửi tin nhắn1",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          224,
+          0
+        ],
+        "id": "5c931992-d70a-4016-af96-929a064d3477",
+        "name": "Loop Over Items"
+      },
+      {
+        "parameters": {
+          "resource": "chatMessage",
+          "chatId": {
+            "__rl": true,
+            "value": "19:50306837a8da409a8037298a6a62e68c@thread.v2",
+            "mode": "id"
+          },
+          "contentType": "html",
+          "message": "={{ $json.message }}",
+          "options": {
+            "includeLinkToWorkflow": false
+          }
+        },
+        "type": "n8n-nodes-base.microsoftTeams",
+        "typeVersion": 2,
+        "position": [
+          848,
+          160
+        ],
+        "id": "0e5b1eb6-5047-4aac-8394-5a94dd061e08",
+        "name": "Create chat message",
+        "webhookId": "faf59007-3027-4e4f-b910-ecf2a74da822",
+        "credentials": {
+          "microsoftTeamsOAuth2Api": {
+            "id": "Iqzyk9veJ1J8eXou",
+            "name": "Microsoft Teams account"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "jsCode": "// Escape HTML để an toàn\nfunction esc(s = '') {\n  return String(s)\n    .replace(/&/g, \"&amp;\")\n    .replace(/</g, \"&lt;\")\n    .replace(/>/g, \"&gt;\")\n    .replace(/\"/g, \"&quot;\");\n}\n\n// Hàm tạo message HTML cho 1 item\nfunction buildMessage(data = {}) {\n  const get = (k) => data?.[k] ?? data?.[String(k).trim()];\n\n  const lines = [];\n\n  lines.push(`<div>📢 <strong>[IT Ticket Mới]</strong></div>`);\n\n  if (get(\"ID\")) lines.push(`<div>🆔 <strong>ID:</strong> ${esc(get(\"ID\"))}</div>`);\n  if (get(\"TÊN BẠN LÀ\")) lines.push(`<div>👤 <strong>Người yêu cầu:</strong> ${esc(get(\"TÊN BẠN LÀ\"))}</div>`);\n  if (get(\"BỘ PHẬN \")) lines.push(`<div>🏢 <strong>Bộ phận:</strong> ${esc(get(\"BỘ PHẬN \"))}</div>`);\n  if (get(\"PHÂN LOẠI\")) lines.push(`<div>🗂️ <strong>Phân loại:</strong> ${esc(get(\"PHÂN LOẠI\"))}</div>`);\n  if (get(\"SỐ ĐIỆN THOẠI\")) lines.push(`<div>📞 <strong>Điện thoại:</strong> ${esc(get(\"SỐ ĐIỆN THOẠI\"))}</div>`);\n  if (get(\"Description\")) lines.push(`<div>🔧 <strong>Mô tả:</strong> ${esc(get(\"Description\"))}</div>`);\n  if (get(\"Priority\")) lines.push(`<div>⚠️ <strong>Mức độ ưu tiên:</strong> ${esc(get(\"Priority\"))}</div>`);\n  if (get(\"Status\")) lines.push(`<div>📌 <strong>Trạng thái:</strong> ${esc(get(\"Status\"))}</div>`);\n  if (get(\"PIC\")) lines.push(`<div>👨‍🔧 <strong>PIC:</strong> ${esc(get(\"PIC\"))}</div>`);\n  if (get(\"Timestamp\")) lines.push(`<div>🕒 <strong>Thời gian tạo:</strong> ${esc(get(\"Timestamp\"))}</div>`);\n\n  // Attachment File: string nhiều dòng hoặc array\n  const attRaw = get(\"Attachment File\");\n  if (attRaw) {\n    let attachments = Array.isArray(attRaw)\n      ? attRaw.map(x => String(x).trim()).filter(Boolean)\n      : String(attRaw).split(/\\r?\\n/).map(x => x.trim()).filter(Boolean);\n\n    if (attachments.length) {\n      lines.push(\"<div>📎 <strong>File đính kèm:</strong></div>\");\n      lines.push(\"<ul>\" + attachments.map(a => `<li>${esc(a)}</li>`).join(\"\") + \"</ul>\");\n    }\n  }\n\n  if (get(\"Comment\")) lines.push(`<div>📝 <strong>Ghi chú:</strong> ${esc(get(\"Comment\"))}</div>`);\n\n  return lines.join(\"\\n\");\n}\n\n// Trả ra đúng số lượng item đầu vào (1 input → 1 output)\nreturn items.map(it => {\n  const data = it.json || {};\n  const message = buildMessage(data);\n  return {\n    json: {\n      ...data,\n      message // HTML content\n    }\n  };\n});\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          656,
+          160
+        ],
+        "id": "844bd40b-befa-42c1-85e3-e2bcc9836726",
+        "name": "Code1",
+        "disabled": true
+      }
+    ],
+    "connections": {
+      "Google Sheets Trigger": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Code1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code1": {
+        "main": [
+          [
+            {
+              "node": "Create chat message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "0cf50e53-8340-4d28-8075-3fd381404640",
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Create chat message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-26T09:16:44.046Z",
+  "id": "J9B9BqpYuqa6p8d0",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Notification ITHD",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+          "mode": "list",
+          "cachedResultName": "IT HELP DESK",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit#gid=0"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1732399d-dbaf-4f33-84b9-f68c01494172",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "3KLUaAaxMncvxTT2",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Hàm tạo message cho 1 item\nfunction buildMessage(data = {}) {\n  const lines = [];\n  const get = (k) => data?.[k] ?? data?.[String(k).trim()];\n\n  lines.push(\"📢 [IT Ticket Mới]\");\n\n  if (get(\"ID\")) lines.push(`🆔 ${get(\"ID\")}`);\n  if (get(\"TÊN BẠN LÀ\")) lines.push(`👤 Người yêu cầu: ${get(\"TÊN BẠN LÀ\")}`);\n  if (get(\"BỘ PHẬN \")) lines.push(`🏢 Bộ phận: ${get(\"BỘ PHẬN \")}`);\n  if (get(\"PHÂN LOẠI\")) lines.push(`🗂️ Phân loại: ${get(\"PHÂN LOẠI\")}`);\n  if (get(\"SỐ ĐIỆN THOẠI\")) lines.push(`📞 Điện thoại: ${get(\"SỐ ĐIỆN THOẠI\")}`);\n  if (get(\"Description\")) lines.push(`🔧 Mô tả: ${get(\"Description\")}`);\n  if (get(\"Priority\")) lines.push(`⚠️ Mức độ ưu tiên: ${get(\"Priority\")}`);\n  if (get(\"Status\")) lines.push(`📌 Trạng thái: ${get(\"Status\")}`);\n  if (get(\"PIC\")) lines.push(`👨‍🔧 PIC: ${get(\"PIC\")}`);\n  if (get(\"Timestamp\")) lines.push(`🕒 Thời gian tạo: ${get(\"Timestamp\")}`);\n\n  // Attachment File: hỗ trợ string nhiều dòng hoặc array\n  const attRaw = get(\"Attachment File\");\n  if (attRaw) {\n    let attachments = Array.isArray(attRaw)\n      ? attRaw.map(x => String(x).trim()).filter(Boolean)\n      : String(attRaw).split(/\\r?\\n/).map(x => x.trim()).filter(Boolean);\n\n    if (attachments.length) {\n      lines.push(\"📎 File đính kèm:\");\n      lines.push(...attachments);\n    }\n  }\n\n  if (get(\"Comment\")) lines.push(`📝 Ghi chú: ${get(\"Comment\")}`);\n\n  return lines.join(\"\\n\");\n}\n\n// Trả ra đúng số lượng item đầu vào (1 input → 1 output)\nreturn items.map(it => {\n  const data = it.json || {};\n  const message = buildMessage(data);\n  return {\n    json: {\n      ...data,      // giữ lại dữ liệu gốc cho node sau\n      message       // thêm message\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        -16
+      ],
+      "id": "c6267910-5996-4cc6-bbb3-ef6583512c5d",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "threadId": "4798747745907374032",
+        "message": "={{ $json.message }}",
+        "threadType": 1
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        848,
+        -16
+      ],
+      "id": "8db06d5b-0eda-4d01-977c-347ca1074969",
+      "name": "Gửi tin nhắn1",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "OMssdW79ELA0RV06",
+          "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "5c931992-d70a-4016-af96-929a064d3477",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "resource": "chatMessage",
+        "chatId": {
+          "__rl": true,
+          "value": "19:50306837a8da409a8037298a6a62e68c@thread.v2",
+          "mode": "id"
+        },
+        "contentType": "html",
+        "message": "={{ $json.message }}",
+        "options": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.microsoftTeams",
+      "typeVersion": 2,
+      "position": [
+        848,
+        160
+      ],
+      "id": "0e5b1eb6-5047-4aac-8394-5a94dd061e08",
+      "name": "Create chat message",
+      "webhookId": "faf59007-3027-4e4f-b910-ecf2a74da822",
+      "credentials": {
+        "microsoftTeamsOAuth2Api": {
+          "id": "Iqzyk9veJ1J8eXou",
+          "name": "Microsoft Teams account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Escape HTML để an toàn\nfunction esc(s = '') {\n  return String(s)\n    .replace(/&/g, \"&amp;\")\n    .replace(/</g, \"&lt;\")\n    .replace(/>/g, \"&gt;\")\n    .replace(/\"/g, \"&quot;\");\n}\n\n// Hàm tạo message HTML cho 1 item\nfunction buildMessage(data = {}) {\n  const get = (k) => data?.[k] ?? data?.[String(k).trim()];\n\n  const lines = [];\n\n  lines.push(`<div>📢 <strong>[IT Ticket Mới]</strong></div>`);\n\n  if (get(\"ID\")) lines.push(`<div>🆔 <strong>ID:</strong> ${esc(get(\"ID\"))}</div>`);\n  if (get(\"TÊN BẠN LÀ\")) lines.push(`<div>👤 <strong>Người yêu cầu:</strong> ${esc(get(\"TÊN BẠN LÀ\"))}</div>`);\n  if (get(\"BỘ PHẬN \")) lines.push(`<div>🏢 <strong>Bộ phận:</strong> ${esc(get(\"BỘ PHẬN \"))}</div>`);\n  if (get(\"PHÂN LOẠI\")) lines.push(`<div>🗂️ <strong>Phân loại:</strong> ${esc(get(\"PHÂN LOẠI\"))}</div>`);\n  if (get(\"SỐ ĐIỆN THOẠI\")) lines.push(`<div>📞 <strong>Điện thoại:</strong> ${esc(get(\"SỐ ĐIỆN THOẠI\"))}</div>`);\n  if (get(\"Description\")) lines.push(`<div>🔧 <strong>Mô tả:</strong> ${esc(get(\"Description\"))}</div>`);\n  if (get(\"Priority\")) lines.push(`<div>⚠️ <strong>Mức độ ưu tiên:</strong> ${esc(get(\"Priority\"))}</div>`);\n  if (get(\"Status\")) lines.push(`<div>📌 <strong>Trạng thái:</strong> ${esc(get(\"Status\"))}</div>`);\n  if (get(\"PIC\")) lines.push(`<div>👨‍🔧 <strong>PIC:</strong> ${esc(get(\"PIC\"))}</div>`);\n  if (get(\"Timestamp\")) lines.push(`<div>🕒 <strong>Thời gian tạo:</strong> ${esc(get(\"Timestamp\"))}</div>`);\n\n  // Attachment File: string nhiều dòng hoặc array\n  const attRaw = get(\"Attachment File\");\n  if (attRaw) {\n    let attachments = Array.isArray(attRaw)\n      ? attRaw.map(x => String(x).trim()).filter(Boolean)\n      : String(attRaw).split(/\\r?\\n/).map(x => x.trim()).filter(Boolean);\n\n    if (attachments.length) {\n      lines.push(\"<div>📎 <strong>File đính kèm:</strong></div>\");\n      lines.push(\"<ul>\" + attachments.map(a => `<li>${esc(a)}</li>`).join(\"\") + \"</ul>\");\n    }\n  }\n\n  if (get(\"Comment\")) lines.push(`<div>📝 <strong>Ghi chú:</strong> ${esc(get(\"Comment\"))}</div>`);\n\n  return lines.join(\"\\n\");\n}\n\n// Trả ra đúng số lượng item đầu vào (1 input → 1 output)\nreturn items.map(it => {\n  const data = it.json || {};\n  const message = buildMessage(data);\n  return {\n    json: {\n      ...data,\n      message // HTML content\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        160
+      ],
+      "id": "844bd40b-befa-42c1-85e3-e2bcc9836726",
+      "name": "Code1",
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "hkWDdyzZ3C1RV4XT"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-26T09:16:44.046Z",
+      "createdAt": "2025-08-26T09:16:44.046Z",
+      "role": "workflow:owner",
+      "workflowId": "J9B9BqpYuqa6p8d0",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": {
+    "node:Google Sheets Trigger": {
+      "documentId": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+      "sheetId": 0,
+      "lastIndexChecked": 1582
+    }
+  },
+  "tags": [
+    {
+      "updatedAt": "2025-08-26T09:13:10.458Z",
+      "createdAt": "2025-08-26T09:13:10.458Z",
+      "id": "B5xHSngQqVM1yV80",
+      "name": "Notification"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-18T17:00:06.723Z",
+  "versionId": "0cf50e53-8340-4d28-8075-3fd381404640"
+}
