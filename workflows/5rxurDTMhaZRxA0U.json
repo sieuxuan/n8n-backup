@@ -1,0 +1,386 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-11T11:16:22.619Z",
+    "createdAt": "2025-12-11T11:16:22.619Z",
+    "versionId": "ff7362ab-c733-42e1-9b73-a668eb6972c4",
+    "workflowId": "5rxurDTMhaZRxA0U",
+    "nodes": [
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "d2df52a0-df6f-46ab-9be8-197a8aec2484",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "command": "=cd /data/shared/WFX_TOOL && /opt/venv/bin/python runner.py --mode {{$json.mode}} --type {{$json.type}}"
+        },
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [
+          656,
+          -16
+        ],
+        "id": "2f4d71b2-b584-4377-b81e-34ef36c1fa47",
+        "name": "Execute Command",
+        "retryOnFail": true,
+        "alwaysOutputData": false,
+        "waitBetweenTries": 2000,
+        "maxTries": 2,
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "jsCode": "const text = ($input.first().json.data.content || '').toUpperCase().trim();\n\n// chuẩn hoá: cho phép \"OFF CODE TRIM\" hoặc \"OFF TRIM\"\nfunction has(w) { return text.includes(w); }\n\nlet mode = null, type = null;\n\nif (has('OFF')) mode = 'OFF';\nif (has('ON'))  mode = 'ON';\nif (has('CHECK'))  mode = 'CHECK';\n\nif (has('TRIM')) type = 'TRIM';\nif (has('FABRIC')) type = 'FABRIC';\nif (has('STYLE')) type = 'STYLE';\nif (has('ALL')) type = 'ALL';\n\nif (!mode || !type) {\n  return [{\n    error: 'Lệnh không hợp lệ. Ví dụ: OFF CODE TRIM / ON TRIM / OFF FABRIC / ON STYLE / CHECK ALL'\n  }];\n}\n\nreturn [{\n  mode,\n  type,\n}];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          208,
+          0
+        ],
+        "id": "21ff1d10-5d55-4448-88c2-317624a35764",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "f8a49c10-76ad-408f-8cee-551b37ca4157",
+                "leftValue": "={{ $json.mode }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          416,
+          0
+        ],
+        "id": "57948ba2-a861-4b26-bdf2-2bd50f6fed5a",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "jsCode": "const item = $input.first().json;\n\nconst mode = ($('If').first().json.mode || \"\").toString().toUpperCase();\nconst type = ($('If').first().json.type || \"\").toString().toUpperCase();\nconst label = `${mode} ${type}`.trim();\n\nconst stdout = (item.stdout || \"\").toString();\nconst stderr = (item.stderr || \"\").toString();\nconst exitCode = Number(item.exitCode ?? 1);\n\n// ----- helpers: pick FINAL line -----\nfunction pickFinalLine(text) {\n  const lines = (text || \"\")\n    .split(/\\r?\\n/)\n    .map(s => s.trim())\n    .filter(Boolean);\n\n  for (let i = lines.length - 1; i >= 0; i--) {\n    if (/^FINAL\\s*:/i.test(lines[i])) return lines[i];\n  }\n  return \"\";\n}\n\nconst finalLine = pickFinalLine(stdout) || pickFinalLine(stderr);\n\n// Parse FINAL: STATUS | message\nlet finalStatus = \"\";\nlet finalMsg = \"\";\n{\n  const m = /^FINAL:\\s*([A-Z]+)\\s*\\|\\s*(.*)\\s*$/i.exec(finalLine || \"\");\n  if (m) {\n    finalStatus = (m[1] || \"\").toUpperCase();\n    finalMsg = (m[2] || \"\").trim();\n  }\n}\n\n// Emoji theo FINAL status\nconst statusEmoji = (st) => {\n  st = (st || \"\").toUpperCase();\n  if (st === \"SUCCESS\") return \"✅\";\n  if (st === \"ALREADY\") return \"✅\";\n  if (st === \"FAILED\") return \"❌\";\n  return \"⚪️\";\n};\n\n// ok nếu FINAL là SUCCESS/ALREADY và exitCode=0\nconst ok = [\"SUCCESS\", \"ALREADY\"].includes(finalStatus) && exitCode === 0;\n\n// ----- CHECK: parse category statuses from stdout -----\nconst categories = {};\nconst re = /Category\\s+'([^']+)':\\s+Logic=(ON|OFF|UNKNOWN|CONFLICT)/gi;\n\nlet mm;\nwhile ((mm = re.exec(stdout)) !== null) {\n  const cat = (mm[1] || \"\").trim();\n  const st = (mm[2] || \"\").trim().toUpperCase();\n  if (cat) categories[cat] = st;\n}\n\nconst emojiOf = (st) => {\n  if (st === \"ON\") return \"🟢\";\n  if (st === \"OFF\") return \"🔴\";\n  if (st === \"UNKNOWN\") return \"🟡\";\n  if (st === \"CONFLICT\") return \"🟠\";\n  return \"⚪️\";\n};\n\nconst displayName = (cat) => {\n  const c = (cat || \"\").trim().toLowerCase();\n  if (c === \"apparel\") return \"Style\";\n  if (c === \"textiles/fabric\") return \"Fabric\";\n  if (c === \"trims\") return \"Trim\";\n  return cat;\n};\n\nconst categorySummary = Object.keys(categories).length\n  ? Object.entries(categories)\n      .sort((a, b) => {\n        const order = { \"apparel\": 1, \"trims\": 2, \"textiles/fabric\": 3 };\n        const ka = (a[0] || \"\").toLowerCase();\n        const kb = (b[0] || \"\").toLowerCase();\n        return (order[ka] || 99) - (order[kb] || 99);\n      })\n      .map(([k, v]) => `${emojiOf(v)} ${displayName(k)}: ${v}`)\n      .join(\"\\n\")\n  : \"\";\n\n// ----- Việt hoá message (giữ nguyên SUCCESS/ALREADY/FAILED) -----\nfunction viMsgFromFinal(finalMsg, mode, type) {\n  let msg = (finalMsg || \"\").trim();\n  const m = (mode || \"\").toUpperCase();\n  const t = (type || \"\").toUpperCase();\n\n  // Nếu runner đã trả tiếng Việt rồi thì dùng luôn\n  if (/[àáảãạăâđêôơư]/i.test(msg)) return msg;\n\n  // Một số dạng tiếng Anh hay gặp từ runner cũ\n  // 1) \"... executed\" => \"... thành công\"\n  if (/\\bexecuted\\b/i.test(msg)) {\n    return `${m} ${t} thành công`;\n  }\n\n  // 2) \"... already correct\" => đã ON/OFF sẵn (ưu tiên theo mode)\n  if (/\\balready correct\\b/i.test(msg)) {\n    if (m === \"ON\")  return `${m} ${t} đã ON sẵn`;\n    if (m === \"OFF\") return `${m} ${t} đã OFF sẵn`;\n    return `${m} ${t} đã đúng sẵn`;\n  }\n\n  // 3) \"... failed (...)\" => \"... lỗi: ...\"\n  // cố gắng rút gọn reason\n  if (/\\bfailed\\b/i.test(msg)) {\n    let reason = \"\";\n    const mr = /(TimeoutException|NoSuchElementException|StaleElementReferenceException|WebDriverException|JavascriptException|Exception)/i.exec(msg);\n    if (mr) reason = mr[1];\n    else {\n      const mcode = /code=([A-Z0-9_]+)/i.exec(msg);\n      if (mcode) reason = `code=${mcode[1]}`;\n    }\n    return reason\n      ? `${m} ${t} lỗi: ${reason}`\n      : `${m} ${t} lỗi`;\n  }\n\n  // 4) CHECK (nếu message chỉ là \"CHECK\" hay tương tự)\n  if (m === \"CHECK\" && (msg.toUpperCase() === \"CHECK\" || msg === \"\")) {\n    return t === \"ALL\" ? \"CHECK ALL thành công\" : `CHECK ${t} thành công`;\n  }\n\n  // fallback: giữ nguyên msg nhưng thêm label nếu msg quá ngắn\n  if (!msg) return `${m} ${t}`;\n  return msg;\n}\n\n// ----- Build answer (pretty + emoji) -----\nlet answer;\n\nif (finalLine) {\n  // Dùng FINAL status, còn message thì Việt hoá\n  const prettyMsg = viMsgFromFinal(finalMsg, mode, type);\n  const lead = `${statusEmoji(finalStatus)} ${finalStatus} | ${prettyMsg}`;\n\n  if (mode === \"CHECK\" && categorySummary) {\n    answer = `${lead}\\n\\n📌 Trạng thái:\\n${categorySummary}`;\n  } else {\n    answer = lead;\n  }\n} else {\n  // fallback gọn, cũng Việt hoá\n  const fail = exitCode !== 0;\n  answer = fail\n    ? `❌ FAILED | ${label} lỗi (exitCode=${exitCode})`\n    : `✅ SUCCESS | ${label} thành công`;\n}\n\nreturn [{\n  ok,\n  answer,\n  final: finalLine || null,\n  status: finalStatus || null,   // giữ nguyên SUCCESS/ALREADY/FAILED\n  message: viMsgFromFinal(finalMsg, mode, type) || null,\n  exitCode,\n  categories,\n  mode,\n  type// optional\n}];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          880,
+          -32
+        ],
+        "id": "31a5a757-55d9-4583-a685-463c21c7aa2a",
+        "name": "Code in JavaScript1"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "2e8ebf1e-d172-4493-892f-920ad57af965",
+                "name": "answer",
+                "value": "=Hệ thống đang bận, vui lòng thử lại sau 30s.",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          896,
+          128
+        ],
+        "id": "07bb3054-18ee-4c22-938b-4916669747fc",
+        "name": "Edit Fields",
+        "executeOnce": true
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Execute Command",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute Command": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "ff7362ab-c733-42e1-9b73-a668eb6972c4",
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-12-03T02:44:45.442Z",
+  "id": "5rxurDTMhaZRxA0U",
+  "isArchived": false,
+  "meta": null,
+  "name": "OFFCODE",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d2df52a0-df6f-46ab-9be8-197a8aec2484",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "command": "=cd /data/shared/WFX_TOOL && /opt/venv/bin/python runner.py --mode {{$json.mode}} --type {{$json.type}}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        656,
+        -16
+      ],
+      "id": "2f4d71b2-b584-4377-b81e-34ef36c1fa47",
+      "name": "Execute Command",
+      "retryOnFail": true,
+      "alwaysOutputData": false,
+      "waitBetweenTries": 2000,
+      "maxTries": 2,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = ($input.first().json.data.content || '').toUpperCase().trim();\n\n// chuẩn hoá: cho phép \"OFF CODE TRIM\" hoặc \"OFF TRIM\"\nfunction has(w) { return text.includes(w); }\n\nlet mode = null, type = null;\n\nif (has('OFF')) mode = 'OFF';\nif (has('ON'))  mode = 'ON';\nif (has('CHECK'))  mode = 'CHECK';\n\nif (has('TRIM')) type = 'TRIM';\nif (has('FABRIC')) type = 'FABRIC';\nif (has('STYLE')) type = 'STYLE';\nif (has('ALL')) type = 'ALL';\n\nif (!mode || !type) {\n  return [{\n    error: 'Lệnh không hợp lệ. Ví dụ: OFF CODE TRIM / ON TRIM / OFF FABRIC / ON STYLE / CHECK ALL'\n  }];\n}\n\nreturn [{\n  mode,\n  type,\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "21ff1d10-5d55-4448-88c2-317624a35764",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f8a49c10-76ad-408f-8cee-551b37ca4157",
+              "leftValue": "={{ $json.mode }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "57948ba2-a861-4b26-bdf2-2bd50f6fed5a",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\n\nconst mode = ($('If').first().json.mode || \"\").toString().toUpperCase();\nconst type = ($('If').first().json.type || \"\").toString().toUpperCase();\nconst label = `${mode} ${type}`.trim();\n\nconst stdout = (item.stdout || \"\").toString();\nconst stderr = (item.stderr || \"\").toString();\nconst exitCode = Number(item.exitCode ?? 1);\n\n// ----- helpers: pick FINAL line -----\nfunction pickFinalLine(text) {\n  const lines = (text || \"\")\n    .split(/\\r?\\n/)\n    .map(s => s.trim())\n    .filter(Boolean);\n\n  for (let i = lines.length - 1; i >= 0; i--) {\n    if (/^FINAL\\s*:/i.test(lines[i])) return lines[i];\n  }\n  return \"\";\n}\n\nconst finalLine = pickFinalLine(stdout) || pickFinalLine(stderr);\n\n// Parse FINAL: STATUS | message\nlet finalStatus = \"\";\nlet finalMsg = \"\";\n{\n  const m = /^FINAL:\\s*([A-Z]+)\\s*\\|\\s*(.*)\\s*$/i.exec(finalLine || \"\");\n  if (m) {\n    finalStatus = (m[1] || \"\").toUpperCase();\n    finalMsg = (m[2] || \"\").trim();\n  }\n}\n\n// Emoji theo FINAL status\nconst statusEmoji = (st) => {\n  st = (st || \"\").toUpperCase();\n  if (st === \"SUCCESS\") return \"✅\";\n  if (st === \"ALREADY\") return \"✅\";\n  if (st === \"FAILED\") return \"❌\";\n  return \"⚪️\";\n};\n\n// ok nếu FINAL là SUCCESS/ALREADY và exitCode=0\nconst ok = [\"SUCCESS\", \"ALREADY\"].includes(finalStatus) && exitCode === 0;\n\n// ----- CHECK: parse category statuses from stdout -----\nconst categories = {};\nconst re = /Category\\s+'([^']+)':\\s+Logic=(ON|OFF|UNKNOWN|CONFLICT)/gi;\n\nlet mm;\nwhile ((mm = re.exec(stdout)) !== null) {\n  const cat = (mm[1] || \"\").trim();\n  const st = (mm[2] || \"\").trim().toUpperCase();\n  if (cat) categories[cat] = st;\n}\n\nconst emojiOf = (st) => {\n  if (st === \"ON\") return \"🟢\";\n  if (st === \"OFF\") return \"🔴\";\n  if (st === \"UNKNOWN\") return \"🟡\";\n  if (st === \"CONFLICT\") return \"🟠\";\n  return \"⚪️\";\n};\n\nconst displayName = (cat) => {\n  const c = (cat || \"\").trim().toLowerCase();\n  if (c === \"apparel\") return \"Style\";\n  if (c === \"textiles/fabric\") return \"Fabric\";\n  if (c === \"trims\") return \"Trim\";\n  return cat;\n};\n\nconst categorySummary = Object.keys(categories).length\n  ? Object.entries(categories)\n      .sort((a, b) => {\n        const order = { \"apparel\": 1, \"trims\": 2, \"textiles/fabric\": 3 };\n        const ka = (a[0] || \"\").toLowerCase();\n        const kb = (b[0] || \"\").toLowerCase();\n        return (order[ka] || 99) - (order[kb] || 99);\n      })\n      .map(([k, v]) => `${emojiOf(v)} ${displayName(k)}: ${v}`)\n      .join(\"\\n\")\n  : \"\";\n\n// ----- Việt hoá message (giữ nguyên SUCCESS/ALREADY/FAILED) -----\nfunction viMsgFromFinal(finalMsg, mode, type) {\n  let msg = (finalMsg || \"\").trim();\n  const m = (mode || \"\").toUpperCase();\n  const t = (type || \"\").toUpperCase();\n\n  // Nếu runner đã trả tiếng Việt rồi thì dùng luôn\n  if (/[àáảãạăâđêôơư]/i.test(msg)) return msg;\n\n  // Một số dạng tiếng Anh hay gặp từ runner cũ\n  // 1) \"... executed\" => \"... thành công\"\n  if (/\\bexecuted\\b/i.test(msg)) {\n    return `${m} ${t} thành công`;\n  }\n\n  // 2) \"... already correct\" => đã ON/OFF sẵn (ưu tiên theo mode)\n  if (/\\balready correct\\b/i.test(msg)) {\n    if (m === \"ON\")  return `${m} ${t} đã ON sẵn`;\n    if (m === \"OFF\") return `${m} ${t} đã OFF sẵn`;\n    return `${m} ${t} đã đúng sẵn`;\n  }\n\n  // 3) \"... failed (...)\" => \"... lỗi: ...\"\n  // cố gắng rút gọn reason\n  if (/\\bfailed\\b/i.test(msg)) {\n    let reason = \"\";\n    const mr = /(TimeoutException|NoSuchElementException|StaleElementReferenceException|WebDriverException|JavascriptException|Exception)/i.exec(msg);\n    if (mr) reason = mr[1];\n    else {\n      const mcode = /code=([A-Z0-9_]+)/i.exec(msg);\n      if (mcode) reason = `code=${mcode[1]}`;\n    }\n    return reason\n      ? `${m} ${t} lỗi: ${reason}`\n      : `${m} ${t} lỗi`;\n  }\n\n  // 4) CHECK (nếu message chỉ là \"CHECK\" hay tương tự)\n  if (m === \"CHECK\" && (msg.toUpperCase() === \"CHECK\" || msg === \"\")) {\n    return t === \"ALL\" ? \"CHECK ALL thành công\" : `CHECK ${t} thành công`;\n  }\n\n  // fallback: giữ nguyên msg nhưng thêm label nếu msg quá ngắn\n  if (!msg) return `${m} ${t}`;\n  return msg;\n}\n\n// ----- Build answer (pretty + emoji) -----\nlet answer;\n\nif (finalLine) {\n  // Dùng FINAL status, còn message thì Việt hoá\n  const prettyMsg = viMsgFromFinal(finalMsg, mode, type);\n  const lead = `${statusEmoji(finalStatus)} ${finalStatus} | ${prettyMsg}`;\n\n  if (mode === \"CHECK\" && categorySummary) {\n    answer = `${lead}\\n\\n📌 Trạng thái:\\n${categorySummary}`;\n  } else {\n    answer = lead;\n  }\n} else {\n  // fallback gọn, cũng Việt hoá\n  const fail = exitCode !== 0;\n  answer = fail\n    ? `❌ FAILED | ${label} lỗi (exitCode=${exitCode})`\n    : `✅ SUCCESS | ${label} thành công`;\n}\n\nreturn [{\n  ok,\n  answer,\n  final: finalLine || null,\n  status: finalStatus || null,   // giữ nguyên SUCCESS/ALREADY/FAILED\n  message: viMsgFromFinal(finalMsg, mode, type) || null,\n  exitCode,\n  categories,\n  mode,\n  type// optional\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        -32
+      ],
+      "id": "31a5a757-55d9-4583-a685-463c21c7aa2a",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2e8ebf1e-d172-4493-892f-920ad57af965",
+              "name": "answer",
+              "value": "=Hệ thống đang bận, vui lòng thử lại sau 30s.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        128
+      ],
+      "id": "07bb3054-18ee-4c22-938b-4916669747fc",
+      "name": "Edit Fields",
+      "executeOnce": true
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-03T02:44:45.442Z",
+      "createdAt": "2025-12-03T02:44:45.442Z",
+      "role": "workflow:owner",
+      "workflowId": "5rxurDTMhaZRxA0U",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-18T18:28:37.482Z",
+  "versionId": "ff7362ab-c733-42e1-9b73-a668eb6972c4"
+}
