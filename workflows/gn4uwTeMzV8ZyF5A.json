@@ -1,0 +1,1156 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-11-28T04:17:46.086Z",
+    "createdAt": "2025-11-28T04:17:46.086Z",
+    "versionId": "a26917c6-1a0a-4cba-be29-9d3d088ff3de",
+    "workflowId": "gn4uwTeMzV8ZyF5A",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "vozer",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -128,
+          0
+        ],
+        "id": "6637a031-be41-45e7-8d72-7ffd225e1d87",
+        "name": "Webhook",
+        "webhookId": "cb20bf4f-3e32-4dfd-a69b-814baa5d2661",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "jsCode": "return items.map(item => {\n  const inputHtml = (item.json?.body?.html || item.json?.html || \"\").toString();\n  const urlRaw    = (item.json?.body?.url || item.json?.url || \"\").toString();\n\n  // --- Lấy name và series từ URL ---\n  let nameFromUrl = \"\";\n  let seriesFromUrl = \"\";\n  try {\n    const u = new URL(urlRaw);\n    const parts = u.pathname.split(\"/\").filter(Boolean);\n    nameFromUrl   = parts[parts.length - 1] || \"\";\n    seriesFromUrl = parts[parts.length - 2] || \"\";\n  } catch {\n    const parts = urlRaw.split(\"?\")[0].split(\"#\")[0].split(\"/\").filter(Boolean);\n    nameFromUrl   = parts[parts.length - 1] || \"\";\n    seriesFromUrl = parts[parts.length - 2] || \"\";\n  }\n\n  // --- Lấy h1 ---\n  const h1ExactRe = /<h1\\b[^>]*class=[\"'][^\"']*\\btext-lg\\b[^\"']*\\bfont-bold\\b[^\"']*\\btext-center\\b[^\"']*\\buppercase\\b[^\"']*\\btext-blue-001\\b[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/h1>/i;\n  const h1AnyRe   = /<h1\\b[^>]*>[\\s\\S]*?<\\/h1>/i;\n\n  let h1Tag = \"\";\n  const h1Exact = inputHtml.match(h1ExactRe);\n  if (h1Exact) {\n    h1Tag = h1Exact[0];\n  } else {\n    const h1Any = inputHtml.match(h1AnyRe);\n    h1Tag = h1Any ? h1Any[0] : \"\";\n  }\n\n  // --- Lấy block .smiley ---\n  const smileyMatch = inputHtml.match(/<div\\b[^>]*class=[\"'][^\"']*\\bsmiley\\b[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/div>/i);\n  let smileyBlock = smileyMatch ? smileyMatch[0] : `<div></div>`;\n\n  // --- Xóa đoạn Note (mẫu cũ đã có) ---\n  smileyBlock = smileyBlock.replace(\n    /\\s*Note:\\s*Dịch truyện theo yêu cầu[\\s\\S]*?Ẩn\\s+quảng\\s+cáo\\s+xem[\\s\\S]*?<strong>[\\s\\S]*?<\\/strong>\\.?/i,\n    \"\"\n  );\n\n  // === BỔ SUNG: Gỡ \"Note: Ghi nhớ địa chỉ mới ... Vozer.io/Vozer.vn ... tại đây\" ===\n  // Linh hoạt trước biến thể nội dung và định dạng.\n  // 1) Xóa cả câu \"Note: Ghi nhớ địa chỉ mới ... (vozer.io | vozer.vn) ... tại đây\"\n  smileyBlock = smileyBlock.replace(\n    /<\\/?p>\\s*Note:\\s*Ghi\\s*nhớ\\s*địa\\s*chỉ\\s*mới[\\s\\S]*?(?:vozer\\.(?:io|vn))[\\s\\S]*?tại\\s*đây<\\/a>\\s*<\\/strong>\\s*\\.?\\s*<\\/?p>?/gi,\n    \"\"\n  );\n\n  // 2) Phòng trường hợp không đủ cụm \"tại đây\", xoá mọi anchor trỏ về vozer.io/vozer.vn (quảng cáo/vip)\n  smileyBlock = smileyBlock.replace(\n    /<a\\b[^>]*href=[\"']https?:\\/\\/(?:www\\.)?vozer\\.(?:io|vn)\\/[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/a>/gi,\n    \"\"\n  );\n\n  // === BỔ SUNG: Gỡ các khối \"Đề xuất ...\" (tên & link thay đổi) ===\n  // Xóa từ \"Đề xuất\" cho đến trước </div> kết thúc của .smiley\n// Xoá toàn bộ đoạn \"Note: Ghi nhớ địa chỉ mới ... Đề xuất XXX:\"\nsmileyBlock = smileyBlock.replace(\n  /Note:\\s*Ghi\\s*nhớ\\s*địa\\s*chỉ\\s*mới[\\s\\S]*?Đề\\s*xuất[^:]*:/gi,\n  \"\"\n);\n\n  // Nếu còn dư các thẻ <br> / khoảng trắng dư thừa sau khi xóa, làm sạch nhẹ:\n  smileyBlock = smileyBlock\n    .replace(/(<br\\s*\\/?>\\s*){2,}/gi, \"<br>\")\n    .replace(/\\s{2,}/g, \" \");\n\n  // --- Xóa toàn bộ class trong HTML ---\n  h1Tag = h1Tag.replace(/\\sclass=\"[^\"]*\"/gi, \"\");\n  smileyBlock = smileyBlock.replace(/\\sclass=\"[^\"]*\"/gi, \"\");\n\n  // --- Lấy text cho title ---\n  const h1InnerText = h1Tag.replace(/<\\/?[^>]+>/g, \"\").trim() || seriesFromUrl || \"Tài liệu\";\n\n  // --- HTML tối giản ---\n  const minimalHtml = `<!doctype html>\n<html lang=\"vi\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n  <title>${h1InnerText}</title>\n</head>\n<body>\n  ${h1Tag}\n  ${smileyBlock}\n</body>\n</html>`;\n\n  return {\n    json: {\n      html: minimalHtml,\n      name: nameFromUrl,\n      series: seriesFromUrl,\n      url: urlRaw\n    }\n  };\n});\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          96,
+          0
+        ],
+        "id": "5bbd2afa-8041-4429-baa6-f51fdce825a1",
+        "name": "Code",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "operation": "toText",
+          "sourceProperty": "html",
+          "binaryPropertyName": "=data",
+          "options": {
+            "fileName": "={{ $json.name }}.html"
+          }
+        },
+        "type": "n8n-nodes-base.convertToFile",
+        "typeVersion": 1.1,
+        "position": [
+          992,
+          0
+        ],
+        "id": "51d6d98f-93a7-4ab8-b5a2-40375f205ddd",
+        "name": "Convert to File",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "parentId": "={{ $('Edit Fields').item.json['ID CODE'] }}",
+          "binaryData": true
+        },
+        "type": "n8n-nodes-base.microsoftOneDrive",
+        "typeVersion": 1,
+        "position": [
+          1216,
+          0
+        ],
+        "id": "3f67315d-71ac-430e-a508-ebaf29cda74d",
+        "name": "Upload a file",
+        "credentials": {
+          "microsoftOneDriveOAuth2Api": {
+            "id": "ldks68x9rwwj4G7v",
+            "name": "Microsoft Drive account"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "={{ $json.parentReference.name }}",
+            "mode": "name"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Links": "={{ $('Code').item.json.url }}",
+              "Status": "Done"
+            },
+            "matchingColumns": [
+              "Links"
+            ],
+            "schema": [
+              {
+                "id": "Links",
+                "displayName": "Links",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "row_number",
+                "displayName": "row_number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "readOnly": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          1440,
+          0
+        ],
+        "id": "0022442c-53b7-476f-8ee2-3c39b880c34a",
+        "name": "Update row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "X1UBt5tMcyjhPYqy",
+            "name": "Google Sheets account"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 871572387,
+            "mode": "list",
+            "cachedResultName": "Book",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit#gid=871572387"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "Name",
+                "lookupValue": "={{ $json.series }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          544,
+          0
+        ],
+        "id": "3ec19b07-a3b1-4b3d-a346-f7c2a2f0487f",
+        "name": "Get row(s) in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "X1UBt5tMcyjhPYqy",
+            "name": "Google Sheets account"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "004c1a55-21a1-43f2-a393-8d4e18f6ccd0",
+                "name": "Name",
+                "value": "={{ $json.Name }}",
+                "type": "string"
+              },
+              {
+                "id": "d4e4775b-7850-4496-bb21-45131279c563",
+                "name": "ID CODE",
+                "value": "={{ $json['ID CODE'] }}",
+                "type": "string"
+              },
+              {
+                "id": "239426ba-73dc-4907-9ecb-306f7cc797ed",
+                "name": "html",
+                "value": "={{ $('Code').item.json.html }}",
+                "type": "string"
+              },
+              {
+                "id": "23b5de08-5ce2-44cb-b24b-2e82214ee1dd",
+                "name": "name",
+                "value": "={{ $('Code').item.json.name }}",
+                "type": "string"
+              },
+              {
+                "id": "3217af51-608c-4c7f-987b-ecb96a64fff0",
+                "name": "url",
+                "value": "={{ $('Code').item.json.url }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          768,
+          0
+        ],
+        "id": "9618bcd9-1bde-49ec-8e2a-95d6566aa8a0",
+        "name": "Edit Fields",
+        "disabled": true
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          320,
+          0
+        ],
+        "id": "74dde72c-556d-4e09-8d2f-320da728e76d",
+        "name": "Wait",
+        "webhookId": "21af12a6-04ee-46b2-a5a8-ec58db2358aa",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "jsCode": "return items.map(item => {\n  const inputHtml = (item.json?.body?.html || item.json?.html || \"\").toString();\n  const urlRaw    = (item.json?.body?.url || item.json?.url || \"\").toString();\n\n  // --- Lấy name và series từ URL ---\n  let nameFromUrl = \"\";\n  let seriesFromUrl = \"\";\n  try {\n    const u = new URL(urlRaw);\n    const parts = u.pathname.split(\"/\").filter(Boolean);\n    nameFromUrl   = parts[parts.length - 1] || \"\";\n    seriesFromUrl = parts[parts.length - 2] || \"\";\n  } catch {\n    const parts = urlRaw.split(\"?\")[0].split(\"#\")[0].split(\"/\").filter(Boolean);\n    nameFromUrl   = parts[parts.length - 1] || \"\";\n    seriesFromUrl = parts[parts.length - 2] || \"\";\n  }\n\n  // --- Lấy h1 ---\n  const h1ExactRe = /<h1\\b[^>]*class=[\"'][^\"']*\\btext-lg\\b[^\"']*\\bfont-bold\\b[^\"']*\\btext-center\\b[^\"']*\\buppercase\\b[^\"']*\\btext-blue-001\\b[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/h1>/i;\n  const h1AnyRe   = /<h1\\b[^>]*>[\\s\\S]*?<\\/h1>/i;\n\n  let h1Tag = \"\";\n  const h1Exact = inputHtml.match(h1ExactRe);\n  if (h1Exact) {\n    h1Tag = h1Exact[0];\n  } else {\n    const h1Any = inputHtml.match(h1AnyRe);\n    h1Tag = h1Any ? h1Any[0] : \"\";\n  }\n\n  // --- Lấy block .smiley ---\n  const smileyMatch = inputHtml.match(/<div\\b[^>]*class=[\"'][^\"']*\\bsmiley\\b[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/div>/i);\n  let smileyBlock = smileyMatch ? smileyMatch[0] : `<div></div>`;\n\n  // --- Xóa đoạn Note (mẫu cũ đã có) ---\n  smileyBlock = smileyBlock.replace(/\\s*Note:\\s*Dịch truyện theo yêu cầu[\\s\\S]*?Ẩn\\s+quảng\\s+cáo\\s+xem[\\s\\S]*?<strong>[\\s\\S]*?<\\/strong>\\.?/i, \"\");\n\n  // Gỡ \"Note: Ghi nhớ địa chỉ mới ... Vozer.io/Vozer.vn ... tại đây\"\n  smileyBlock = smileyBlock.replace(/<\\/?p>\\s*Note:\\s*Ghi\\s*nhớ\\s*địa\\s*chỉ\\s*mới[\\s\\S]*?(?:vozer\\.(?:io|vn))[\\s\\S]*?tại\\s*đây<\\/a>\\s*<\\/strong>\\s*\\.?\\s*<\\/?p>?/gi, \"\");\n\n  // Xóa anchor vozer.io/vozer.vn\n  smileyBlock = smileyBlock.replace(/<a\\b[^>]*href=[\"']https?:\\/\\/(?:www\\.)?vozer\\.(?:io|vn)\\/[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/a>/gi, \"\");\n\n  // Xóa đoạn đề xuất\n  smileyBlock = smileyBlock.replace(/Note:\\s*Ghi\\s*nhớ\\s*địa\\s*chỉ\\s*mới[\\s\\S]*?Đề\\s*xuất[^:]*:/gi, \"\");\n\n  // Làm sạch <br> & khoảng trắng\n  smileyBlock = smileyBlock.replace(/(<br\\s*\\/?>\\s*){2,}/gi, \"<br>\").replace(/\\s{2,}/g, \" \");\n\n  // Xóa class trong HTML\n  h1Tag = h1Tag.replace(/\\sclass=\"[^\"]*\"/gi, \"\");\n  smileyBlock = smileyBlock.replace(/\\sclass=\"[^\"]*\"/gi, \"\");\n\n  // Lấy text cho title\n  const h1InnerText = h1Tag.replace(/<\\/?[^>]+>/g, \"\").trim() || seriesFromUrl || \"Tài liệu\";\n\n  // HTML tối giản\n  const minimalHtml = `<!doctype html>\\n<html lang=\"vi\">\\n<head>\\n  <meta charset=\"utf-8\">\\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\\n  <title>${h1InnerText}</title>\\n</head>\\n<body>\\n  ${h1Tag}\\n  ${smileyBlock}\\n</body>\\n</html>`;\n\n  const key = `vozer:${seriesFromUrl}:${nameFromUrl}`;\n\n  return {\n    json: { key, url: urlRaw, html: minimalHtml, name: nameFromUrl, series: seriesFromUrl, ts: Date.now() }\n  };\n});"
+        },
+        "id": "a068f795-e287-4210-82e9-f3a952f1a30e",
+        "name": "Code (Parse & Normalize)",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          96,
+          320
+        ]
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "vozer",
+          "options": {}
+        },
+        "id": "1de26fa2-5494-49c2-bffd-25bfdc687569",
+        "name": "Webhook1",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -128,
+          320
+        ],
+        "webhookId": "cb20bf4f-3e32-4dfd-a69b-814baa5d2661"
+      },
+      {
+        "parameters": {
+          "dataTableId": {
+            "__rl": true,
+            "value": "n2LDGEC3sJYcffrp",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "key",
+                "displayName": "key",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "url",
+                "displayName": "url",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "html",
+                "displayName": "html",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "name",
+                "displayName": "name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "series",
+                "displayName": "series",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "ts",
+                "displayName": "ts",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "status",
+                "displayName": "status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "folderID",
+                "displayName": "folderID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.dataTable",
+        "typeVersion": 1,
+        "position": [
+          544,
+          416
+        ],
+        "id": "8d941bfe-94a2-49f7-947d-0f915edebc32",
+        "name": "Insert row"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "0e2ea45a-24b4-43bd-8e51-911f8462789c",
+                "leftValue": "={{ $json.url }}",
+                "rightValue": "vozer",
+                "operator": {
+                  "type": "string",
+                  "operation": "notContains"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          320,
+          320
+        ],
+        "id": "949dee3b-acf5-46a4-b05d-4894fb89efa2",
+        "name": "If"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          544,
+          224
+        ],
+        "id": "0bf41c91-04bd-453c-8108-c61c1a2019de",
+        "name": "No Operation, do nothing"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Convert to File": {
+        "main": [
+          [
+            {
+              "node": "Upload a file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload a file": {
+        "main": [
+          [
+            {
+              "node": "Update row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Convert to File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "Get row(s) in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook1": {
+        "main": [
+          [
+            {
+              "node": "Code (Parse & Normalize)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code (Parse & Normalize)": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Insert row": {
+        "main": [
+          []
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Insert row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "a26917c6-1a0a-4cba-be29-9d3d088ff3de",
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload a file": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Code (Parse & Normalize)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code (Parse & Normalize)": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-26T10:01:57.569Z",
+  "id": "gn4uwTeMzV8ZyF5A",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "CRAWL",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vozer",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        0
+      ],
+      "id": "6637a031-be41-45e7-8d72-7ffd225e1d87",
+      "name": "Webhook",
+      "webhookId": "cb20bf4f-3e32-4dfd-a69b-814baa5d2661",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const inputHtml = (item.json?.body?.html || item.json?.html || \"\").toString();\n  const urlRaw    = (item.json?.body?.url || item.json?.url || \"\").toString();\n\n  // --- Lấy name và series từ URL ---\n  let nameFromUrl = \"\";\n  let seriesFromUrl = \"\";\n  try {\n    const u = new URL(urlRaw);\n    const parts = u.pathname.split(\"/\").filter(Boolean);\n    nameFromUrl   = parts[parts.length - 1] || \"\";\n    seriesFromUrl = parts[parts.length - 2] || \"\";\n  } catch {\n    const parts = urlRaw.split(\"?\")[0].split(\"#\")[0].split(\"/\").filter(Boolean);\n    nameFromUrl   = parts[parts.length - 1] || \"\";\n    seriesFromUrl = parts[parts.length - 2] || \"\";\n  }\n\n  // --- Lấy h1 ---\n  const h1ExactRe = /<h1\\b[^>]*class=[\"'][^\"']*\\btext-lg\\b[^\"']*\\bfont-bold\\b[^\"']*\\btext-center\\b[^\"']*\\buppercase\\b[^\"']*\\btext-blue-001\\b[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/h1>/i;\n  const h1AnyRe   = /<h1\\b[^>]*>[\\s\\S]*?<\\/h1>/i;\n\n  let h1Tag = \"\";\n  const h1Exact = inputHtml.match(h1ExactRe);\n  if (h1Exact) {\n    h1Tag = h1Exact[0];\n  } else {\n    const h1Any = inputHtml.match(h1AnyRe);\n    h1Tag = h1Any ? h1Any[0] : \"\";\n  }\n\n  // --- Lấy block .smiley ---\n  const smileyMatch = inputHtml.match(/<div\\b[^>]*class=[\"'][^\"']*\\bsmiley\\b[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/div>/i);\n  let smileyBlock = smileyMatch ? smileyMatch[0] : `<div></div>`;\n\n  // --- Xóa đoạn Note (mẫu cũ đã có) ---\n  smileyBlock = smileyBlock.replace(\n    /\\s*Note:\\s*Dịch truyện theo yêu cầu[\\s\\S]*?Ẩn\\s+quảng\\s+cáo\\s+xem[\\s\\S]*?<strong>[\\s\\S]*?<\\/strong>\\.?/i,\n    \"\"\n  );\n\n  // === BỔ SUNG: Gỡ \"Note: Ghi nhớ địa chỉ mới ... Vozer.io/Vozer.vn ... tại đây\" ===\n  // Linh hoạt trước biến thể nội dung và định dạng.\n  // 1) Xóa cả câu \"Note: Ghi nhớ địa chỉ mới ... (vozer.io | vozer.vn) ... tại đây\"\n  smileyBlock = smileyBlock.replace(\n    /<\\/?p>\\s*Note:\\s*Ghi\\s*nhớ\\s*địa\\s*chỉ\\s*mới[\\s\\S]*?(?:vozer\\.(?:io|vn))[\\s\\S]*?tại\\s*đây<\\/a>\\s*<\\/strong>\\s*\\.?\\s*<\\/?p>?/gi,\n    \"\"\n  );\n\n  // 2) Phòng trường hợp không đủ cụm \"tại đây\", xoá mọi anchor trỏ về vozer.io/vozer.vn (quảng cáo/vip)\n  smileyBlock = smileyBlock.replace(\n    /<a\\b[^>]*href=[\"']https?:\\/\\/(?:www\\.)?vozer\\.(?:io|vn)\\/[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/a>/gi,\n    \"\"\n  );\n\n  // === BỔ SUNG: Gỡ các khối \"Đề xuất ...\" (tên & link thay đổi) ===\n  // Xóa từ \"Đề xuất\" cho đến trước </div> kết thúc của .smiley\n// Xoá toàn bộ đoạn \"Note: Ghi nhớ địa chỉ mới ... Đề xuất XXX:\"\nsmileyBlock = smileyBlock.replace(\n  /Note:\\s*Ghi\\s*nhớ\\s*địa\\s*chỉ\\s*mới[\\s\\S]*?Đề\\s*xuất[^:]*:/gi,\n  \"\"\n);\n\n  // Nếu còn dư các thẻ <br> / khoảng trắng dư thừa sau khi xóa, làm sạch nhẹ:\n  smileyBlock = smileyBlock\n    .replace(/(<br\\s*\\/?>\\s*){2,}/gi, \"<br>\")\n    .replace(/\\s{2,}/g, \" \");\n\n  // --- Xóa toàn bộ class trong HTML ---\n  h1Tag = h1Tag.replace(/\\sclass=\"[^\"]*\"/gi, \"\");\n  smileyBlock = smileyBlock.replace(/\\sclass=\"[^\"]*\"/gi, \"\");\n\n  // --- Lấy text cho title ---\n  const h1InnerText = h1Tag.replace(/<\\/?[^>]+>/g, \"\").trim() || seriesFromUrl || \"Tài liệu\";\n\n  // --- HTML tối giản ---\n  const minimalHtml = `<!doctype html>\n<html lang=\"vi\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n  <title>${h1InnerText}</title>\n</head>\n<body>\n  ${h1Tag}\n  ${smileyBlock}\n</body>\n</html>`;\n\n  return {\n    json: {\n      html: minimalHtml,\n      name: nameFromUrl,\n      series: seriesFromUrl,\n      url: urlRaw\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        0
+      ],
+      "id": "5bbd2afa-8041-4429-baa6-f51fdce825a1",
+      "name": "Code",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html",
+        "binaryPropertyName": "=data",
+        "options": {
+          "fileName": "={{ $json.name }}.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        992,
+        0
+      ],
+      "id": "51d6d98f-93a7-4ab8-b5a2-40375f205ddd",
+      "name": "Convert to File",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "parentId": "={{ $('Edit Fields').item.json['ID CODE'] }}",
+        "binaryData": true
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        0
+      ],
+      "id": "3f67315d-71ac-430e-a508-ebaf29cda74d",
+      "name": "Upload a file",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "ldks68x9rwwj4G7v",
+          "name": "Microsoft Drive account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $json.parentReference.name }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Links": "={{ $('Code').item.json.url }}",
+            "Status": "Done"
+          },
+          "matchingColumns": [
+            "Links"
+          ],
+          "schema": [
+            {
+              "id": "Links",
+              "displayName": "Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1440,
+        0
+      ],
+      "id": "0022442c-53b7-476f-8ee2-3c39b880c34a",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 871572387,
+          "mode": "list",
+          "cachedResultName": "Book",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit#gid=871572387"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Name",
+              "lookupValue": "={{ $json.series }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        544,
+        0
+      ],
+      "id": "3ec19b07-a3b1-4b3d-a346-f7c2a2f0487f",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "004c1a55-21a1-43f2-a393-8d4e18f6ccd0",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "d4e4775b-7850-4496-bb21-45131279c563",
+              "name": "ID CODE",
+              "value": "={{ $json['ID CODE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "239426ba-73dc-4907-9ecb-306f7cc797ed",
+              "name": "html",
+              "value": "={{ $('Code').item.json.html }}",
+              "type": "string"
+            },
+            {
+              "id": "23b5de08-5ce2-44cb-b24b-2e82214ee1dd",
+              "name": "name",
+              "value": "={{ $('Code').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "3217af51-608c-4c7f-987b-ecb96a64fff0",
+              "name": "url",
+              "value": "={{ $('Code').item.json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        768,
+        0
+      ],
+      "id": "9618bcd9-1bde-49ec-8e2a-95d6566aa8a0",
+      "name": "Edit Fields",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        0
+      ],
+      "id": "74dde72c-556d-4e09-8d2f-320da728e76d",
+      "name": "Wait",
+      "webhookId": "21af12a6-04ee-46b2-a5a8-ec58db2358aa",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const inputHtml = (item.json?.body?.html || item.json?.html || \"\").toString();\n  const urlRaw    = (item.json?.body?.url || item.json?.url || \"\").toString();\n\n  // --- Lấy name và series từ URL ---\n  let nameFromUrl = \"\";\n  let seriesFromUrl = \"\";\n  try {\n    const u = new URL(urlRaw);\n    const parts = u.pathname.split(\"/\").filter(Boolean);\n    nameFromUrl   = parts[parts.length - 1] || \"\";\n    seriesFromUrl = parts[parts.length - 2] || \"\";\n  } catch {\n    const parts = urlRaw.split(\"?\")[0].split(\"#\")[0].split(\"/\").filter(Boolean);\n    nameFromUrl   = parts[parts.length - 1] || \"\";\n    seriesFromUrl = parts[parts.length - 2] || \"\";\n  }\n\n  // --- Lấy h1 ---\n  const h1ExactRe = /<h1\\b[^>]*class=[\"'][^\"']*\\btext-lg\\b[^\"']*\\bfont-bold\\b[^\"']*\\btext-center\\b[^\"']*\\buppercase\\b[^\"']*\\btext-blue-001\\b[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/h1>/i;\n  const h1AnyRe   = /<h1\\b[^>]*>[\\s\\S]*?<\\/h1>/i;\n\n  let h1Tag = \"\";\n  const h1Exact = inputHtml.match(h1ExactRe);\n  if (h1Exact) {\n    h1Tag = h1Exact[0];\n  } else {\n    const h1Any = inputHtml.match(h1AnyRe);\n    h1Tag = h1Any ? h1Any[0] : \"\";\n  }\n\n  // --- Lấy block .smiley ---\n  const smileyMatch = inputHtml.match(/<div\\b[^>]*class=[\"'][^\"']*\\bsmiley\\b[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/div>/i);\n  let smileyBlock = smileyMatch ? smileyMatch[0] : `<div></div>`;\n\n  // --- Xóa đoạn Note (mẫu cũ đã có) ---\n  smileyBlock = smileyBlock.replace(/\\s*Note:\\s*Dịch truyện theo yêu cầu[\\s\\S]*?Ẩn\\s+quảng\\s+cáo\\s+xem[\\s\\S]*?<strong>[\\s\\S]*?<\\/strong>\\.?/i, \"\");\n\n  // Gỡ \"Note: Ghi nhớ địa chỉ mới ... Vozer.io/Vozer.vn ... tại đây\"\n  smileyBlock = smileyBlock.replace(/<\\/?p>\\s*Note:\\s*Ghi\\s*nhớ\\s*địa\\s*chỉ\\s*mới[\\s\\S]*?(?:vozer\\.(?:io|vn))[\\s\\S]*?tại\\s*đây<\\/a>\\s*<\\/strong>\\s*\\.?\\s*<\\/?p>?/gi, \"\");\n\n  // Xóa anchor vozer.io/vozer.vn\n  smileyBlock = smileyBlock.replace(/<a\\b[^>]*href=[\"']https?:\\/\\/(?:www\\.)?vozer\\.(?:io|vn)\\/[^\"']*[\"'][^>]*>[\\s\\S]*?<\\/a>/gi, \"\");\n\n  // Xóa đoạn đề xuất\n  smileyBlock = smileyBlock.replace(/Note:\\s*Ghi\\s*nhớ\\s*địa\\s*chỉ\\s*mới[\\s\\S]*?Đề\\s*xuất[^:]*:/gi, \"\");\n\n  // Làm sạch <br> & khoảng trắng\n  smileyBlock = smileyBlock.replace(/(<br\\s*\\/?>\\s*){2,}/gi, \"<br>\").replace(/\\s{2,}/g, \" \");\n\n  // Xóa class trong HTML\n  h1Tag = h1Tag.replace(/\\sclass=\"[^\"]*\"/gi, \"\");\n  smileyBlock = smileyBlock.replace(/\\sclass=\"[^\"]*\"/gi, \"\");\n\n  // Lấy text cho title\n  const h1InnerText = h1Tag.replace(/<\\/?[^>]+>/g, \"\").trim() || seriesFromUrl || \"Tài liệu\";\n\n  // HTML tối giản\n  const minimalHtml = `<!doctype html>\\n<html lang=\"vi\">\\n<head>\\n  <meta charset=\"utf-8\">\\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\\n  <title>${h1InnerText}</title>\\n</head>\\n<body>\\n  ${h1Tag}\\n  ${smileyBlock}\\n</body>\\n</html>`;\n\n  const key = `vozer:${seriesFromUrl}:${nameFromUrl}`;\n\n  return {\n    json: { key, url: urlRaw, html: minimalHtml, name: nameFromUrl, series: seriesFromUrl, ts: Date.now() }\n  };\n});"
+      },
+      "id": "a068f795-e287-4210-82e9-f3a952f1a30e",
+      "name": "Code (Parse & Normalize)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vozer",
+        "options": {}
+      },
+      "id": "1de26fa2-5494-49c2-bffd-25bfdc687569",
+      "name": "Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -128,
+        320
+      ],
+      "webhookId": "cb20bf4f-3e32-4dfd-a69b-814baa5d2661"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "n2LDGEC3sJYcffrp",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "key",
+              "displayName": "key",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "html",
+              "displayName": "html",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "series",
+              "displayName": "series",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ts",
+              "displayName": "ts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "folderID",
+              "displayName": "folderID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        544,
+        416
+      ],
+      "id": "8d941bfe-94a2-49f7-947d-0f915edebc32",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0e2ea45a-24b4-43bd-8e51-911f8462789c",
+              "leftValue": "={{ $json.url }}",
+              "rightValue": "vozer",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        320
+      ],
+      "id": "949dee3b-acf5-46a4-b05d-4894fb89efa2",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        544,
+        224
+      ],
+      "id": "0bf41c91-04bd-453c-8108-c61c1a2019de",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-26T10:01:57.569Z",
+      "createdAt": "2025-08-26T10:01:57.569Z",
+      "role": "workflow:owner",
+      "workflowId": "gn4uwTeMzV8ZyF5A",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-10-29T04:13:22.866Z",
+  "versionId": "a26917c6-1a0a-4cba-be29-9d3d088ff3de"
+}
