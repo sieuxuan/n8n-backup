@@ -1,0 +1,210 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-15T07:48:11.552Z",
+  "id": "V3Tua1UjOmf8VNtU",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "My workflow 5",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/u/0/folders/18XrXOxwsKrqDYaE3Wo5vIEYunpv6bW2P",
+          "mode": "url"
+        },
+        "event": "fileUpdated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "948b956c-0498-4569-9ae8-72a7da305f92",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "RaSre3D2vfCbiNij",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json.id}}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "28397d29-fe84-4c7c-96c2-d979e6dbced3",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "RaSre3D2vfCbiNij",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "57a56279-b1fb-4173-9b63-d5da9066f7f8",
+              "name": "file_name",
+              "value": "={{$binary.data.fileName}}",
+              "type": "string"
+            },
+            {
+              "id": "a4f37e19-00e2-44c2-98a1-f2205eb3ddf8",
+              "name": "mime_type",
+              "value": "={{$binary.data.mimeType}}",
+              "type": "string"
+            },
+            {
+              "id": "c5607c3f-322e-4206-a713-2debefbe04fc",
+              "name": "file_size_kb",
+              "value": "={{Math.round($binary.data.fileSize / 1024)}}",
+              "type": "string"
+            },
+            {
+              "id": "fb27fb0e-0120-417f-a4a5-08b23c2d124e",
+              "name": "drive_file_id",
+              "value": "={{$json.id}}",
+              "type": "string"
+            },
+            {
+              "id": "78cc7050-ccc7-4c83-b641-54694ee889f1",
+              "name": "logged_at",
+              "value": "={{$now}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "922bc0cd-02cd-47bd-9a3f-8c0318a272dd",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1MIjLX9xjO1jwGcK5nKXiSc-pL8Ci52p9D-ow7t3oVlY/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "sheet",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        0
+      ],
+      "id": "ee1e3494-be85-4772-9c02-7960daf4cdbf",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HAuycisc2CDPvPSS",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-15T07:48:11.552Z",
+      "createdAt": "2025-12-15T07:48:11.552Z",
+      "role": "workflow:owner",
+      "workflowId": "V3Tua1UjOmf8VNtU",
+      "projectId": "0KvFWNFJcnQ9XdQQ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-17T11:08:54.575Z",
+  "versionId": "c6b405e2-561d-4729-b9ae-45941a74b818"
+}
