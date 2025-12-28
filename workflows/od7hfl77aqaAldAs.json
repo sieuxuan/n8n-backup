@@ -1,0 +1,923 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-06T08:38:01.756Z",
+    "createdAt": "2025-12-06T08:38:01.756Z",
+    "versionId": "e8cde02e-e9e3-4d77-8e58-ba5bdea7381a",
+    "workflowId": "od7hfl77aqaAldAs",
+    "nodes": [
+      {
+        "parameters": {
+          "jsCode": "// n8n Function node\nconst isKeep = (s) => (s || '').trim().toLowerCase() !== 'lunch';\n\n// Lấy danh sách events (json), rồi lọc\nconst events = $input.all()\n  .map(i => i.json)\n  .filter(ev => isKeep(ev.summary));\n\nreturn [{\n  json: {\n    eventCount: events.length,\n    events\n  }\n}];"
+        },
+        "id": "a79f7817-b3e8-417c-b176-eb507d9c7b69",
+        "name": "Count event",
+        "type": "n8n-nodes-base.code",
+        "position": [
+          1280,
+          656
+        ],
+        "typeVersion": 2
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "version": 2,
+              "leftValue": "",
+              "caseSensitive": true,
+              "typeValidation": "strict"
+            },
+            "combinator": "or",
+            "conditions": [
+              {
+                "id": "0a556b19-d5f6-42fd-aa9f-6ebfc2c5e042",
+                "operator": {
+                  "type": "number",
+                  "operation": "gt"
+                },
+                "leftValue": "={{ $json.eventCount}}",
+                "rightValue": 0
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "11e1cff6-439b-4cae-8d1c-a48e7a8bed90",
+        "name": "If condition",
+        "type": "n8n-nodes-base.if",
+        "position": [
+          1504,
+          656
+        ],
+        "executeOnce": false,
+        "typeVersion": 2.2,
+        "alwaysOutputData": false
+      },
+      {
+        "parameters": {
+          "jsCode": "// Get all of the events from IF true branch\nconst rawItems = $items();\nlet events = [];\n\n// Normalize data\nrawItems.forEach(item => {\n  const data = item.json;\n\n  if (Array.isArray(data.events)) {\n    events.push(...data.events);\n  } else if (data.event) {\n    events.push(data.event);\n  } else {\n    events.push(data);\n  }\n});\n\n// Lấy ngày hôm nay (dùng tiếng Anh cho thứ)\nconst today = new Date().toLocaleDateString(\"en-GB\", { \n  weekday: \"long\", year: \"numeric\", month: \"2-digit\", day: \"2-digit\",\n  timeZone: \"Asia/Ho_Chi_Minh\" \n});\n\n// Hàm format giờ VN\nfunction formatDateTime(dateStr) {\n  if (!dateStr) return \"\";\n  const d = new Date(dateStr);\n  return d.toLocaleTimeString(\"en-GB\", {\n    hour: \"2-digit\",\n    minute: \"2-digit\",\n    timeZone: \"Asia/Ho_Chi_Minh\"\n  });\n}\n\n// Message creation\nlet message = `☀️ Good morning! Here's your calendar for today (${today})\\n\\n📅 You have ${events.length} event${events.length > 1 ? 's' : ''} today.\\n`;\n\nevents.forEach(e => {\n  message += `──────────────────────\\n`;\n\n  if (e.summary) message += `📌 Name: ${e.summary}\\n`;\n\n  const start = e.start?.dateTime || e.start?.date;\n  const end = e.end?.dateTime || e.end?.date;\n  if (start || end) {\n    message += `⏰ Time: ${formatDateTime(start)} - ${formatDateTime(end)}\\n`;\n  }\n\n  if (e.description) message += `📝 Description: ${e.description}\\n`;\n  if (e.location) message += `📍 Location: ${e.location}\\n`;\n});\n\nmessage += \"✨ Have a great day!\";\n\nreturn [\n  {\n    json: {\n      text: message\n    }\n  }\n];\n"
+        },
+        "id": "711a4b13-a376-4f54-b458-f97a832e4fe1",
+        "name": "Message code",
+        "type": "n8n-nodes-base.code",
+        "position": [
+          1728,
+          560
+        ],
+        "typeVersion": 2
+      },
+      {
+        "parameters": {
+          "operation": "getAll",
+          "calendar": {
+            "__rl": true,
+            "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+            "mode": "list",
+            "cachedResultName": "MAHEN TEAM WORKING PLAN"
+          },
+          "returnAll": true,
+          "timeMin": "={{ $now.startOf('day') }}",
+          "timeMax": "={{ $now.endOf('day') }}",
+          "options": {
+            "orderBy": "startTime"
+          }
+        },
+        "id": "d2319706-cda9-45a0-860e-d3b1f330d3f0",
+        "name": "Check google Calendar",
+        "type": "n8n-nodes-base.googleCalendar",
+        "position": [
+          608,
+          560
+        ],
+        "executeOnce": false,
+        "typeVersion": 1.3,
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleCalendarOAuth2Api": {
+            "id": "VkDZsOnEyJbsFdoc",
+            "name": "Google Calendar account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "triggerAtHour": 8
+              }
+            ]
+          }
+        },
+        "id": "3daa99b4-dc92-47eb-a9a2-a749ca5fa215",
+        "name": "8am trigger",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "position": [
+          384,
+          800
+        ],
+        "typeVersion": 1.2
+      },
+      {
+        "parameters": {
+          "threadId": "2091898082743203663",
+          "message": "={{ $json.text }}"
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          1952,
+          560
+        ],
+        "id": "fb38dced-ec7e-45ce-bf36-a73c51eaa1b3",
+        "name": "Gửi tin nhắn1",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "threadId": "2091898082743203663",
+          "message": "=👋 Hi! Your calendar is clear for today 🗓️✨"
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          1728,
+          752
+        ],
+        "id": "81d2a086-f237-4b43-8fde-7a992cdcf2ca",
+        "name": "Gửi tin nhắn",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "getAll",
+          "calendar": {
+            "__rl": true,
+            "value": "9k78fub48bou9jpde1if87b9a0fahjcq@import.calendar.google.com",
+            "mode": "list",
+            "cachedResultName": "Calendar"
+          },
+          "returnAll": true,
+          "timeMin": "={{ $now.startOf('day') }}",
+          "timeMax": "={{ $now.endOf('day') }}",
+          "options": {
+            "orderBy": "startTime"
+          }
+        },
+        "id": "866f1783-ba6c-41db-9c8a-7184969e0fd6",
+        "name": "Check google Calendar1",
+        "type": "n8n-nodes-base.googleCalendar",
+        "position": [
+          608,
+          752
+        ],
+        "executeOnce": false,
+        "typeVersion": 1.3,
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleCalendarOAuth2Api": {
+            "id": "VkDZsOnEyJbsFdoc",
+            "name": "Google Calendar account"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          1056,
+          656
+        ],
+        "id": "3d9e9e7f-105c-471c-ab38-3f1e9ec011e8",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "jsCode": "// n8n Function node\n\n// === Config ===\nconst TARGET_TZ = 'Asia/Ho_Chi_Minh';\nconst TARGET_OFFSET = '+07:00'; // hiển thị offset\n\n// === Helpers ===\nfunction toHoChiMinhOffset(dtStr) {\n  if (!dtStr) return null;\n  // All-day (YYYY-MM-DD) -> set 00:00:00Z trước khi cộng +7\n  const isDateOnly = /^\\d{4}-\\d{2}-\\d{2}$/.test(dtStr);\n  const base = isDateOnly ? `${dtStr}T00:00:00Z` : dtStr;\n\n  const d = new Date(base);\n  const d7 = new Date(d.getTime() + 7 * 60 * 60 * 1000);\n\n  const y = d7.getUTCFullYear();\n  const m = String(d7.getUTCMonth() + 1).padStart(2, '0');\n  const day = String(d7.getUTCDate()).padStart(2, '0');\n  const hh = String(d7.getUTCHours()).padStart(2, '0');\n  const mm = String(d7.getUTCMinutes()).padStart(2, '0');\n  const ss = String(d7.getUTCSeconds()).padStart(2, '0');\n\n  return `${y}-${m}-${day}T${hh}:${mm}:${ss}${TARGET_OFFSET}`;\n}\n\nfunction pick(obj = {}, keys = []) {\n  const out = {};\n  for (const k of keys) {\n    if (obj[k] !== undefined) out[k] = obj[k];\n  }\n  return out;\n}\n\n// === Main ===\nconst outItems = items.map(({ json = {} }) => {\n  const {\n    id,\n    summary,\n    start = {},\n    end = {},\n    creator = {},\n    organizer = {},\n    created,\n    updated,\n    etag,\n    eventType,\n    htmlLink,\n    iCalUID,\n    kind,\n    reminders,\n    sequence,\n    status,\n  } = json;\n\n  const startDateTimeRaw = start.dateTime || start.date;\n  const endDateTimeRaw = end.dateTime || end.date;\n\n  const startOut = {\n    dateTime: toHoChiMinhOffset(startDateTimeRaw),\n    timeZone: TARGET_TZ,\n  };\n\n  const endOut = {\n    dateTime: toHoChiMinhOffset(endDateTimeRaw),\n    timeZone: TARGET_TZ,\n  };\n\n  const obj = {\n    id,\n    summary,\n    start: startOut,\n    end: endOut,\n    creator: pick(creator, ['email']),\n    organizer: {\n      ...pick(organizer, ['email', 'displayName', 'self']),\n    },\n    created,\n    updated,\n    etag,\n    eventType,\n    htmlLink,\n    iCalUID,\n    kind,\n    reminders: reminders && typeof reminders === 'object'\n      ? pick(reminders, ['useDefault'])\n      : undefined,\n    sequence,\n    status,\n  };\n\n  // clean undefined\n  Object.keys(obj).forEach(k => obj[k] === undefined && delete obj[k]);\n  if (obj.organizer) {\n    Object.keys(obj.organizer).forEach(k => obj.organizer[k] === undefined && delete obj.organizer[k]);\n    if (Object.keys(obj.organizer).length === 0) delete obj.organizer;\n  }\n  if (obj.reminders === undefined) delete obj.reminders;\n\n  return { json: obj }; // MỖI EVENT → 1 ITEM (json là object)\n});\n\nreturn outItems;"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          832,
+          752
+        ],
+        "id": "7ba741d1-1a98-428e-aa1b-ffc9b32cee77",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          384,
+          512
+        ],
+        "id": "262d0417-7b44-4f72-9dc2-c08f39952839",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1haXSugWNx2xwMZgZlW0Ms2mzOObkL43dA1_gV1syXkI",
+            "mode": "list",
+            "cachedResultName": "DANH SACH CONG TY",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1haXSugWNx2xwMZgZlW0Ms2mzOObkL43dA1_gV1syXkI/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 2010708477,
+            "mode": "list",
+            "cachedResultName": "DS",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1haXSugWNx2xwMZgZlW0Ms2mzOObkL43dA1_gV1syXkI/edit#gid=2010708477"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          608,
+          976
+        ],
+        "id": "9924e17a-503b-45a9-8696-48ed601a20fb",
+        "name": "Get row(s) in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "X1UBt5tMcyjhPYqy",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const TZ = 'Asia/Ho_Chi_Minh';\n\n// --- Helpers ---\nfunction getTodayInVN() {\n  const fmt = new Intl.DateTimeFormat('en-GB', {\n    timeZone: TZ,\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n  });\n  const parts = fmt.formatToParts(new Date());\n  const get = (t) => parts.find(p => p.type === t).value;\n  const d = Number(get('day'));\n  const m = Number(get('month'));\n  const y = Number(get('year'));\n  const dt = new Date(Date.UTC(y, m - 1, d));\n  return { y, m, d, dt };\n}\n\nfunction parseFlexibleDate(input) {\n  if (!input) return null;\n  const s = String(input).trim();\n  const sep = s.includes('/') ? '/' : (s.includes('-') ? '-' : null);\n  if (!sep) return null;\n  const parts = s.split(sep).map(p => p.trim());\n\n  let y, m, d;\n  if (parts[0].length === 4) {\n    y = Number(parts[0]); m = Number(parts[1]); d = Number(parts[2]);\n  } else if (parts[2] && parts[2].length === 4) {\n    const a = Number(parts[0]);\n    const b = Number(parts[1]);\n    y = Number(parts[2]);\n    if (a > 12 && b <= 12) { d = a; m = b; }\n    else if (b > 12 && a <= 12) { m = a; d = b; }\n    else { m = a; d = b; }\n  } else {\n    return null;\n  }\n\n  if (!y || !m || !d) return null;\n  const dt = new Date(Date.UTC(y, m - 1, d));\n  if (isNaN(dt.getTime())) return null;\n  return { y, m, d, dt };\n}\n\nfunction isSameMonthDay(a, b) {\n  return a.m === (b.getUTCMonth() + 1) && a.d === b.getUTCDate();\n}\n\nfunction calcAge(dob, todayUTC) {\n  const ty = todayUTC.getUTCFullYear();\n  let age = ty - dob.y;\n  const thisYearBday = new Date(Date.UTC(ty, dob.m - 1, dob.d));\n  if (todayUTC < thisYearBday) age -= 1;\n  return age;\n}\n\nfunction pick(obj, keys) {\n  for (const k of keys) {\n    if (obj[k] !== undefined && obj[k] !== null) return String(obj[k]).trim();\n  }\n  return '';\n}\n\n// --- Main ---\nconst { dt: vnTodayDate, y: ty, m: tm, d: td } = getTodayInVN();\n\nlet employees = [];\nif (items.length > 1) {\n  employees = items.map(it => it.json);\n} else if (items.length === 1) {\n  const j = items[0].json;\n  if (Array.isArray(j)) {\n    employees = j;\n  } else if (Array.isArray(j.data)) {\n    employees = j.data;\n  } else {\n    employees = [j];\n  }\n}\n\nconst matches = [];\nfor (const r of employees) {\n  const dobRaw = pick(r, ['DOB', 'dob', 'Date of Birth']);\n  const parsed = parseFlexibleDate(dobRaw);\n  if (!parsed) continue;\n\n  if (isSameMonthDay(parsed, vnTodayDate)) {\n    const age = calcAge(parsed, vnTodayDate);\n    const name = pick(r, ['Name', 'name']);\n    const dept = pick(r, ['Department', 'Department ', 'Dept', 'department']);\n    matches.push({ \n      name, \n      dept: dept || 'N/A', \n      birthYear: parsed.y,   // <<< THÊM NĂM SINH\n      age \n    });\n  }\n}\n\nconst dayStrVI = `${String(td).padStart(2, '0')}/${String(tm).padStart(2, '0')}/${ty}`;\nlet messageVI;\n\nif (matches.length === 0) {\n  messageVI = `🎂 Thông báo sinh nhật ngày ${dayStrVI}:\\nHôm nay không có người nào sinh nhật.`;\n} else {\n  const linesVI = matches\n    .map(p => `• ${p.name} – ${p.dept} – Sinh năm ${p.birthYear} – ${p.age} tuổi`)\n    .join('\\n');\n\n  messageVI = `🎂 Thông báo sinh nhật ngày ${dayStrVI}:\\n${linesVI}`;\n}\n\nreturn [\n  {\n    json: {\n      ngay: dayStrVI,\n      sinhnhat: matches,\n      thongbao: messageVI\n    }\n  }\n];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          832,
+          976
+        ],
+        "id": "939b5867-b402-48d6-8848-51acb640fd78",
+        "name": "Code"
+      },
+      {
+        "parameters": {
+          "threadId": "2091898082743203663",
+          "message": "={{ $json.thongbao }}"
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          1184,
+          976
+        ],
+        "id": "b6ba04bf-f603-4549-af16-c08d53745f86",
+        "name": "Gửi tin nhắn2",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Count event": {
+        "main": [
+          [
+            {
+              "node": "If condition",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If condition": {
+        "main": [
+          [
+            {
+              "node": "Message code",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Gửi tin nhắn",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Message code": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Check google Calendar": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "8am trigger": {
+        "main": [
+          [
+            {
+              "node": "Check google Calendar",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Check google Calendar1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Get row(s) in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Check google Calendar1": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Count event",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Check google Calendar",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Check google Calendar1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Get row(s) in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "e8cde02e-e9e3-4d77-8e58-ba5bdea7381a",
+  "connections": {
+    "Count event": {
+      "main": [
+        [
+          {
+            "node": "If condition",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If condition": {
+      "main": [
+        [
+          {
+            "node": "Message code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gửi tin nhắn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message code": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8am trigger": {
+      "main": [
+        [
+          {
+            "node": "Check google Calendar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check google Calendar1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check google Calendar1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Count event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Check google Calendar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check google Calendar1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-29T02:57:41.960Z",
+  "id": "od7hfl77aqaAldAs",
+  "isArchived": false,
+  "meta": {
+    "templateId": "6952",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Daily Calendar Summary Notifications via Telegram from Google Calendar",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// n8n Function node\nconst isKeep = (s) => (s || '').trim().toLowerCase() !== 'lunch';\n\n// Lấy danh sách events (json), rồi lọc\nconst events = $input.all()\n  .map(i => i.json)\n  .filter(ev => isKeep(ev.summary));\n\nreturn [{\n  json: {\n    eventCount: events.length,\n    events\n  }\n}];"
+      },
+      "id": "a79f7817-b3e8-417c-b176-eb507d9c7b69",
+      "name": "Count event",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1280,
+        656
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "or",
+          "conditions": [
+            {
+              "id": "0a556b19-d5f6-42fd-aa9f-6ebfc2c5e042",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": "={{ $json.eventCount}}",
+              "rightValue": 0
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11e1cff6-439b-4cae-8d1c-a48e7a8bed90",
+      "name": "If condition",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1504,
+        656
+      ],
+      "executeOnce": false,
+      "typeVersion": 2.2,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all of the events from IF true branch\nconst rawItems = $items();\nlet events = [];\n\n// Normalize data\nrawItems.forEach(item => {\n  const data = item.json;\n\n  if (Array.isArray(data.events)) {\n    events.push(...data.events);\n  } else if (data.event) {\n    events.push(data.event);\n  } else {\n    events.push(data);\n  }\n});\n\n// Lấy ngày hôm nay (dùng tiếng Anh cho thứ)\nconst today = new Date().toLocaleDateString(\"en-GB\", { \n  weekday: \"long\", year: \"numeric\", month: \"2-digit\", day: \"2-digit\",\n  timeZone: \"Asia/Ho_Chi_Minh\" \n});\n\n// Hàm format giờ VN\nfunction formatDateTime(dateStr) {\n  if (!dateStr) return \"\";\n  const d = new Date(dateStr);\n  return d.toLocaleTimeString(\"en-GB\", {\n    hour: \"2-digit\",\n    minute: \"2-digit\",\n    timeZone: \"Asia/Ho_Chi_Minh\"\n  });\n}\n\n// Message creation\nlet message = `☀️ Good morning! Here's your calendar for today (${today})\\n\\n📅 You have ${events.length} event${events.length > 1 ? 's' : ''} today.\\n`;\n\nevents.forEach(e => {\n  message += `──────────────────────\\n`;\n\n  if (e.summary) message += `📌 Name: ${e.summary}\\n`;\n\n  const start = e.start?.dateTime || e.start?.date;\n  const end = e.end?.dateTime || e.end?.date;\n  if (start || end) {\n    message += `⏰ Time: ${formatDateTime(start)} - ${formatDateTime(end)}\\n`;\n  }\n\n  if (e.description) message += `📝 Description: ${e.description}\\n`;\n  if (e.location) message += `📍 Location: ${e.location}\\n`;\n});\n\nmessage += \"✨ Have a great day!\";\n\nreturn [\n  {\n    json: {\n      text: message\n    }\n  }\n];\n"
+      },
+      "id": "711a4b13-a376-4f54-b458-f97a832e4fe1",
+      "name": "Message code",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1728,
+        560
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "8e435411e7a8822e91a3ba5b226b6fa1f14d7516c8b0ef033cddda43f6e649f4@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "MAHEN TEAM WORKING PLAN"
+        },
+        "returnAll": true,
+        "timeMin": "={{ $now.startOf('day') }}",
+        "timeMax": "={{ $now.endOf('day') }}",
+        "options": {
+          "orderBy": "startTime"
+        }
+      },
+      "id": "d2319706-cda9-45a0-860e-d3b1f330d3f0",
+      "name": "Check google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        608,
+        560
+      ],
+      "executeOnce": false,
+      "typeVersion": 1.3,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VkDZsOnEyJbsFdoc",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "3daa99b4-dc92-47eb-a9a2-a749ca5fa215",
+      "name": "8am trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        384,
+        800
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "threadId": "2091898082743203663",
+        "message": "={{ $json.text }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        560
+      ],
+      "id": "fb38dced-ec7e-45ce-bf36-a73c51eaa1b3",
+      "name": "Gửi tin nhắn1",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "OMssdW79ELA0RV06",
+          "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "2091898082743203663",
+        "message": "=👋 Hi! Your calendar is clear for today 🗓️✨"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        1728,
+        752
+      ],
+      "id": "81d2a086-f237-4b43-8fde-7a992cdcf2ca",
+      "name": "Gửi tin nhắn",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "OMssdW79ELA0RV06",
+          "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "9k78fub48bou9jpde1if87b9a0fahjcq@import.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Calendar"
+        },
+        "returnAll": true,
+        "timeMin": "={{ $now.startOf('day') }}",
+        "timeMax": "={{ $now.endOf('day') }}",
+        "options": {
+          "orderBy": "startTime"
+        }
+      },
+      "id": "866f1783-ba6c-41db-9c8a-7184969e0fd6",
+      "name": "Check google Calendar1",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        608,
+        752
+      ],
+      "executeOnce": false,
+      "typeVersion": 1.3,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "VkDZsOnEyJbsFdoc",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1056,
+        656
+      ],
+      "id": "3d9e9e7f-105c-471c-ab38-3f1e9ec011e8",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Function node\n\n// === Config ===\nconst TARGET_TZ = 'Asia/Ho_Chi_Minh';\nconst TARGET_OFFSET = '+07:00'; // hiển thị offset\n\n// === Helpers ===\nfunction toHoChiMinhOffset(dtStr) {\n  if (!dtStr) return null;\n  // All-day (YYYY-MM-DD) -> set 00:00:00Z trước khi cộng +7\n  const isDateOnly = /^\\d{4}-\\d{2}-\\d{2}$/.test(dtStr);\n  const base = isDateOnly ? `${dtStr}T00:00:00Z` : dtStr;\n\n  const d = new Date(base);\n  const d7 = new Date(d.getTime() + 7 * 60 * 60 * 1000);\n\n  const y = d7.getUTCFullYear();\n  const m = String(d7.getUTCMonth() + 1).padStart(2, '0');\n  const day = String(d7.getUTCDate()).padStart(2, '0');\n  const hh = String(d7.getUTCHours()).padStart(2, '0');\n  const mm = String(d7.getUTCMinutes()).padStart(2, '0');\n  const ss = String(d7.getUTCSeconds()).padStart(2, '0');\n\n  return `${y}-${m}-${day}T${hh}:${mm}:${ss}${TARGET_OFFSET}`;\n}\n\nfunction pick(obj = {}, keys = []) {\n  const out = {};\n  for (const k of keys) {\n    if (obj[k] !== undefined) out[k] = obj[k];\n  }\n  return out;\n}\n\n// === Main ===\nconst outItems = items.map(({ json = {} }) => {\n  const {\n    id,\n    summary,\n    start = {},\n    end = {},\n    creator = {},\n    organizer = {},\n    created,\n    updated,\n    etag,\n    eventType,\n    htmlLink,\n    iCalUID,\n    kind,\n    reminders,\n    sequence,\n    status,\n  } = json;\n\n  const startDateTimeRaw = start.dateTime || start.date;\n  const endDateTimeRaw = end.dateTime || end.date;\n\n  const startOut = {\n    dateTime: toHoChiMinhOffset(startDateTimeRaw),\n    timeZone: TARGET_TZ,\n  };\n\n  const endOut = {\n    dateTime: toHoChiMinhOffset(endDateTimeRaw),\n    timeZone: TARGET_TZ,\n  };\n\n  const obj = {\n    id,\n    summary,\n    start: startOut,\n    end: endOut,\n    creator: pick(creator, ['email']),\n    organizer: {\n      ...pick(organizer, ['email', 'displayName', 'self']),\n    },\n    created,\n    updated,\n    etag,\n    eventType,\n    htmlLink,\n    iCalUID,\n    kind,\n    reminders: reminders && typeof reminders === 'object'\n      ? pick(reminders, ['useDefault'])\n      : undefined,\n    sequence,\n    status,\n  };\n\n  // clean undefined\n  Object.keys(obj).forEach(k => obj[k] === undefined && delete obj[k]);\n  if (obj.organizer) {\n    Object.keys(obj.organizer).forEach(k => obj.organizer[k] === undefined && delete obj.organizer[k]);\n    if (Object.keys(obj.organizer).length === 0) delete obj.organizer;\n  }\n  if (obj.reminders === undefined) delete obj.reminders;\n\n  return { json: obj }; // MỖI EVENT → 1 ITEM (json là object)\n});\n\nreturn outItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        752
+      ],
+      "id": "7ba741d1-1a98-428e-aa1b-ffc9b32cee77",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        384,
+        512
+      ],
+      "id": "262d0417-7b44-4f72-9dc2-c08f39952839",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1haXSugWNx2xwMZgZlW0Ms2mzOObkL43dA1_gV1syXkI",
+          "mode": "list",
+          "cachedResultName": "DANH SACH CONG TY",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1haXSugWNx2xwMZgZlW0Ms2mzOObkL43dA1_gV1syXkI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2010708477,
+          "mode": "list",
+          "cachedResultName": "DS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1haXSugWNx2xwMZgZlW0Ms2mzOObkL43dA1_gV1syXkI/edit#gid=2010708477"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        608,
+        976
+      ],
+      "id": "9924e17a-503b-45a9-8696-48ed601a20fb",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const TZ = 'Asia/Ho_Chi_Minh';\n\n// --- Helpers ---\nfunction getTodayInVN() {\n  const fmt = new Intl.DateTimeFormat('en-GB', {\n    timeZone: TZ,\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n  });\n  const parts = fmt.formatToParts(new Date());\n  const get = (t) => parts.find(p => p.type === t).value;\n  const d = Number(get('day'));\n  const m = Number(get('month'));\n  const y = Number(get('year'));\n  const dt = new Date(Date.UTC(y, m - 1, d));\n  return { y, m, d, dt };\n}\n\nfunction parseFlexibleDate(input) {\n  if (!input) return null;\n  const s = String(input).trim();\n  const sep = s.includes('/') ? '/' : (s.includes('-') ? '-' : null);\n  if (!sep) return null;\n  const parts = s.split(sep).map(p => p.trim());\n\n  let y, m, d;\n  if (parts[0].length === 4) {\n    y = Number(parts[0]); m = Number(parts[1]); d = Number(parts[2]);\n  } else if (parts[2] && parts[2].length === 4) {\n    const a = Number(parts[0]);\n    const b = Number(parts[1]);\n    y = Number(parts[2]);\n    if (a > 12 && b <= 12) { d = a; m = b; }\n    else if (b > 12 && a <= 12) { m = a; d = b; }\n    else { m = a; d = b; }\n  } else {\n    return null;\n  }\n\n  if (!y || !m || !d) return null;\n  const dt = new Date(Date.UTC(y, m - 1, d));\n  if (isNaN(dt.getTime())) return null;\n  return { y, m, d, dt };\n}\n\nfunction isSameMonthDay(a, b) {\n  return a.m === (b.getUTCMonth() + 1) && a.d === b.getUTCDate();\n}\n\nfunction calcAge(dob, todayUTC) {\n  const ty = todayUTC.getUTCFullYear();\n  let age = ty - dob.y;\n  const thisYearBday = new Date(Date.UTC(ty, dob.m - 1, dob.d));\n  if (todayUTC < thisYearBday) age -= 1;\n  return age;\n}\n\nfunction pick(obj, keys) {\n  for (const k of keys) {\n    if (obj[k] !== undefined && obj[k] !== null) return String(obj[k]).trim();\n  }\n  return '';\n}\n\n// --- Main ---\nconst { dt: vnTodayDate, y: ty, m: tm, d: td } = getTodayInVN();\n\nlet employees = [];\nif (items.length > 1) {\n  employees = items.map(it => it.json);\n} else if (items.length === 1) {\n  const j = items[0].json;\n  if (Array.isArray(j)) {\n    employees = j;\n  } else if (Array.isArray(j.data)) {\n    employees = j.data;\n  } else {\n    employees = [j];\n  }\n}\n\nconst matches = [];\nfor (const r of employees) {\n  const dobRaw = pick(r, ['DOB', 'dob', 'Date of Birth']);\n  const parsed = parseFlexibleDate(dobRaw);\n  if (!parsed) continue;\n\n  if (isSameMonthDay(parsed, vnTodayDate)) {\n    const age = calcAge(parsed, vnTodayDate);\n    const name = pick(r, ['Name', 'name']);\n    const dept = pick(r, ['Department', 'Department ', 'Dept', 'department']);\n    matches.push({ \n      name, \n      dept: dept || 'N/A', \n      birthYear: parsed.y,   // <<< THÊM NĂM SINH\n      age \n    });\n  }\n}\n\nconst dayStrVI = `${String(td).padStart(2, '0')}/${String(tm).padStart(2, '0')}/${ty}`;\nlet messageVI;\n\nif (matches.length === 0) {\n  messageVI = `🎂 Thông báo sinh nhật ngày ${dayStrVI}:\\nHôm nay không có người nào sinh nhật.`;\n} else {\n  const linesVI = matches\n    .map(p => `• ${p.name} – ${p.dept} – Sinh năm ${p.birthYear} – ${p.age} tuổi`)\n    .join('\\n');\n\n  messageVI = `🎂 Thông báo sinh nhật ngày ${dayStrVI}:\\n${linesVI}`;\n}\n\nreturn [\n  {\n    json: {\n      ngay: dayStrVI,\n      sinhnhat: matches,\n      thongbao: messageVI\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        976
+      ],
+      "id": "939b5867-b402-48d6-8848-51acb640fd78",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "threadId": "2091898082743203663",
+        "message": "={{ $json.thongbao }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        976
+      ],
+      "id": "b6ba04bf-f603-4549-af16-c08d53745f86",
+      "name": "Gửi tin nhắn2",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "OMssdW79ELA0RV06",
+          "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v0"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-29T02:57:41.960Z",
+      "createdAt": "2025-08-29T02:57:41.960Z",
+      "role": "workflow:owner",
+      "workflowId": "od7hfl77aqaAldAs",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": {
+    "node:8am trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-06T08:38:01.776Z",
+  "versionId": "e8cde02e-e9e3-4d77-8e58-ba5bdea7381a"
+}
