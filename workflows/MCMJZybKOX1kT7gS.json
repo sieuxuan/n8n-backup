@@ -1,0 +1,158 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-26T09:44:47.492Z",
+  "id": "MCMJZybKOX1kT7gS",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Birthday notification",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        112
+      ],
+      "id": "e8fe6926-b9d3-453d-ba70-5dc89ca3f5b0",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1haXSugWNx2xwMZgZlW0Ms2mzOObkL43dA1_gV1syXkI",
+          "mode": "list",
+          "cachedResultName": "DANH SACH CONG TY",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1haXSugWNx2xwMZgZlW0Ms2mzOObkL43dA1_gV1syXkI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2010708477,
+          "mode": "list",
+          "cachedResultName": "DS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1haXSugWNx2xwMZgZlW0Ms2mzOObkL43dA1_gV1syXkI/edit#gid=2010708477"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        928,
+        112
+      ],
+      "id": "8f32687d-a149-4d79-b7bc-ac54b9e57097",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const TZ = 'Asia/Ho_Chi_Minh';\n\n// --- Helpers ---\nfunction getTodayInVN() {\n  const fmt = new Intl.DateTimeFormat('en-GB', {\n    timeZone: TZ,\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n  });\n  const parts = fmt.formatToParts(new Date());\n  const get = (t) => parts.find(p => p.type === t).value;\n  const d = Number(get('day'));\n  const m = Number(get('month'));\n  const y = Number(get('year'));\n  const dt = new Date(Date.UTC(y, m - 1, d));\n  return { y, m, d, dt };\n}\n\nfunction parseFlexibleDate(input) {\n  if (!input) return null;\n  const s = String(input).trim();\n  const sep = s.includes('/') ? '/' : (s.includes('-') ? '-' : null);\n  if (!sep) return null;\n  const parts = s.split(sep).map(p => p.trim());\n\n  let y, m, d;\n  if (parts[0].length === 4) {\n    y = Number(parts[0]); m = Number(parts[1]); d = Number(parts[2]);\n  } else if (parts[2] && parts[2].length === 4) {\n    const a = Number(parts[0]);\n    const b = Number(parts[1]);\n    y = Number(parts[2]);\n    if (a > 12 && b <= 12) { d = a; m = b; }\n    else if (b > 12 && a <= 12) { m = a; d = b; }\n    else { m = a; d = b; }\n  } else {\n    return null;\n  }\n\n  if (!y || !m || !d) return null;\n  const dt = new Date(Date.UTC(y, m - 1, d));\n  if (isNaN(dt.getTime())) return null;\n  return { y, m, d, dt };\n}\n\nfunction isSameMonthDay(a, b) {\n  return a.m === (b.getUTCMonth() + 1) && a.d === b.getUTCDate();\n}\n\nfunction calcAge(dob, todayUTC) {\n  const ty = todayUTC.getUTCFullYear();\n  let age = ty - dob.y;\n  const thisYearBday = new Date(Date.UTC(ty, dob.m - 1, dob.d));\n  if (todayUTC < thisYearBday) age -= 1;\n  return age;\n}\n\nfunction pick(obj, keys) {\n  for (const k of keys) {\n    if (obj[k] !== undefined && obj[k] !== null) return String(obj[k]).trim();\n  }\n  return '';\n}\n\n// --- Main ---\nconst { dt: vnTodayDate, y: ty, m: tm, d: td } = getTodayInVN();\n\nlet employees = [];\nif (items.length > 1) {\n  employees = items.map(it => it.json);\n} else if (items.length === 1) {\n  const j = items[0].json;\n  if (Array.isArray(j)) {\n    employees = j;\n  } else if (Array.isArray(j.data)) {\n    employees = j.data;\n  } else {\n    employees = [j];\n  }\n}\n\nconst matches = [];\nfor (const r of employees) {\n  const dobRaw = pick(r, ['DOB', 'dob', 'Date of Birth']);\n  const parsed = parseFlexibleDate(dobRaw);\n  if (!parsed) continue;\n\n  if (isSameMonthDay(parsed, vnTodayDate)) {\n    const age = calcAge(parsed, vnTodayDate);\n    const name = pick(r, ['Name', 'name']);\n    const dept = pick(r, ['Department', 'Department ', 'Dept', 'department']);\n    matches.push({ name, dept: dept || 'N/A', age });\n  }\n}\n\nconst dayStrVI = `${String(td).padStart(2, '0')}/${String(tm).padStart(2, '0')}/${ty}`;\nlet messageVI;\n\nif (matches.length === 0) {\n  messageVI = `🎂 Thông báo sinh nhật ngày ${dayStrVI}:\\nHôm nay không có người nào sinh nhật.`;\n} else {\n  const linesVI = matches.map(p => `• ${p.name} – ${p.dept} – ${p.age} tuổi`).join('\\n');\n  messageVI = `🎂 Thông báo sinh nhật ngày ${dayStrVI}:\\n${linesVI}`;\n}\n\nreturn [\n  {\n    json: {\n      ngay: dayStrVI,\n      sinhnhat: matches,\n      thongbao: messageVI\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1152,
+        112
+      ],
+      "id": "08e7c5f3-3a31-4289-ba08-c30b2aa6cbeb",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "threadId": "2091898082743203663",
+        "message": "={{ $json.thongbao }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        112
+      ],
+      "id": "8a10c474-6a00-407b-8ad7-99c571c50dd3",
+      "name": "Gửi tin nhắn1",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "WUpoyHut3Blt9uG7",
+          "name": "Zalo It Bot - 2025-10-04T06:56:30.226Z"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-26T09:44:47.492Z",
+      "createdAt": "2025-08-26T09:44:47.492Z",
+      "role": "workflow:owner",
+      "workflowId": "MCMJZybKOX1kT7gS",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-11-28T04:19:02.239Z",
+  "versionId": "b8c44fc1-dfc7-4cea-9502-359a9909e3b1"
+}
