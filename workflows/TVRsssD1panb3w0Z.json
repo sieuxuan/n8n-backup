@@ -1,0 +1,564 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-26T10:43:48.111Z",
+    "createdAt": "2025-12-26T10:43:46.678Z",
+    "versionId": "7f652e09-dab0-4c64-b38a-fa68da12b2db",
+    "workflowId": "TVRsssD1panb3w0Z",
+    "nodes": [
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -672,
+          -16
+        ],
+        "id": "7dac70c5-a624-4ded-8dae-1fcfeab9203d",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "command": "cd /data/shared/WFX_TOOL && /opt/venv/bin/python checkbug.py"
+        },
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [
+          -400,
+          -16
+        ],
+        "id": "f8bfad62-247b-4e6a-aec9-7c88405e7e23",
+        "name": "Execute Command",
+        "retryOnFail": true,
+        "waitBetweenTries": 2000
+      },
+      {
+        "parameters": {
+          "fileSelector": "/data/shared/WFX_TOOL/data/latest_result.json",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.readWriteFile",
+        "typeVersion": 1,
+        "position": [
+          -192,
+          -16
+        ],
+        "id": "c168fd1d-fbb5-4dde-8a79-e65e1732ae96",
+        "name": "Read/Write Files from Disk"
+      },
+      {
+        "parameters": {
+          "operation": "fromJson",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1.1,
+        "position": [
+          16,
+          -16
+        ],
+        "id": "0ee63b82-256e-4bfa-ae0b-8dd27495e56c",
+        "name": "Extract from File"
+      },
+      {
+        "parameters": {
+          "jsCode": "const latest = items[0]?.json?.latest ?? {};\nconst stateMap = items[1]?.json?.state ?? {};\n\n// ---------- helpers ----------\nconst pad = (n) => String(n).padStart(2, \"0\");\nconst norm = (s) => String(s ?? \"\").trim().toLowerCase();\n\nfunction parseDMYHMS(s) {\n  // input: \"dd-mm-yyyy hh:mm:ss\"\n  const m = String(s ?? \"\").trim().match(/^(\\d{2})-(\\d{2})-(\\d{4})(?:\\s+(\\d{2}):(\\d{2}):(\\d{2}))?/);\n  if (!m) return null;\n  const dd = +m[1], mm = +m[2], yyyy = +m[3];\n  const HH = +(m[4] ?? 0), MM = +(m[5] ?? 0), SS = +(m[6] ?? 0);\n  return new Date(yyyy, mm - 1, dd, HH, MM, SS);\n}\n\nfunction parseISO(s) {\n  const d = new Date(String(s ?? \"\").trim());\n  return isNaN(d.getTime()) ? null : d;\n}\n\nfunction toDDMMYYYY(fromDmyHms) {\n  const m = String(fromDmyHms ?? \"\").trim().match(/^(\\d{2})-(\\d{2})-(\\d{4})/);\n  return m ? `${m[1]}/${m[2]}/${m[3]}` : String(fromDmyHms ?? \"\").trim();\n}\n\nfunction shortDesc(s, n = 80) {\n  const t = String(s ?? \"\").trim().replace(/\\s+/g, \" \");\n  return t.length > n ? t.slice(0, n - 3) + \"...\" : t;\n}\n\nfunction daysBetween(a, b) {\n  const ms = 24 * 60 * 60 * 1000;\n  return Math.max(0, Math.floor((a.getTime() - b.getTime()) / ms));\n}\n\n// ---------- report time (header): latest.run_at +7 ----------\nlet runAt = \"(unknown time)\";\n{\n  const d0 = parseISO(latest.run_at);\n  if (d0) {\n    d0.setHours(d0.getHours() + 7);\n    runAt = `${pad(d0.getDate())}/${pad(d0.getMonth() + 1)}/${d0.getFullYear()} ${pad(d0.getHours())}:${pad(d0.getMinutes())}:${pad(d0.getSeconds())}`;\n  }\n}\n\n// ---------- Status change ----------\nconst summary = latest.summary ?? { new: 0, updated: 0 };\nconst updates = Array.isArray(latest.update) ? latest.update : [];\nconst hasChanges = (summary.new ?? 0) > 0 || (summary.updated ?? 0) > 0;\n\nconst maxChanges = 10;\nlet changeLines = [];\nif (!hasChanges || updates.length === 0) {\n  changeLines = [\"0\"];\n} else {\n  changeLines = updates.slice(0, maxChanges).map(u => {\n    const by = stateMap?.[String(u.id)]?.last_updated_by ?? \"\";\n    const byTxt = by ? ` (@${by})` : \"\";\n    return `- #${u.id}: ${u.old_status ?? \"\"} → ${u.new_status ?? \"\"}${byTxt}`;\n  });\n  if (updates.length > maxChanges) changeLines.push(`...and ${updates.length - maxChanges} more`);\n}\n\n// ---------- Pending (status not closed/deployed), sort newest->oldest by last_updated_on ----------\nconst allBugs = Object.values(stateMap);\n\nconst pendingBugs = allBugs.filter(b => {\n  const st = norm(b.status);\n  if (!st) return false;\n  if (st.includes(\"closed\")) return false;\n  if (st.includes(\"deployed\")) return false;\n  return true;\n});\n\nfunction sortKey(b) {\n  return parseDMYHMS(b.last_updated_on) || parseDMYHMS(b.reported_on) || new Date(0);\n}\npendingBugs.sort((a, b) => sortKey(b).getTime() - sortKey(a).getTime());\n\n// ✅ pending days = today - reported_on\nconst now = new Date();\nconst maxOpen = 10;\n\nlet pendingLines = [];\nif (pendingBugs.length === 0) {\n  pendingLines = [\"(none)\"];\n} else {\n  pendingLines = pendingBugs.slice(0, maxOpen).map(b => {\n    const id = b.id ?? \"\";\n    const status = b.status ?? \"\";\n    const date = toDDMMYYYY(b.reported_on);\n\n    const reportedDateObj = parseDMYHMS(b.reported_on);\n    const ageDays = reportedDateObj ? daysBetween(now, reportedDateObj) : 0;\n\n    return `- #${id} | ${status} | ${date} | ${ageDays}d | ${shortDesc(b.desc, 80)}`;\n  });\n  if (pendingBugs.length > maxOpen) pendingLines.push(`...and ${pendingBugs.length - maxOpen} more`);\n}\n\n// ---------- Message ----------\nlet msg = `🐞 WFX BUG REPORT ${runAt}\\n`;\nif (hasChanges) msg += `Summary: +${summary.new ?? 0} new, ${summary.updated ?? 0} updated\\n`;\nmsg += `Total pending: ${pendingBugs.length}\\n\\n`;\nmsg += `Status change:\\n${changeLines.join(\"\\n\")}\\n\\n`;\nmsg += `Pending:\\n${pendingLines.join(\"\\n\")}\\n\\n`;\nmsg += `📎 https://helpdesk.worldfashionexchange.com/bugs.aspx`;\n\nreturn [{ json: { answer: msg } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1040,
+          32
+        ],
+        "id": "35394553-c7ff-4290-8f88-24015fa63308",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "operation": "fromJson",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1.1,
+        "position": [
+          32,
+          160
+        ],
+        "id": "46359b70-805b-4b5b-a40c-2f0ba838513a",
+        "name": "Extract from File1"
+      },
+      {
+        "parameters": {
+          "fileSelector": "/data/shared/WFX_TOOL/data/state.json",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.readWriteFile",
+        "typeVersion": 1,
+        "position": [
+          -176,
+          160
+        ],
+        "id": "864f828b-470d-4a34-937d-6bff4565570a",
+        "name": "Read/Write Files from Disk1"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "33de1831-7273-4e43-8a0b-d947d4f6de5c",
+                "name": "state",
+                "value": "={{ $json.data }}",
+                "type": "object"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          240,
+          160
+        ],
+        "id": "acd48755-ce0b-4c6c-a17d-27e4cdfc8bdf",
+        "name": "Set state"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "c29b9980-ca99-463d-8027-b296b09cce03",
+                "name": "latest",
+                "value": "={{ $json.data }}",
+                "type": "object"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          224,
+          -16
+        ],
+        "id": "81198b1e-2e0e-4465-8acc-5adaacf5d24b",
+        "name": "Set latest"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          720,
+          32
+        ],
+        "id": "d03968a9-4d36-40be-b44c-a04f9d510c0b",
+        "name": "Merge"
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Execute Command",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute Command": {
+        "main": [
+          [
+            {
+              "node": "Read/Write Files from Disk",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Read/Write Files from Disk1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Read/Write Files from Disk": {
+        "main": [
+          [
+            {
+              "node": "Extract from File",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File": {
+        "main": [
+          [
+            {
+              "node": "Set latest",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File1": {
+        "main": [
+          [
+            {
+              "node": "Set state",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Read/Write Files from Disk1": {
+        "main": [
+          [
+            {
+              "node": "Extract from File1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set state": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Set latest": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": "Version 7f652e09",
+    "description": ""
+  },
+  "activeVersionId": "7f652e09-dab0-4c64-b38a-fa68da12b2db",
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Set latest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Set state",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set state": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Set latest": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-18T18:06:42.456Z",
+  "id": "TVRsssD1panb3w0Z",
+  "isArchived": false,
+  "meta": null,
+  "name": "checkbug",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -672,
+        -16
+      ],
+      "id": "7dac70c5-a624-4ded-8dae-1fcfeab9203d",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "command": "cd /data/shared/WFX_TOOL && /opt/venv/bin/python checkbug.py"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -16
+      ],
+      "id": "f8bfad62-247b-4e6a-aec9-7c88405e7e23",
+      "name": "Execute Command",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "fileSelector": "/data/shared/WFX_TOOL/data/latest_result.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -16
+      ],
+      "id": "c168fd1d-fbb5-4dde-8a79-e65e1732ae96",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        -16
+      ],
+      "id": "0ee63b82-256e-4bfa-ae0b-8dd27495e56c",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "const latest = items[0]?.json?.latest ?? {};\nconst stateMap = items[1]?.json?.state ?? {};\n\n// ---------- helpers ----------\nconst pad = (n) => String(n).padStart(2, \"0\");\nconst norm = (s) => String(s ?? \"\").trim().toLowerCase();\n\nfunction parseDMYHMS(s) {\n  // input: \"dd-mm-yyyy hh:mm:ss\"\n  const m = String(s ?? \"\").trim().match(/^(\\d{2})-(\\d{2})-(\\d{4})(?:\\s+(\\d{2}):(\\d{2}):(\\d{2}))?/);\n  if (!m) return null;\n  const dd = +m[1], mm = +m[2], yyyy = +m[3];\n  const HH = +(m[4] ?? 0), MM = +(m[5] ?? 0), SS = +(m[6] ?? 0);\n  return new Date(yyyy, mm - 1, dd, HH, MM, SS);\n}\n\nfunction parseISO(s) {\n  const d = new Date(String(s ?? \"\").trim());\n  return isNaN(d.getTime()) ? null : d;\n}\n\nfunction toDDMMYYYY(fromDmyHms) {\n  const m = String(fromDmyHms ?? \"\").trim().match(/^(\\d{2})-(\\d{2})-(\\d{4})/);\n  return m ? `${m[1]}/${m[2]}/${m[3]}` : String(fromDmyHms ?? \"\").trim();\n}\n\nfunction shortDesc(s, n = 80) {\n  const t = String(s ?? \"\").trim().replace(/\\s+/g, \" \");\n  return t.length > n ? t.slice(0, n - 3) + \"...\" : t;\n}\n\nfunction daysBetween(a, b) {\n  const ms = 24 * 60 * 60 * 1000;\n  return Math.max(0, Math.floor((a.getTime() - b.getTime()) / ms));\n}\n\n// ---------- report time (header): latest.run_at +7 ----------\nlet runAt = \"(unknown time)\";\n{\n  const d0 = parseISO(latest.run_at);\n  if (d0) {\n    d0.setHours(d0.getHours() + 7);\n    runAt = `${pad(d0.getDate())}/${pad(d0.getMonth() + 1)}/${d0.getFullYear()} ${pad(d0.getHours())}:${pad(d0.getMinutes())}:${pad(d0.getSeconds())}`;\n  }\n}\n\n// ---------- Status change ----------\nconst summary = latest.summary ?? { new: 0, updated: 0 };\nconst updates = Array.isArray(latest.update) ? latest.update : [];\nconst hasChanges = (summary.new ?? 0) > 0 || (summary.updated ?? 0) > 0;\n\nconst maxChanges = 10;\nlet changeLines = [];\nif (!hasChanges || updates.length === 0) {\n  changeLines = [\"0\"];\n} else {\n  changeLines = updates.slice(0, maxChanges).map(u => {\n    const by = stateMap?.[String(u.id)]?.last_updated_by ?? \"\";\n    const byTxt = by ? ` (@${by})` : \"\";\n    return `- #${u.id}: ${u.old_status ?? \"\"} → ${u.new_status ?? \"\"}${byTxt}`;\n  });\n  if (updates.length > maxChanges) changeLines.push(`...and ${updates.length - maxChanges} more`);\n}\n\n// ---------- Pending (status not closed/deployed), sort newest->oldest by last_updated_on ----------\nconst allBugs = Object.values(stateMap);\n\nconst pendingBugs = allBugs.filter(b => {\n  const st = norm(b.status);\n  if (!st) return false;\n  if (st.includes(\"closed\")) return false;\n  if (st.includes(\"deployed\")) return false;\n  return true;\n});\n\nfunction sortKey(b) {\n  return parseDMYHMS(b.last_updated_on) || parseDMYHMS(b.reported_on) || new Date(0);\n}\npendingBugs.sort((a, b) => sortKey(b).getTime() - sortKey(a).getTime());\n\n// ✅ pending days = today - reported_on\nconst now = new Date();\nconst maxOpen = 10;\n\nlet pendingLines = [];\nif (pendingBugs.length === 0) {\n  pendingLines = [\"(none)\"];\n} else {\n  pendingLines = pendingBugs.slice(0, maxOpen).map(b => {\n    const id = b.id ?? \"\";\n    const status = b.status ?? \"\";\n    const date = toDDMMYYYY(b.reported_on);\n\n    const reportedDateObj = parseDMYHMS(b.reported_on);\n    const ageDays = reportedDateObj ? daysBetween(now, reportedDateObj) : 0;\n\n    return `- #${id} | ${status} | ${date} | ${ageDays}d | ${shortDesc(b.desc, 80)}`;\n  });\n  if (pendingBugs.length > maxOpen) pendingLines.push(`...and ${pendingBugs.length - maxOpen} more`);\n}\n\n// ---------- Message ----------\nlet msg = `🐞 WFX BUG REPORT ${runAt}\\n`;\nif (hasChanges) msg += `Summary: +${summary.new ?? 0} new, ${summary.updated ?? 0} updated\\n`;\nmsg += `Total pending: ${pendingBugs.length}\\n\\n`;\nmsg += `Status change:\\n${changeLines.join(\"\\n\")}\\n\\n`;\nmsg += `Pending:\\n${pendingLines.join(\"\\n\")}\\n\\n`;\nmsg += `📎 https://helpdesk.worldfashionexchange.com/bugs.aspx`;\n\nreturn [{ json: { answer: msg } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        32
+      ],
+      "id": "35394553-c7ff-4290-8f88-24015fa63308",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        160
+      ],
+      "id": "46359b70-805b-4b5b-a40c-2f0ba838513a",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/data/shared/WFX_TOOL/data/state.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        160
+      ],
+      "id": "864f828b-470d-4a34-937d-6bff4565570a",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33de1831-7273-4e43-8a0b-d947d4f6de5c",
+              "name": "state",
+              "value": "={{ $json.data }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        160
+      ],
+      "id": "acd48755-ce0b-4c6c-a17d-27e4cdfc8bdf",
+      "name": "Set state"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c29b9980-ca99-463d-8027-b296b09cce03",
+              "name": "latest",
+              "value": "={{ $json.data }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        -16
+      ],
+      "id": "81198b1e-2e0e-4465-8acc-5adaacf5d24b",
+      "name": "Set latest"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        720,
+        32
+      ],
+      "id": "d03968a9-4d36-40be-b44c-a04f9d510c0b",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-18T18:06:42.456Z",
+      "createdAt": "2025-12-18T18:06:42.456Z",
+      "role": "workflow:owner",
+      "workflowId": "TVRsssD1panb3w0Z",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-26T10:43:46.677Z",
+  "versionId": "7f652e09-dab0-4c64-b38a-fa68da12b2db"
+}
