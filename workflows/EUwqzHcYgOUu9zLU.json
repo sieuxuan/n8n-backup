@@ -1,0 +1,1354 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-01T04:51:21.992Z",
+    "createdAt": "2025-12-01T04:51:21.992Z",
+    "versionId": "d869eedb-947a-4c41-92eb-316be200f6f9",
+    "workflowId": "EUwqzHcYgOUu9zLU",
+    "nodes": [
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "1b8917a0-7b13-46f3-9b5a-59dbe9d33e38",
+                "name": "=File Name",
+                "type": "string",
+                "value": "={{ Array.from({ length: 10 }, () => Math.random().toString(36)[2]).join('') }}"
+              },
+              {
+                "id": "3dd38945-c044-486b-9e0c-4a080b62a606",
+                "name": "Folder Name",
+                "type": "string",
+                "value": "data/shared"
+              },
+              {
+                "id": "29c1bfd5-54bf-4c7a-b25f-1d17b535d0f3",
+                "name": "link",
+                "value": "={{ $json.link }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "4fc56679-7501-46e0-94a2-97e47ea63824",
+        "name": "GenrateFileName",
+        "type": "n8n-nodes-base.set",
+        "position": [
+          224,
+          96
+        ],
+        "typeVersion": 3.4
+      },
+      {
+        "parameters": {
+          "command": "=FOLDER=\"/data/shared/\"; FILE=\"{{ $json['File Name'] }}\"; URL=\"{{ $json.link }}\";\nmkdir -p \"$FOLDER\";\nyt-dlp --no-playlist --restrict-filenames \\\n  -f \"bv*+ba/b\" -S \"res,ext:mp4:m4a\" \\\n  -o \"$FOLDER/$FILE.%(ext)s\" \\\n  --print after_move:filepath \"$URL\""
+        },
+        "id": "01ce48c0-c605-4449-825a-660c31e725b4",
+        "name": "DownloadVideoFootage",
+        "type": "n8n-nodes-base.executeCommand",
+        "position": [
+          896,
+          192
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "0df944eb-1384-4ed2-8d39-228b586deb8d",
+                "name": "link",
+                "value": "={{\n  (\n    // 1) Link trong content\n    (($json.data.content || '')\n      .match(/https?:\\/\\/[^\\s)]+/i) || [])[0]\n    ||\n    // 2) Link trong quote.msg\n    (($json.data.quote && $json.data.quote.msg\n      ? $json.data.quote.msg : '')\n      .match(/https?:\\/\\/[^\\s)]+/i) || [])[0]\n    ||\n    // 3) Link trong attach (JSON string)\n    ((String($json.data.attach || '')\n      .match(/https?:\\/\\/[^\\s\"']+/i)) || [])[0]\n    ||\n    // 4) Link trong quote.attach (JSON string)\n    ((String($json.data.quote && $json.data.quote.attach || '')\n      .match(/https?:\\/\\/[^\\s\"']+/i)) || [])[0]\n  ) || ''\n}}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          0,
+          192
+        ],
+        "id": "f08e4275-e71e-4b82-93ed-d8b67211ee94",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "jsCode": "const out = $json.stdout || '';\nconst filePath = out.trim().split('\\n').pop();\nconst fileName = filePath.split('/').pop();\nreturn [{ json: { filePath, fileName } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1344,
+          192
+        ],
+        "id": "75a1c3c6-7d17-4cf5-8cab-aacb861eb3fb",
+        "name": "Code"
+      },
+      {
+        "parameters": {
+          "fileSelector": "={{ $json.filePath }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.readWriteFile",
+        "typeVersion": 1,
+        "position": [
+          1568,
+          192
+        ],
+        "id": "f6cf15e0-1754-4f84-988d-28b131c0c6c1",
+        "name": "Read/Write Files from Disk"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "174aa0e1-ae0c-42b7-a341-5ce243001f26",
+                "leftValue": "={{ $json.exitCode }}",
+                "rightValue": 0,
+                "operator": {
+                  "type": "number",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          1120,
+          192
+        ],
+        "id": "c6fa17be-6e8c-4054-bc6d-418b712fb2a4",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "parentId": "01VT72QWJU3E7UCE62NBCI3WOCIYEPDZND",
+          "binaryData": true
+        },
+        "type": "n8n-nodes-base.microsoftOneDrive",
+        "typeVersion": 1,
+        "position": [
+          1792,
+          192
+        ],
+        "id": "4e5cb6af-5245-4691-9bb3-953bd298eb41",
+        "name": "Upload a file",
+        "credentials": {
+          "microsoftOneDriveOAuth2Api": {
+            "id": "ldks68x9rwwj4G7v",
+            "name": "Microsoft Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "share",
+          "fileId": "={{ $json.id }}",
+          "type": "view",
+          "scope": "anonymous"
+        },
+        "type": "n8n-nodes-base.microsoftOneDrive",
+        "typeVersion": 1,
+        "position": [
+          2016,
+          192
+        ],
+        "id": "6a525460-bd96-45f6-8fb2-74354fa88f1f",
+        "name": "Share a file",
+        "credentials": {
+          "microsoftOneDriveOAuth2Api": {
+            "id": "ldks68x9rwwj4G7v",
+            "name": "Microsoft Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Input: items có json.link.webUrl (từ Microsoft Graph createLink)\n// Output: thêm json.directUrl\n\n// ---- helpers: thao tác query string thuần chuỗi ----\nfunction splitHash(u) {\n  const i = u.indexOf('#');\n  return i === -1 ? [u, ''] : [u.slice(0, i), u.slice(i)];\n}\nfunction hasParam(u, key) {\n  const [base] = splitHash(u);\n  const re = new RegExp('[?&]' + key + '=');\n  return re.test(base);\n}\nfunction upsertParam(u, key, val) {\n  let [base, hash] = splitHash(u);\n  if (hasParam(base, key)) return base + hash;\n  base += (base.includes('?') ? '&' : '?') + key + '=' + encodeURIComponent(val);\n  return base + hash;\n}\nfunction removeParam(u, key) {\n  let [base, hash] = splitHash(u);\n  const re = new RegExp('([?&])' + key + '=[^&]*(&?)', 'gi');\n  base = base.replace(re, (m, p1, p2) => (p2 ? p1 : ''));\n  base = base.replace(/\\?&/, '?').replace(/&&/, '&').replace(/\\?$/, '');\n  return base + hash;\n}\n\n// ---- converter ----\nfunction toOneDriveDirect(raw) {\n  let url = String(raw || '');\n\n  if (/onedrive\\.live\\.com/i.test(url)) {\n    url = url.replace(/\\/redir(?=[/?])/i, '/download');   // /redir? or /redir/\n    url = upsertParam(url, 'download', '1');\n    return url;\n  }\n  if (/1drv\\.ms/i.test(url)) {\n    return upsertParam(url, 'download', '1');\n  }\n  if (/\\.sharepoint\\.com/i.test(url)) {\n    url = removeParam(url, 'web');        // bỏ web=1 nếu có\n    url = upsertParam(url, 'download', '1');\n    return url;\n  }\n  // fallback\n  return upsertParam(url, 'download', '1');\n}\n\nconst filePath = $('Code').first().json.filePath\n// ---- n8n plumbing ----\nconst items = $input.all();\nreturn items.map(item => {\n  const j = item.json || {};\n  const webUrl = (j.link && j.link.webUrl) || j.webUrl || j.WebUrl || '';\n  if (!webUrl) {\n    return { json: { ...j, error: 'Không tìm thấy link.webUrl trong item.json' } };\n  }\n  const directUrl = toOneDriveDirect(webUrl);\n  return { json: { ...j, webUrl, directUrl,filePath } };\n});\n\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2240,
+          192
+        ],
+        "id": "cde728fc-a481-474f-80b2-e556eed4bb8f",
+        "name": "Code1"
+      },
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -448,
+          96
+        ],
+        "id": "c14eb42c-6f95-4538-89ff-5ee163fbf14c",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "ae93cfe0-c32a-41b0-ba59-124bc071fa85",
+                "leftValue": "={{ $json.data.msgType }}",
+                "rightValue": "chat.recommended",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -224,
+          96
+        ],
+        "id": "c7485c9e-7bef-4f50-8d74-e3c93eec8111",
+        "name": "If1"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "0df944eb-1384-4ed2-8d39-228b586deb8d",
+                "name": "link",
+                "value": "={{ $json.data.content.href }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          0,
+          0
+        ],
+        "id": "eff9eeb4-04ef-4a32-aa86-7f4f70cbac11",
+        "name": "Edit Fields1"
+      },
+      {
+        "parameters": {
+          "jsCode": "const out = $json.stdout || '';\nconst filePath = out.trim().split('\\n').pop();\nconst fileName = filePath.split('/').pop();\nreturn [{ json: { filePath, fileName } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1344,
+          0
+        ],
+        "id": "b7be4977-c621-4d00-8ca8-a0a37fcd61b4",
+        "name": "Code2"
+      },
+      {
+        "parameters": {
+          "fileSelector": "={{ $json.filePath }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.readWriteFile",
+        "typeVersion": 1,
+        "position": [
+          1568,
+          0
+        ],
+        "id": "b1af0cde-e282-4605-aba3-49d47f1a1a48",
+        "name": "Read/Write Files from Disk1"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "174aa0e1-ae0c-42b7-a341-5ce243001f26",
+                "leftValue": "={{ $json.exitCode }}",
+                "rightValue": 0,
+                "operator": {
+                  "type": "number",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          1120,
+          0
+        ],
+        "id": "b7f8149b-b5ba-4630-b674-da9486bd1708",
+        "name": "If2"
+      },
+      {
+        "parameters": {
+          "parentId": "01VT72QWJU3E7UCE62NBCI3WOCIYEPDZND",
+          "binaryData": true
+        },
+        "type": "n8n-nodes-base.microsoftOneDrive",
+        "typeVersion": 1,
+        "position": [
+          1792,
+          0
+        ],
+        "id": "75b4e017-563b-4527-bd72-01e9569c823b",
+        "name": "Upload a file1",
+        "credentials": {
+          "microsoftOneDriveOAuth2Api": {
+            "id": "ldks68x9rwwj4G7v",
+            "name": "Microsoft Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "share",
+          "fileId": "={{ $json.id }}",
+          "type": "view",
+          "scope": "anonymous"
+        },
+        "type": "n8n-nodes-base.microsoftOneDrive",
+        "typeVersion": 1,
+        "position": [
+          2016,
+          0
+        ],
+        "id": "37726808-b9cd-4229-a1cb-4b1181c9b821",
+        "name": "Share a file1",
+        "credentials": {
+          "microsoftOneDriveOAuth2Api": {
+            "id": "ldks68x9rwwj4G7v",
+            "name": "Microsoft Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Input: items có json.link.webUrl (từ Microsoft Graph createLink)\n// Output: thêm json.directUrl\n\n// ---- helpers: thao tác query string thuần chuỗi ----\nfunction splitHash(u) {\n  const i = u.indexOf('#');\n  return i === -1 ? [u, ''] : [u.slice(0, i), u.slice(i)];\n}\nfunction hasParam(u, key) {\n  const [base] = splitHash(u);\n  const re = new RegExp('[?&]' + key + '=');\n  return re.test(base);\n}\nfunction upsertParam(u, key, val) {\n  let [base, hash] = splitHash(u);\n  if (hasParam(base, key)) return base + hash;\n  base += (base.includes('?') ? '&' : '?') + key + '=' + encodeURIComponent(val);\n  return base + hash;\n}\nfunction removeParam(u, key) {\n  let [base, hash] = splitHash(u);\n  const re = new RegExp('([?&])' + key + '=[^&]*(&?)', 'gi');\n  base = base.replace(re, (m, p1, p2) => (p2 ? p1 : ''));\n  base = base.replace(/\\?&/, '?').replace(/&&/, '&').replace(/\\?$/, '');\n  return base + hash;\n}\n\n// ---- converter ----\nfunction toOneDriveDirect(raw) {\n  let url = String(raw || '');\n\n  if (/onedrive\\.live\\.com/i.test(url)) {\n    url = url.replace(/\\/redir(?=[/?])/i, '/download');   // /redir? or /redir/\n    url = upsertParam(url, 'download', '1');\n    return url;\n  }\n  if (/1drv\\.ms/i.test(url)) {\n    return upsertParam(url, 'download', '1');\n  }\n  if (/\\.sharepoint\\.com/i.test(url)) {\n    url = removeParam(url, 'web');        // bỏ web=1 nếu có\n    url = upsertParam(url, 'download', '1');\n    return url;\n  }\n  // fallback\n  return upsertParam(url, 'download', '1');\n}\n\nconst filePath = $('Code2').first().json.filePath\n// ---- n8n plumbing ----\nconst items = $input.all();\nreturn items.map(item => {\n  const j = item.json || {};\n  const webUrl = (j.link && j.link.webUrl) || j.webUrl || j.WebUrl || '';\n  if (!webUrl) {\n    return { json: { ...j, error: 'Không tìm thấy link.webUrl trong item.json' } };\n  }\n  const directUrl = toOneDriveDirect(webUrl);\n  return { json: { ...j, webUrl, directUrl,filePath } };\n});\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2240,
+          0
+        ],
+        "id": "502a180e-3aa8-45c5-892c-2fbb25c7c98e",
+        "name": "Code3"
+      },
+      {
+        "parameters": {
+          "command": "=FOLDER=\"{{ $json['Folder Name'] || '' }}\"\nRAW_FILE=\"{{ $json['File Name'] || '%(id)s' }}\"\nURL=\"{{ $json.link }}\"\n\n# Bỏ đuôi .mp3 nếu người dùng gõ sẵn\nFILE=\"${RAW_FILE%.mp3}\"\n\nmkdir -p \"$FOLDER\"\n\nyt-dlp --no-playlist --restrict-filenames \\\n  -x --audio-format mp3 --audio-quality 0 \\\n  --embed-metadata --embed-thumbnail --convert-thumbnails jpg \\\n  -o \"$FOLDER/$FILE.%(ext)s\" \\\n  --print after_move:filepath \"$URL\"\n"
+        },
+        "id": "0e126819-3635-4ec3-a01a-302261acc0a0",
+        "name": "DownloadMP3Footage1",
+        "type": "n8n-nodes-base.executeCommand",
+        "position": [
+          896,
+          0
+        ],
+        "typeVersion": 1
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "19671e10-7926-48cf-9612-ab8bd71ee3cb",
+                "leftValue": "={{ $json.isMp3 }}",
+                "rightValue": "mp3",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          672,
+          96
+        ],
+        "id": "8c9b5ce5-eacd-4c28-b1cb-abd6057f5528",
+        "name": "If3"
+      },
+      {
+        "parameters": {
+          "jsCode": "const root = ($json && $json.message) ? $json\n  : ($node['When Executed by Another Workflow'] ? $node['When Executed by Another Workflow'].json : {});\nconst d = root?.data || {};\n\nconst pick = (o) => {\n  if (!o) return '';\n  if (typeof o === 'string') return o;\n  if (Array.isArray(o)) return o.map(pick).join(' ');\n  if (typeof o === 'object') return [o.title,o.description,o.href,o.url,o.msg,o.text].filter(Boolean).join(' ');\n  return '';\n};\nconst parseMaybe = (x) => { try { return (typeof x === 'string') ? JSON.parse(x) : x; } catch { return x; } };\n\nconst sContent = pick(d.content);\nconst a = parseMaybe(d.attach);\nconst sAttach  = pick(a) + ' ' + (a?.params?.streamUrl || '') + ' ' + (a?.streamUrl || '');\nconst q = d.quote || {};\nconst qa = parseMaybe(q.attach);\nconst sQuote = pick(q.msg) + ' ' + pick(qa) + ' ' + (qa?.params?.streamUrl || '') + ' ' + (qa?.streamUrl || '');\n\nconst text = [sContent, sAttach, sQuote].filter(Boolean).join(' ');\nconst isMp3 = /(^|[^a-zA-Z0-9])mp3([^a-zA-Z0-9]|$)/i.test(text);\n\n// (tuỳ chọn) Lấy URL đầu tiên nếu bạn cần dùng tiếp\nconst urlMatch = text.match(/https?:\\/\\/[^\\s\"'()]+/i);\nconst url = urlMatch ? urlMatch[0] : '';\n\nreturn [{ json: { ...$json, _text: text, isMp3, url } }];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          448,
+          96
+        ],
+        "id": "e687c93c-28fe-4db3-95f1-26c2518d7d77",
+        "name": "Code4"
+      }
+    ],
+    "connections": {
+      "GenrateFileName": {
+        "main": [
+          [
+            {
+              "node": "Code4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "DownloadVideoFootage": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "GenrateFileName",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Read/Write Files from Disk",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Read/Write Files from Disk": {
+        "main": [
+          [
+            {
+              "node": "Upload a file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload a file": {
+        "main": [
+          [
+            {
+              "node": "Share a file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Share a file": {
+        "main": [
+          [
+            {
+              "node": "Code1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "If1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If1": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields1": {
+        "main": [
+          [
+            {
+              "node": "GenrateFileName",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code2": {
+        "main": [
+          [
+            {
+              "node": "Read/Write Files from Disk1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Read/Write Files from Disk1": {
+        "main": [
+          [
+            {
+              "node": "Upload a file1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If2": {
+        "main": [
+          [
+            {
+              "node": "Code2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload a file1": {
+        "main": [
+          [
+            {
+              "node": "Share a file1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Share a file1": {
+        "main": [
+          [
+            {
+              "node": "Code3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "DownloadMP3Footage1": {
+        "main": [
+          [
+            {
+              "node": "If2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If3": {
+        "main": [
+          [
+            {
+              "node": "DownloadMP3Footage1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "DownloadVideoFootage",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code4": {
+        "main": [
+          [
+            {
+              "node": "If3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "d869eedb-947a-4c41-92eb-316be200f6f9",
+  "connections": {
+    "GenrateFileName": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DownloadVideoFootage": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "GenrateFileName",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Upload a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload a file": {
+      "main": [
+        [
+          {
+            "node": "Share a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share a file": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "GenrateFileName",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk1": {
+      "main": [
+        [
+          {
+            "node": "Upload a file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload a file1": {
+      "main": [
+        [
+          {
+            "node": "Share a file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share a file1": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DownloadMP3Footage1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "DownloadMP3Footage1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "DownloadVideoFootage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-26T09:26:37.798Z",
+  "id": "EUwqzHcYgOUu9zLU",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "youtube download",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1b8917a0-7b13-46f3-9b5a-59dbe9d33e38",
+              "name": "=File Name",
+              "type": "string",
+              "value": "={{ Array.from({ length: 10 }, () => Math.random().toString(36)[2]).join('') }}"
+            },
+            {
+              "id": "3dd38945-c044-486b-9e0c-4a080b62a606",
+              "name": "Folder Name",
+              "type": "string",
+              "value": "data/shared"
+            },
+            {
+              "id": "29c1bfd5-54bf-4c7a-b25f-1d17b535d0f3",
+              "name": "link",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4fc56679-7501-46e0-94a2-97e47ea63824",
+      "name": "GenrateFileName",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        224,
+        96
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "command": "=FOLDER=\"/data/shared/\"; FILE=\"{{ $json['File Name'] }}\"; URL=\"{{ $json.link }}\";\nmkdir -p \"$FOLDER\";\nyt-dlp --no-playlist --restrict-filenames \\\n  -f \"bv*+ba/b\" -S \"res,ext:mp4:m4a\" \\\n  -o \"$FOLDER/$FILE.%(ext)s\" \\\n  --print after_move:filepath \"$URL\""
+      },
+      "id": "01ce48c0-c605-4449-825a-660c31e725b4",
+      "name": "DownloadVideoFootage",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        896,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0df944eb-1384-4ed2-8d39-228b586deb8d",
+              "name": "link",
+              "value": "={{\n  (\n    // 1) Link trong content\n    (($json.data.content || '')\n      .match(/https?:\\/\\/[^\\s)]+/i) || [])[0]\n    ||\n    // 2) Link trong quote.msg\n    (($json.data.quote && $json.data.quote.msg\n      ? $json.data.quote.msg : '')\n      .match(/https?:\\/\\/[^\\s)]+/i) || [])[0]\n    ||\n    // 3) Link trong attach (JSON string)\n    ((String($json.data.attach || '')\n      .match(/https?:\\/\\/[^\\s\"']+/i)) || [])[0]\n    ||\n    // 4) Link trong quote.attach (JSON string)\n    ((String($json.data.quote && $json.data.quote.attach || '')\n      .match(/https?:\\/\\/[^\\s\"']+/i)) || [])[0]\n  ) || ''\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        192
+      ],
+      "id": "f08e4275-e71e-4b82-93ed-d8b67211ee94",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = $json.stdout || '';\nconst filePath = out.trim().split('\\n').pop();\nconst fileName = filePath.split('/').pop();\nreturn [{ json: { filePath, fileName } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        192
+      ],
+      "id": "75a1c3c6-7d17-4cf5-8cab-aacb861eb3fb",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.filePath }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        192
+      ],
+      "id": "f6cf15e0-1754-4f84-988d-28b131c0c6c1",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "174aa0e1-ae0c-42b7-a341-5ce243001f26",
+              "leftValue": "={{ $json.exitCode }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        192
+      ],
+      "id": "c6fa17be-6e8c-4054-bc6d-418b712fb2a4",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "parentId": "01VT72QWJU3E7UCE62NBCI3WOCIYEPDZND",
+        "binaryData": true
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        1792,
+        192
+      ],
+      "id": "4e5cb6af-5245-4691-9bb3-953bd298eb41",
+      "name": "Upload a file",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "ldks68x9rwwj4G7v",
+          "name": "Microsoft Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": "={{ $json.id }}",
+        "type": "view",
+        "scope": "anonymous"
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        2016,
+        192
+      ],
+      "id": "6a525460-bd96-45f6-8fb2-74354fa88f1f",
+      "name": "Share a file",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "ldks68x9rwwj4G7v",
+          "name": "Microsoft Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: items có json.link.webUrl (từ Microsoft Graph createLink)\n// Output: thêm json.directUrl\n\n// ---- helpers: thao tác query string thuần chuỗi ----\nfunction splitHash(u) {\n  const i = u.indexOf('#');\n  return i === -1 ? [u, ''] : [u.slice(0, i), u.slice(i)];\n}\nfunction hasParam(u, key) {\n  const [base] = splitHash(u);\n  const re = new RegExp('[?&]' + key + '=');\n  return re.test(base);\n}\nfunction upsertParam(u, key, val) {\n  let [base, hash] = splitHash(u);\n  if (hasParam(base, key)) return base + hash;\n  base += (base.includes('?') ? '&' : '?') + key + '=' + encodeURIComponent(val);\n  return base + hash;\n}\nfunction removeParam(u, key) {\n  let [base, hash] = splitHash(u);\n  const re = new RegExp('([?&])' + key + '=[^&]*(&?)', 'gi');\n  base = base.replace(re, (m, p1, p2) => (p2 ? p1 : ''));\n  base = base.replace(/\\?&/, '?').replace(/&&/, '&').replace(/\\?$/, '');\n  return base + hash;\n}\n\n// ---- converter ----\nfunction toOneDriveDirect(raw) {\n  let url = String(raw || '');\n\n  if (/onedrive\\.live\\.com/i.test(url)) {\n    url = url.replace(/\\/redir(?=[/?])/i, '/download');   // /redir? or /redir/\n    url = upsertParam(url, 'download', '1');\n    return url;\n  }\n  if (/1drv\\.ms/i.test(url)) {\n    return upsertParam(url, 'download', '1');\n  }\n  if (/\\.sharepoint\\.com/i.test(url)) {\n    url = removeParam(url, 'web');        // bỏ web=1 nếu có\n    url = upsertParam(url, 'download', '1');\n    return url;\n  }\n  // fallback\n  return upsertParam(url, 'download', '1');\n}\n\nconst filePath = $('Code').first().json.filePath\n// ---- n8n plumbing ----\nconst items = $input.all();\nreturn items.map(item => {\n  const j = item.json || {};\n  const webUrl = (j.link && j.link.webUrl) || j.webUrl || j.WebUrl || '';\n  if (!webUrl) {\n    return { json: { ...j, error: 'Không tìm thấy link.webUrl trong item.json' } };\n  }\n  const directUrl = toOneDriveDirect(webUrl);\n  return { json: { ...j, webUrl, directUrl,filePath } };\n});\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        192
+      ],
+      "id": "cde728fc-a481-474f-80b2-e556eed4bb8f",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -448,
+        96
+      ],
+      "id": "c14eb42c-6f95-4538-89ff-5ee163fbf14c",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ae93cfe0-c32a-41b0-ba59-124bc071fa85",
+              "leftValue": "={{ $json.data.msgType }}",
+              "rightValue": "chat.recommended",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -224,
+        96
+      ],
+      "id": "c7485c9e-7bef-4f50-8d74-e3c93eec8111",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0df944eb-1384-4ed2-8d39-228b586deb8d",
+              "name": "link",
+              "value": "={{ $json.data.content.href }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "eff9eeb4-04ef-4a32-aa86-7f4f70cbac11",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = $json.stdout || '';\nconst filePath = out.trim().split('\\n').pop();\nconst fileName = filePath.split('/').pop();\nreturn [{ json: { filePath, fileName } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        0
+      ],
+      "id": "b7be4977-c621-4d00-8ca8-a0a37fcd61b4",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.filePath }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        0
+      ],
+      "id": "b1af0cde-e282-4605-aba3-49d47f1a1a48",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "174aa0e1-ae0c-42b7-a341-5ce243001f26",
+              "leftValue": "={{ $json.exitCode }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "b7f8149b-b5ba-4630-b674-da9486bd1708",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "parentId": "01VT72QWJU3E7UCE62NBCI3WOCIYEPDZND",
+        "binaryData": true
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        1792,
+        0
+      ],
+      "id": "75b4e017-563b-4527-bd72-01e9569c823b",
+      "name": "Upload a file1",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "ldks68x9rwwj4G7v",
+          "name": "Microsoft Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": "={{ $json.id }}",
+        "type": "view",
+        "scope": "anonymous"
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        2016,
+        0
+      ],
+      "id": "37726808-b9cd-4229-a1cb-4b1181c9b821",
+      "name": "Share a file1",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "ldks68x9rwwj4G7v",
+          "name": "Microsoft Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: items có json.link.webUrl (từ Microsoft Graph createLink)\n// Output: thêm json.directUrl\n\n// ---- helpers: thao tác query string thuần chuỗi ----\nfunction splitHash(u) {\n  const i = u.indexOf('#');\n  return i === -1 ? [u, ''] : [u.slice(0, i), u.slice(i)];\n}\nfunction hasParam(u, key) {\n  const [base] = splitHash(u);\n  const re = new RegExp('[?&]' + key + '=');\n  return re.test(base);\n}\nfunction upsertParam(u, key, val) {\n  let [base, hash] = splitHash(u);\n  if (hasParam(base, key)) return base + hash;\n  base += (base.includes('?') ? '&' : '?') + key + '=' + encodeURIComponent(val);\n  return base + hash;\n}\nfunction removeParam(u, key) {\n  let [base, hash] = splitHash(u);\n  const re = new RegExp('([?&])' + key + '=[^&]*(&?)', 'gi');\n  base = base.replace(re, (m, p1, p2) => (p2 ? p1 : ''));\n  base = base.replace(/\\?&/, '?').replace(/&&/, '&').replace(/\\?$/, '');\n  return base + hash;\n}\n\n// ---- converter ----\nfunction toOneDriveDirect(raw) {\n  let url = String(raw || '');\n\n  if (/onedrive\\.live\\.com/i.test(url)) {\n    url = url.replace(/\\/redir(?=[/?])/i, '/download');   // /redir? or /redir/\n    url = upsertParam(url, 'download', '1');\n    return url;\n  }\n  if (/1drv\\.ms/i.test(url)) {\n    return upsertParam(url, 'download', '1');\n  }\n  if (/\\.sharepoint\\.com/i.test(url)) {\n    url = removeParam(url, 'web');        // bỏ web=1 nếu có\n    url = upsertParam(url, 'download', '1');\n    return url;\n  }\n  // fallback\n  return upsertParam(url, 'download', '1');\n}\n\nconst filePath = $('Code2').first().json.filePath\n// ---- n8n plumbing ----\nconst items = $input.all();\nreturn items.map(item => {\n  const j = item.json || {};\n  const webUrl = (j.link && j.link.webUrl) || j.webUrl || j.WebUrl || '';\n  if (!webUrl) {\n    return { json: { ...j, error: 'Không tìm thấy link.webUrl trong item.json' } };\n  }\n  const directUrl = toOneDriveDirect(webUrl);\n  return { json: { ...j, webUrl, directUrl,filePath } };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        0
+      ],
+      "id": "502a180e-3aa8-45c5-892c-2fbb25c7c98e",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "command": "=FOLDER=\"{{ $json['Folder Name'] || '' }}\"\nRAW_FILE=\"{{ $json['File Name'] || '%(id)s' }}\"\nURL=\"{{ $json.link }}\"\n\n# Bỏ đuôi .mp3 nếu người dùng gõ sẵn\nFILE=\"${RAW_FILE%.mp3}\"\n\nmkdir -p \"$FOLDER\"\n\nyt-dlp --no-playlist --restrict-filenames \\\n  -x --audio-format mp3 --audio-quality 0 \\\n  --embed-metadata --embed-thumbnail --convert-thumbnails jpg \\\n  -o \"$FOLDER/$FILE.%(ext)s\" \\\n  --print after_move:filepath \"$URL\"\n"
+      },
+      "id": "0e126819-3635-4ec3-a01a-302261acc0a0",
+      "name": "DownloadMP3Footage1",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        896,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "19671e10-7926-48cf-9612-ab8bd71ee3cb",
+              "leftValue": "={{ $json.isMp3 }}",
+              "rightValue": "mp3",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        96
+      ],
+      "id": "8c9b5ce5-eacd-4c28-b1cb-abd6057f5528",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const root = ($json && $json.message) ? $json\n  : ($node['When Executed by Another Workflow'] ? $node['When Executed by Another Workflow'].json : {});\nconst d = root?.data || {};\n\nconst pick = (o) => {\n  if (!o) return '';\n  if (typeof o === 'string') return o;\n  if (Array.isArray(o)) return o.map(pick).join(' ');\n  if (typeof o === 'object') return [o.title,o.description,o.href,o.url,o.msg,o.text].filter(Boolean).join(' ');\n  return '';\n};\nconst parseMaybe = (x) => { try { return (typeof x === 'string') ? JSON.parse(x) : x; } catch { return x; } };\n\nconst sContent = pick(d.content);\nconst a = parseMaybe(d.attach);\nconst sAttach  = pick(a) + ' ' + (a?.params?.streamUrl || '') + ' ' + (a?.streamUrl || '');\nconst q = d.quote || {};\nconst qa = parseMaybe(q.attach);\nconst sQuote = pick(q.msg) + ' ' + pick(qa) + ' ' + (qa?.params?.streamUrl || '') + ' ' + (qa?.streamUrl || '');\n\nconst text = [sContent, sAttach, sQuote].filter(Boolean).join(' ');\nconst isMp3 = /(^|[^a-zA-Z0-9])mp3([^a-zA-Z0-9]|$)/i.test(text);\n\n// (tuỳ chọn) Lấy URL đầu tiên nếu bạn cần dùng tiếp\nconst urlMatch = text.match(/https?:\\/\\/[^\\s\"'()]+/i);\nconst url = urlMatch ? urlMatch[0] : '';\n\nreturn [{ json: { ...$json, _text: text, isMp3, url } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        96
+      ],
+      "id": "e687c93c-28fe-4db3-95f1-26c2518d7d77",
+      "name": "Code4"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-26T09:26:37.798Z",
+      "createdAt": "2025-08-26T09:26:37.798Z",
+      "role": "workflow:owner",
+      "workflowId": "EUwqzHcYgOUu9zLU",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-01T04:51:21.983Z",
+  "versionId": "d869eedb-947a-4c41-92eb-316be200f6f9"
+}
