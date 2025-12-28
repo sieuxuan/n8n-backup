@@ -1,0 +1,476 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-11-28T04:17:46.086Z",
+    "createdAt": "2025-11-28T04:17:46.086Z",
+    "versionId": "393ca283-1517-4be0-b1b0-efb013c4b5bb",
+    "workflowId": "zY8MUXQNvBNOSrb4",
+    "nodes": [
+      {
+        "parameters": {
+          "resource": "folder",
+          "operation": "create",
+          "name": "={{ $json.Name }}",
+          "options": {
+            "parentFolderId": "01VT72QWKH4AVRDJGZZJGZXGUOMJLEOSUC"
+          }
+        },
+        "type": "n8n-nodes-base.microsoftOneDrive",
+        "typeVersion": 1,
+        "position": [
+          208,
+          0
+        ],
+        "id": "dcc0b003-ac51-44cb-9a47-7f6805195b37",
+        "name": "Create a folder",
+        "credentials": {
+          "microsoftOneDriveOAuth2Api": {
+            "id": "ldks68x9rwwj4G7v",
+            "name": "Microsoft Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "formTitle": "Tạo folder và link",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Name",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Link",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Số Trang",
+                "fieldType": "number"
+              }
+            ]
+          },
+          "options": {
+            "appendAttribution": false,
+            "path": "taofoldertruyen"
+          }
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.2,
+        "position": [
+          0,
+          0
+        ],
+        "id": "604a721d-141d-410d-a5c2-e07ec80d2f35",
+        "name": "On form submission",
+        "webhookId": "6bb6f9e3-f7cb-422a-92c4-c3d21ae77fed"
+      },
+      {
+        "parameters": {
+          "threadId": "2091898082743203663",
+          "message": "=Đã tạo {{ $json.Name }} thành công\nhttps://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?gid=871572387#gid=871572387"
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          624,
+          0
+        ],
+        "id": "f91e5b12-7d08-4928-a3eb-f2331c733813",
+        "name": "Gửi tin nhắn",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "lpFWKs9HC4J3rO1n",
+            "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 871572387,
+            "mode": "list",
+            "cachedResultName": "Book",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit#gid=871572387"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Name": "={{ $json.name }}",
+              "Link": "={{ $('On form submission').item.json.Link }}",
+              "Page No": "={{ $('On form submission').item.json['Số Trang'] }}",
+              "ID CODE": "={{ $json.id }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Name",
+                "displayName": "Name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Link",
+                "displayName": "Link",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Page No",
+                "displayName": "Page No",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Bug",
+                "displayName": "Bug",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "ID CODE",
+                "displayName": "ID CODE",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          416,
+          0
+        ],
+        "id": "6c999a66-796b-45b8-b156-cf84402bc8df",
+        "name": "Append row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "X1UBt5tMcyjhPYqy",
+            "name": "Google Sheets account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "On form submission": {
+        "main": [
+          [
+            {
+              "node": "Create a folder",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Create a folder": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Append row in sheet": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "393ca283-1517-4be0-b1b0-efb013c4b5bb",
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create a folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a folder": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-09-18T03:31:29.852Z",
+  "id": "zY8MUXQNvBNOSrb4",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "CREATE CRAWL FOLDER",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "create",
+        "name": "={{ $json.Name }}",
+        "options": {
+          "parentFolderId": "01VT72QWKH4AVRDJGZZJGZXGUOMJLEOSUC"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "dcc0b003-ac51-44cb-9a47-7f6805195b37",
+      "name": "Create a folder",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "ldks68x9rwwj4G7v",
+          "name": "Microsoft Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Tạo folder và link",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Link",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Số Trang",
+              "fieldType": "number"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "path": "taofoldertruyen"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "604a721d-141d-410d-a5c2-e07ec80d2f35",
+      "name": "On form submission",
+      "webhookId": "6bb6f9e3-f7cb-422a-92c4-c3d21ae77fed"
+    },
+    {
+      "parameters": {
+        "threadId": "2091898082743203663",
+        "message": "=Đã tạo {{ $json.Name }} thành công\nhttps://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?gid=871572387#gid=871572387"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "f91e5b12-7d08-4928-a3eb-f2331c733813",
+      "name": "Gửi tin nhắn",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "lpFWKs9HC4J3rO1n",
+          "name": "Zalo It Bot - 2025-08-26T08:40:05.662Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 871572387,
+          "mode": "list",
+          "cachedResultName": "Book",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit#gid=871572387"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            "Link": "={{ $('On form submission').item.json.Link }}",
+            "Page No": "={{ $('On form submission').item.json['Số Trang'] }}",
+            "ID CODE": "={{ $json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Page No",
+              "displayName": "Page No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Bug",
+              "displayName": "Bug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ID CODE",
+              "displayName": "ID CODE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "6c999a66-796b-45b8-b156-cf84402bc8df",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-09-18T03:31:29.852Z",
+      "createdAt": "2025-09-18T03:31:29.852Z",
+      "role": "workflow:owner",
+      "workflowId": "zY8MUXQNvBNOSrb4",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-09-18T10:18:27.466Z",
+  "versionId": "393ca283-1517-4be0-b1b0-efb013c4b5bb"
+}
