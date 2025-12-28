@@ -1,0 +1,224 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-29T04:40:13.520Z",
+  "id": "1dhClf2Hx0w4W3dU",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Weather",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=10.2025&longitude=106.009&current=precipitation,temperature_2m,relative_humidity_2m,is_day,wind_speed_10m,wind_direction_10m&minutely_15=rain&timezone=Asia%2FBangkok&forecast_days=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -304,
+        -48
+      ],
+      "id": "cfae0585-5ad9-4f24-961b-d3f9b3245b18",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "chatId": "-1002310396660",
+        "text": "={{ $json.weatherSummary }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        576,
+        -64
+      ],
+      "id": "e4702a89-2683-4557-9193-0e3ebed47e80",
+      "name": "Telegram",
+      "webhookId": "1bbc3c7b-dd93-4c18-8090-ef1e1421d80c",
+      "credentials": {
+        "telegramApi": {
+          "id": "5KNkhdEfvJfjBw6P",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        -48
+      ],
+      "id": "f043878f-4861-4f4d-a61f-a85c6aa48043",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy dữ liệu từ input của n8n\nconst weatherData = $input.first().json.current;\n\n// Kiểm tra xem dữ liệu có hợp lệ không\nif (!weatherData || !weatherData.temperature_2m || !weatherData.relative_humidity_2m || !weatherData.time) {\n  return [{\n    json: {\n      error: 'Invalid weather data'\n    }\n  }];\n}\n\n// Lấy các thông số\nconst timeString = weatherData.time; // \"2025-04-15T07:15\"\nconst temperature = weatherData.temperature_2m; // 27.2°C\nconst humidity = weatherData.relative_humidity_2m; // 86%\nconst precipitation = weatherData.precipitation; // 0 mm\nconst windSpeed = weatherData.wind_speed_10m; // 5.2 km/h\nconst windDirection = weatherData.wind_direction_10m; // 102°\nconst isDay = weatherData.is_day; // 1 (ban ngày)\n\n// Xử lý thời gian\nconst dateTime = new Date(timeString + 'Z'); // Thêm 'Z' để đảm bảo UTC\nif (isNaN(dateTime.getTime())) {\n  return [{\n    json: {\n      error: 'Invalid date format'\n    }\n  }];\n}\nconst hours = dateTime.getUTCHours().toString().padStart(2, '0');\nconst minutes = dateTime.getUTCMinutes().toString().padStart(2, '0');\nconst day = dateTime.getUTCDate().toString().padStart(2, '0');\nconst month = (dateTime.getUTCMonth() + 1).toString().padStart(2, '0'); // Tháng bắt đầu từ 0\nconst year = dateTime.getUTCFullYear();\nconst formattedTime = `Thời gian: ${hours}:${minutes} ${day}/${month}/${year}.`;\n\n// Chuyển đổi độ ẩm thành mô tả\nconst humidityDescription = humidity >= 80 ? '(rất ẩm)' : humidity >= 60 ? '(ẩm)' : '(khô)';\n\n// Chuyển đổi lượng mưa\nconst precipitationDescription = precipitation === 0 ? 'Không có mưa.' : `Có mưa (${precipitation} mm).`;\n\n// Chuyển đổi tốc độ gió\nconst windSpeedDescription = windSpeed < 5 ? 'Gió rất nhẹ' : windSpeed < 20 ? 'Gió nhẹ' : 'Gió mạnh';\n\n// Chuyển đổi hướng gió\nlet windDirectionDescription = '';\nif (windDirection >= 0 && windDirection <= 360) {\n  if (windDirection >= 337.5 || windDirection < 22.5) windDirectionDescription = 'Bắc';\n  else if (windDirection < 67.5) windDirectionDescription = 'Đông-Bắc';\n  else if (windDirection < 112.5) windDirectionDescription = 'Đông-Đông-Nam'; // 102° rơi vào khoảng này\n  else if (windDirection < 157.5) windDirectionDescription = 'Nam-Đông-Nam';\n  else if (windDirection < 202.5) windDirectionDescription = 'Nam';\n  else if (windDirection < 247.5) windDirectionDescription = 'Tây-Nam';\n  else if (windDirection < 292.5) windDirectionDescription = 'Tây-Tây-Bắc';\n  else windDirectionDescription = 'Bắc-Tây-Bắc';\n}\n\n// Chuyển đổi ban ngày/đêm\nconst dayNightDescription = isDay === 1 ? 'Là ban ngày.' : 'Là ban đêm.';\n\n// Tạo các chuỗi mô tả\nconst temperatureStr = `Nhiệt độ: ${temperature}°C.`;\nconst humidityStr = `Độ ẩm: ${humidity}% ${humidityDescription}.`;\nconst precipitationStr = precipitationDescription;\nconst windStr = `${windSpeedDescription} (${windSpeed} km/h) từ hướng ${windDirectionDescription}.`;\nconst dayNightStr = dayNightDescription;\n\n// Tạo đối tượng JSON đầu ra, thêm thời gian vào đầu\nreturn [{\n  json: {\n    weatherSummary: [\n      formattedTime, // Thêm thời gian vào đầu\n      temperatureStr,\n      humidityStr,\n      precipitationStr,\n      windStr,\n      dayNightStr\n    ]\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        -48
+      ],
+      "id": "1959348f-99e6-43de-b5f4-d9f94d8227d1",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fcaf7288-81aa-4d9a-828a-5ff3018c09fb",
+              "name": "local",
+              "value": "Vĩnh Long",
+              "type": "string"
+            },
+            {
+              "id": "a2fb6dd6-3c79-4da5-91fa-6dd4482a7f82",
+              "name": "weatherSummary",
+              "value": "={{ $json.weatherSummary }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        112,
+        -48
+      ],
+      "id": "5e41ec22-1ffb-4427-a491-8f9d866b3198",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "376f0a2f-7c4e-4260-8337-f2df769c5818",
+              "leftValue": "={{ $('HTTP Request').item.json.current.temperature_2m }}",
+              "rightValue": 28,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        304,
+        -48
+      ],
+      "id": "bbba6c19-7063-4ca5-8e2a-024af8d8a5f1",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-08-29T04:40:13.520Z",
+      "createdAt": "2025-08-29T04:40:13.520Z",
+      "role": "workflow:owner",
+      "workflowId": "1dhClf2Hx0w4W3dU",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-10-17T01:49:20.955Z",
+  "versionId": "656379ea-04b9-4df3-b41f-4a516c9d758a"
+}
