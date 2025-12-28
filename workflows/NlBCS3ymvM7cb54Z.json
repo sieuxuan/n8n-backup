@@ -1,0 +1,432 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-11-28T04:17:46.086Z",
+    "createdAt": "2025-11-28T04:17:46.086Z",
+    "versionId": "a78314ab-d7f5-436e-bb20-a7358f522ad6",
+    "workflowId": "NlBCS3ymvM7cb54Z",
+    "nodes": [
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 871572387,
+            "mode": "list",
+            "cachedResultName": "Book",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit#gid=871572387"
+          },
+          "options": {}
+        },
+        "id": "fa89bf8b-2f64-468e-95e7-d8686b3dab36",
+        "name": "Google Sheets (Read whole sheet)",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -96,
+          0
+        ],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "X1UBt5tMcyjhPYqy",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "dataTableId": {
+            "__rl": true,
+            "value": "n2LDGEC3sJYcffrp",
+            "mode": "list",
+            "cachedResultName": "CRAWL",
+            "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+          },
+          "matchType": "allConditions",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "folderID",
+                "condition": "isEmpty"
+              },
+              {
+                "keyName": "series",
+                "keyValue": "={{ $json.Name }}"
+              }
+            ]
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "folderID": "={{ $json['ID CODE'] }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "key",
+                "displayName": "key",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "url",
+                "displayName": "url",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "html",
+                "displayName": "html",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "name",
+                "displayName": "name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "series",
+                "displayName": "series",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "ts",
+                "displayName": "ts",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "status",
+                "displayName": "status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": true
+              },
+              {
+                "id": "folderID",
+                "displayName": "folderID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.dataTable",
+        "typeVersion": 1,
+        "position": [
+          208,
+          0
+        ],
+        "id": "6c43b10b-cdfd-4881-bbfc-8ef286e884e7",
+        "name": "Update row(s)",
+        "alwaysOutputData": false
+      },
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -368,
+          0
+        ],
+        "id": "94df327f-6248-4f6f-90df-abc9c852f70d",
+        "name": "When Executed by Another Workflow"
+      }
+    ],
+    "connections": {
+      "Google Sheets (Read whole sheet)": {
+        "main": [
+          [
+            {
+              "node": "Update row(s)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Google Sheets (Read whole sheet)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "a78314ab-d7f5-436e-bb20-a7358f522ad6",
+  "connections": {
+    "Google Sheets (Read whole sheet)": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets (Read whole sheet)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-10-06T02:44:28.653Z",
+  "id": "NlBCS3ymvM7cb54Z",
+  "isArchived": false,
+  "meta": null,
+  "name": "Update Crawl",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 871572387,
+          "mode": "list",
+          "cachedResultName": "Book",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Tiyly88j4PetqcVQbeFi72THGGjEVsLT4aT_P8w2Xk/edit#gid=871572387"
+        },
+        "options": {}
+      },
+      "id": "fa89bf8b-2f64-468e-95e7-d8686b3dab36",
+      "name": "Google Sheets (Read whole sheet)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -96,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "X1UBt5tMcyjhPYqy",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "n2LDGEC3sJYcffrp",
+          "mode": "list",
+          "cachedResultName": "CRAWL",
+          "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/n2LDGEC3sJYcffrp"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "folderID",
+              "condition": "isEmpty"
+            },
+            {
+              "keyName": "series",
+              "keyValue": "={{ $json.Name }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "folderID": "={{ $json['ID CODE'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "key",
+              "displayName": "key",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "html",
+              "displayName": "html",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "series",
+              "displayName": "series",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ts",
+              "displayName": "ts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "folderID",
+              "displayName": "folderID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6c43b10b-cdfd-4881-bbfc-8ef286e884e7",
+      "name": "Update row(s)",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -368,
+        0
+      ],
+      "id": "94df327f-6248-4f6f-90df-abc9c852f70d",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-10-06T02:44:28.653Z",
+      "createdAt": "2025-10-06T02:44:28.653Z",
+      "role": "workflow:owner",
+      "workflowId": "NlBCS3ymvM7cb54Z",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-10-29T02:15:45.669Z",
+  "versionId": "a78314ab-d7f5-436e-bb20-a7358f522ad6"
+}
