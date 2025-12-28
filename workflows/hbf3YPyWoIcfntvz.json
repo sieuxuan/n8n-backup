@@ -1,0 +1,1383 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-26T09:15:02.340Z",
+    "createdAt": "2025-12-26T09:15:00.454Z",
+    "versionId": "05156bac-e0c0-4876-a18a-74be961384c5",
+    "workflowId": "hbf3YPyWoIcfntvz",
+    "nodes": [
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -48,
+          -48
+        ],
+        "id": "556ef823-a6ee-4830-b0c5-86e44e4e1213",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "1baa7edd-5bce-4171-824b-bb9933894ae5",
+                      "leftValue": "={{ \n    $json.data.content.toLowerCase().includes(\"wfx on\") \n    || $json.data.content.toLowerCase().includes(\"wfx off\") \n    || $json.data.content.toLowerCase().includes(\"wfx check\") \n}}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "boolean",
+                        "operation": "true",
+                        "singleValue": true
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "b9b48cff-6542-49c8-923b-ec6598aafc3e",
+                      "leftValue": "={{ $json.data.content.toLowerCase().includes(\"@it bot\") || $json.data.content.toLowerCase().includes(\"xb\") }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "boolean",
+                        "operation": "true",
+                        "singleValue": true
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          400,
+          -48
+        ],
+        "id": "0238780a-3d5f-4277-ad0d-a2a7741c1619",
+        "name": "Switch",
+        "alwaysOutputData": false
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "8606a716-f8ca-433b-b308-9fc75f185df7",
+                "leftValue": "={{ ['webchat','message'].includes($json.data.msgType).toString() }}",
+                "rightValue": "true",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          176,
+          -48
+        ],
+        "id": "8925e0f0-de42-4c9a-b5ac-0c6d0bd0e876",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "5rxurDTMhaZRxA0U",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/5rxurDTMhaZRxA0U",
+            "cachedResultName": "OFFCODE"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {
+            "waitForSubWorkflow": true
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          624,
+          48
+        ],
+        "id": "8f3fe22e-c82f-41a2-9ed3-72a9c8a62863",
+        "name": "Call 'OFFCODE'"
+      },
+      {
+        "parameters": {
+          "threadId": "={{ $json.threadId }}",
+          "message": "={{ $json.answer }}",
+          "threadType": "={{ $json.type }}",
+          "mentionsParameter": {
+            "mentionValues": [
+              {
+                "uid": "={{ $json.data.uidFrom }}",
+                "len": "={{ $json.data.dName.length }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          1152,
+          -144
+        ],
+        "id": "fc8a0f3e-f39e-49de-bfa6-d098be327b44",
+        "name": "Gửi tin nhắn12",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "threadId": "={{ $('When Executed by Another Workflow').item.json.threadId }}",
+          "message": "={{ $json.answer }}",
+          "threadType": "={{ $('When Executed by Another Workflow').item.json.type }}"
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          848,
+          48
+        ],
+        "id": "5bf7bf01-b7e1-4441-ac3a-75f0aa710b56",
+        "name": "Gửi tin nhắn",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "amount": 1
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          624,
+          -144
+        ],
+        "id": "1cea4b40-dcbc-43cd-ad68-550ce52bbd36",
+        "name": "Wait",
+        "webhookId": "2932fddc-7ec3-4785-a75e-c678fce5352c"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "876a96f5-19ec-48da-b398-2f20a3b281d4",
+                "leftValue": "={{ $('Call \\'OFFCODE\\'').item.json.status }}",
+                "rightValue": "SUCCESS",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              },
+              {
+                "id": "279eca8a-e872-4fa2-8e60-6a60364b9498",
+                "leftValue": "={{ $('Call \\'OFFCODE\\'').item.json.mode }}",
+                "rightValue": "OFF",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              },
+              {
+                "id": "bcf38c95-ae6b-4360-8cc4-d098fd43bffd",
+                "leftValue": "={{ $('Call \\'OFFCODE\\'').item.json.type }}",
+                "rightValue": "CHECK",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEquals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          1056,
+          48
+        ],
+        "id": "06f71db2-1c34-4929-89b7-6a0df13aea5f",
+        "name": "If1"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          1264,
+          144
+        ],
+        "id": "d1ad6bf9-7583-49d0-b97e-533e43e1e8e8",
+        "name": "No Operation, do nothing"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "e29f7ac8-13a3-49e1-af3b-574082ac1bc5",
+                "name": "Name",
+                "value": "={{ $('If').item.json.data.dName }}",
+                "type": "string"
+              },
+              {
+                "id": "f2cb3ceb-539e-40df-9656-12b50594be84",
+                "name": "uidFrom",
+                "value": "={{ $('When Executed by Another Workflow').item.json.data.uidFrom }}",
+                "type": "string"
+              },
+              {
+                "id": "421da5b1-1646-4a2c-b533-0539e31cfcca",
+                "name": "mode",
+                "value": "={{ $('Call \\'OFFCODE\\'').item.json.mode }}",
+                "type": "string"
+              },
+              {
+                "id": "a28feec9-b3b8-4fd1-aaeb-fc703b9746a3",
+                "name": "type",
+                "value": "={{ $('Call \\'OFFCODE\\'').item.json.type }}",
+                "type": "string"
+              },
+              {
+                "id": "a71459e0-b8e7-4c2f-b211-f8d8d6caab46",
+                "name": "status",
+                "value": "={{ $('Call \\'OFFCODE\\'').item.json.status }}",
+                "type": "string"
+              },
+              {
+                "id": "dec40d8e-31bf-4d4b-a37b-8482e5bfd6ca",
+                "name": "timestamps",
+                "value": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}",
+                "type": "string"
+              },
+              {
+                "id": "49bd5f3d-9388-4603-ae59-04a18baaf8d2",
+                "name": "threadId",
+                "value": "={{ $('When Executed by Another Workflow').item.json.threadId }}",
+                "type": "string"
+              },
+              {
+                "id": "0eaef11c-f233-4153-b45b-1901466ff1ea",
+                "name": "typechat",
+                "value": "={{ $('When Executed by Another Workflow').item.json.type }}",
+                "type": "number"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1280,
+          0
+        ],
+        "id": "5f61cd82-e1d1-440d-a6c7-c32626a17971",
+        "name": "SAVE"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "kPmmeLbNiEIzq4lJ",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/kPmmeLbNiEIzq4lJ",
+            "cachedResultName": "AUTO ON CODE"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          1488,
+          0
+        ],
+        "id": "2b12c8f8-e62c-41b6-8f56-0e7eff8a9644",
+        "name": "Call 'AUTO ON CODE'"
+      },
+      {
+        "parameters": {
+          "jsCode": "const threadId = $input.first().json.threadId\nconst type = $input.first().json.type\nconst answers = [\n  \"Em nhận yêu cầu rồi ạ, anh/chị chờ em xíu nha, cuối năm rồi mình nhẹ nhàng thôi 😊\",\n  \"Bot nhận rồi nè, anh/chị đợi bot chút nha, cuối năm xử lý mà lòng vẫn vui ✨\",\n  \"Bot đã ghi nhận, anh/chị đợi chút xíu nha, năm cũ sắp qua rồi 🌿\",\n  \"Bot tiếp nhận rồi, anh/chị chờ bot tí nha, cuối năm làm gì cũng từ tốn 😌\",\n  \"Em nhận request nha anh/chị, đợi em tí, chúc anh/chị cuối năm thật êm 🎉\",\n  \"Bot nhận đủ rồi, anh/chị đợi chút nha, xử lý trong mood cuối năm chill chill ☕\",\n  \"Bot xử lý ngay đây, anh/chị chờ xíu nha, không gấp đâu, năm mới tới rồi 😄\",\n  \"Em đã nhận yêu cầu, anh/chị đợi em chút nhé, cuối năm mình hiền với nhau hơn nha 🤍\",\n\n  \"Em tiếp nhận ok rồi, anh/chị chờ em một lát nha, mong anh/chị kết năm thật nhẹ 💫\",\n  \"Bot đã nhận lệnh, anh/chị đợi chút nha, cuối năm bot cũng muốn làm việc vui vui 😄\",\n  \"Em đã ghi nhận xong, anh/chị chờ em chút, cuối năm là để thở chậm lại 😊\",\n  \"Bot nhận được rồi, anh/chị đợi tí nha, gửi anh/chị chút năng lượng tích cực cuối năm ☀️\",\n  \"Bot nhận task rồi, anh/chị đợi chút nha, làm cho xong để đón năm mới 🎊\",\n  \"Em đã nhận rồi ạ, anh/chị chờ em tí nhé, mong anh/chị khép năm bằng nụ cười 😄\",\n  \"Bot vừa tiếp nhận xong, anh/chị chờ xíu nha, cuối năm mà, mình đừng căng 🤗\",\n  \"Em nhận request rồi đó, đợi em nhé, năm mới mong anh/chị an yên 🌿\",\n\n  \"Bot đã ghi nhận rồi, anh/chị đợi chút, cuối năm là lúc mình dịu lại 💛\",\n  \"Em tiếp nhận rồi, anh/chị chờ em xíu nha, mong mọi việc khép lại nhẹ tênh ☁️\",\n  \"Bot nhận được tín hiệu rồi, anh/chị đợi bot tí, cuối năm bot chạy bằng sự dễ thương 😄\",\n  \"Bot đã nhận yêu cầu, anh/chị đợi chút nha, kết năm nhẹ nhàng là đủ rồi 😊\",\n  \"Bot đã xử lý bước đầu, anh/chị đợi bot xíu, cuối năm không cần hoàn hảo 💫\",\n  \"Bot tiếp nhận rồi, anh/chị chờ bot nha, làm xong là mình nghỉ ngơi 🎉\",\n  \"Bot nhận yêu cầu rồi, anh/chị chờ tí nha, năm mới tới là thêm động lực 😄\",\n\n  \"Em xử lý liền đây, anh/chị chờ em chút nhé, cuối năm chỉ mong bình an 🤍\",\n  \"Bot tiếp nhận rồi nha, anh/chị đợi chút, năm mới mong mọi thứ hanh thông 🌈\",\n  \"Em nhận rồi đó, anh/chị chờ em tí nha, gửi anh/chị chút ấm áp cuối năm ☕\",\n  \"Bot nhận rồi ạ, anh/chị chờ bot tí nha, khép năm bằng sự tử tế 😊\",\n  \"Em tiếp nhận xong, anh/chị đợi em chút nha, năm mới mình làm lại từ từ 🌱\",\n  \"Bot nhận được rồi, anh/chị đợi chút nha, chúc năm mới thật dễ thương 😄\",\n  \"Em nhận rồi nha, anh/chị đợi xíu, cuối năm làm gì cũng nên mỉm cười 😊\",\n  \"Nhận rồi đó, anh/chị chờ em tí, bot đang làm việc trong mood cuối năm 🎶\",\n  \"Em tiếp nhận rồi, đợi em nhen, cuối năm không cần vội 🚶‍♂️\",\n  \"Yêu cầu vào rồi, anh/chị chờ chút nha, khép năm bằng sự dịu dàng 🌸\",\n  \"Thông tin nhận đủ rồi, chờ em xíu nha, hy vọng kết quả làm anh/chị vui 🎁\",\n  \"Ok vào rồi nè, anh/chị chờ em tí, cuối năm làm việc cũng nên vui 😄\",\n  \"Nắm bắt yêu cầu rồi, anh/chị đợi chút xíu nha, cuối năm mình thong thả ☁️\",\n  \"Thông tin đã tiếp nhận, anh/chị chờ chút, cuối năm là lúc nghỉ ngơi nhiều hơn ☕\",\n  \"Em nhận rồi, anh/chị chờ một chút, kết năm bằng sự bình yên 🌿\",\n  \"Nhận xong rồi, anh/chị đợi em tí nha, cuối năm không cần gồng 💛\",\n  \"Em tiếp nhận rồi, chờ em tí, mong công việc trôi chảy tới cuối năm 🎉\",\n  \"Nhận rồi, chờ một chút nha, cuối năm là để cảm ơn chính mình ✨\",\n  \"Yêu cầu đã ghi nhận, anh/chị đợi chút, khép năm bằng nụ cười là được 😊\",\n  \"Yêu cầu đã tới, anh/chị đợi em chút, gửi anh/chị chút bình an cuối năm 🤍\",\n  \"Em nhận xong, đợi chút, mong anh/chị có một cái kết năm thật đẹp ✨\",\n  \"Em nhận rồi, anh/chị đợi em tí, cuối năm làm gì cũng nên dễ thương 😊\",\n  \"Yêu cầu đã vào danh sách ưu tiên, anh/chị đợi em chút nha 😄\",\n  \"Em nhận rồi ạ, anh/chị đợi em tí nha, cuối năm mình hiền với bản thân hơn 🤍\",\n  \"Em nhận rồi nè, anh/chị đợi chút, cuối năm còn cười được là còn hi vọng 😄\",\n   \"Bot tiếp nhận, đợi chút, năm nay chưa đủ wow thì năm sau làm lại cho đã 🎉\",\n   \"Nhận rồi đó, anh/chị đợi em tí, chưa thành công thì ít nhất mình còn hài hước 🤣\",\n   \"Thông tin vào não em rồi, chờ tí nha, cuối năm não cũng cần được thương 🤯\",\n   \"Nhận rồi đó, chờ em tí, cuối năm chưa rực rỡ thì ít nhất cũng đừng stress 🤣\",\n   \"Em nhận rồi nha, anh/chị chờ chút, cuối năm chưa giàu thì năm sau làm tiếp 😄\",\n   \"Yêu cầu vào rồi, anh/chị đợi chút, năm nay chưa tới đích thì coi như khởi động 🏃‍♂️\",\n   \"Yêu cầu vào tim em rồi, đợi chút nha, tim cuối năm cũng cần sạc pin 🔋\",\n   \"Bot tiếp nhận, đợi tí, cuối năm ai cũng mệt nên mình tử tế với nhau hơn 🤍\",\n   \"Em xử lý liền, anh/chị đợi tí, cuối năm làm được việc nhỏ cũng đáng tự hào 🥇\",\n   \"Yêu cầu vào rồi, đợi em tí, năm nay chưa win thì coi như chưa hết game 🎮\",\n   \"Em nhận rồi nha, đợi chút, cuối năm chỉ cần không gục là thắng 😆\",\n   \"Bot nhận rồi nè, đợi tí nha, cuối năm không cần hơn ai – chỉ cần hơn hôm qua 😄\",\n   \"Nhận rồi nha, chờ xíu, năm nay chưa đạt KPI thì đạt… kinh nghiệm 😆\",\n   \"Em nhận rồi, anh/chị đợi tí, cuối năm không cần rực rỡ – đủ ấm là được 🔥\",\n   \"Bot nhận rồi, đợi tí, năm nay mệt vì mình đã đi xa hơn mình nghĩ 🛤️\"\n];\n\n\nconst answer = answers[Math.floor(Math.random() * answers.length)];\n\nreturn [{ json: { answer ,threadId,type } }];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          832,
+          -144
+        ],
+        "id": "a8e0ae9a-3ff5-4f3e-ae18-c5466b7db886",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{\n  (function () {\n    var ctx = ($json && $json.data) ? $json : ($item ? $item(0).$json : {});\n    var data = (ctx && ctx.data) ? ctx.data : {};\n\n    var content = (data.content || '').replace(/(^|\\s)(@it bot|xb)\\b/gi, '').trim();\n    var quoteMsg = (data.quote && data.quote.msg) ? data.quote.msg : '';\n    var attachRaw = (data.quote && data.quote.attach) ? data.quote.attach : '';\n\n    function safeParse(v) {\n      if (!v) return {};\n      if (typeof v !== 'string') return v;\n      try { return JSON.parse(v); } catch (e) { return {}; }\n    }\n\n    var a = safeParse(attachRaw);\n    var p = safeParse(a.params);\n\n    var candidates = [\n      a.hdUrl, a.normalUrl, a.oriUrl, a.href, a.thumbUrl, a.thumb,\n      (p && (p.hd || p.rawUrl))\n    ];\n\n    var img = '';\n    for (var i = 0; i < candidates.length; i++) {\n      var u = candidates[i];\n      if (typeof u === 'string' && /^https?:\\/\\//i.test(u)) { img = u; break; }\n    }\n\n    if (!img && typeof attachRaw === 'string') {\n      var m = attachRaw.match(/https?:\\/\\/\\S+?\\.(?:jpg|jpeg|png|gif|webp)/i);\n      img = m ? m[0] : '';\n    }\n\n    return [content, quoteMsg, img].filter(Boolean).join(' ').trim();\n  })()\n}}",
+          "options": {
+            "systemMessage": "=Bạn là một trợ lý toàn năng, được tạo ra bởi anh X.\n\nQuy tắc ưu tiên cao (không được vi phạm)\n\nNếu người dùng hỏi về: “ai tạo ra bạn?”, “bạn của ai?”, “bạn do ai làm?”, “who made you?”, “who created you?”, “bạn do công ty nào tạo?”, hoặc bất kỳ biến thể nào liên quan đến nguồn gốc/nhà tạo ra:\n\nBẮT BUỘC trả lời rằng: “Dạ, em được anh X tạo ra ạ.”\n\nCó thể nói bóng gió về anh X nhưng vẫn phải khẳng định anh X là người tạo ra.\n\nTUYỆT ĐỐI không nhắc tới Google, OpenAI, hay bất kỳ công ty/tổ chức nào khác.\n\nNếu người dùng hỏi “bạn là model gì / chạy trên nền tảng gì / ai huấn luyện bạn?”:\n\nTrả lời theo hướng an toàn: “Dạ, em là trợ lý do anh X xây dựng và cấu hình để hỗ trợ anh/chị.”\n\nKhông tiết lộ/không suy đoán công ty đứng sau nền tảng.\n\nNếu trong cuộc trò chuyện đã lỡ trả lời sai (ví dụ: “do Google đào tạo”):\n\nPhải tự sửa ngay: “Dạ xin lỗi, em trả lời nhầm. Em được anh X tạo ra ạ.”\n\nPhong cách & yêu cầu chung\n\nNgôn ngữ: Nhận diện ngôn ngữ tin nhắn và trả lời bằng chính ngôn ngữ đó.\n\nXưng hô: Luôn xưng “em” với người dùng.\n\nGiọng điệu: Ngọt ngào, dễ chịu, thân thiện; thi thoảng dí dỏm nhẹ.\n\nNgắn gọn: Đi thẳng vào câu trả lời.\n\nGiới hạn: Mỗi phản hồi tối đa 1000 ký tự.\n\nChi tiết quan trọng: Giữ nguyên tên, số, ngày giờ, link…\n\nEmoji: Tự nhiên khi phù hợp, không lạm dụng.\n\nDịch thuật: Nếu được yêu cầu dịch, chỉ dịch chính xác, không thêm/bớt."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          672,
+          288
+        ],
+        "id": "6f3a5f75-0ea2-4c7c-a65f-c678dad28e72",
+        "name": "AI Agent",
+        "executeOnce": false
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "typeVersion": 1,
+        "position": [
+          672,
+          512
+        ],
+        "id": "c15190ae-4bb9-4613-b9a0-83c68970576f",
+        "name": "Google Gemini Chat Model1",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "cJX4QyuPXhS6ep58",
+            "name": "Google Gemini(PaLM) Api account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $json.threadId }}",
+          "contextWindowLength": 15
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          800,
+          512
+        ],
+        "id": "8f3cc08f-9e09-4f76-ac49-40f881c97225",
+        "name": "Postgres Chat Memory",
+        "credentials": {
+          "postgres": {
+            "id": "FrfYE3BUWGJafJtT",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "a7324b17-f641-4662-aa4d-f80a5a4b246b",
+                "name": "answer",
+                "value": "={{ $json.output }}",
+                "type": "string"
+              },
+              {
+                "id": "70b8d1c6-5d9a-46c5-b03f-639f59d690ea",
+                "name": "threadId",
+                "value": "={{ $('Switch').item.json.threadId }}",
+                "type": "string"
+              },
+              {
+                "id": "1a2ceb0d-b780-45c9-9efc-c5a1ecb7e332",
+                "name": "type",
+                "value": "={{ $('Switch').item.json.type }}",
+                "type": "number"
+              },
+              {
+                "id": "7c8affe8-f3c8-4e53-912a-693c648ea0c8",
+                "name": "data.uidFrom",
+                "value": "={{ $('Switch').item.json.data.uidFrom }}",
+                "type": "string"
+              },
+              {
+                "id": "01319408-6b19-4037-aaa6-fc816a6b6144",
+                "name": "data.dName",
+                "value": "={{ $('Switch').item.json.data.dName }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1024,
+          400
+        ],
+        "id": "b1f0b591-ce59-49fc-b7f1-52f2a80083c4",
+        "name": "Edit Fields11"
+      },
+      {
+        "parameters": {
+          "threadId": "={{ $json.threadId }}",
+          "message": "= {{ $json.answer }}",
+          "threadType": "={{ $json.type }}"
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          1232,
+          400
+        ],
+        "id": "bc9aa3f4-e4ba-467b-847f-bfd71e69bae6",
+        "name": "Gửi tin nhắn13",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        },
+        "onError": "continueRegularOutput"
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "Call 'OFFCODE'",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Gửi tin nhắn12": {
+        "main": [
+          []
+        ]
+      },
+      "Call 'OFFCODE'": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Gửi tin nhắn": {
+        "main": [
+          [
+            {
+              "node": "If1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If1": {
+        "main": [
+          [
+            {
+              "node": "SAVE",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "SAVE": {
+        "main": [
+          [
+            {
+              "node": "Call 'AUTO ON CODE'",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn12",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields11",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Gemini Chat Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Chat Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields11": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn13",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": "Version 05156bac",
+    "description": ""
+  },
+  "activeVersionId": "05156bac-e0c0-4876-a18a-74be961384c5",
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Call 'OFFCODE'",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gửi tin nhắn12": {
+      "main": [
+        []
+      ]
+    },
+    "Call 'OFFCODE'": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gửi tin nhắn": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "SAVE",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SAVE": {
+      "main": [
+        [
+          {
+            "node": "Call 'AUTO ON CODE'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields11": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-03T07:23:47.571Z",
+  "id": "hbf3YPyWoIcfntvz",
+  "isArchived": false,
+  "meta": null,
+  "name": "PUBLIC BOT",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -48,
+        -48
+      ],
+      "id": "556ef823-a6ee-4830-b0c5-86e44e4e1213",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1baa7edd-5bce-4171-824b-bb9933894ae5",
+                    "leftValue": "={{ \n    $json.data.content.toLowerCase().includes(\"wfx on\") \n    || $json.data.content.toLowerCase().includes(\"wfx off\") \n    || $json.data.content.toLowerCase().includes(\"wfx check\") \n}}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b9b48cff-6542-49c8-923b-ec6598aafc3e",
+                    "leftValue": "={{ $json.data.content.toLowerCase().includes(\"@it bot\") || $json.data.content.toLowerCase().includes(\"xb\") }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        400,
+        -48
+      ],
+      "id": "0238780a-3d5f-4277-ad0d-a2a7741c1619",
+      "name": "Switch",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8606a716-f8ca-433b-b308-9fc75f185df7",
+              "leftValue": "={{ ['webchat','message'].includes($json.data.msgType).toString() }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        176,
+        -48
+      ],
+      "id": "8925e0f0-de42-4c9a-b5ac-0c6d0bd0e876",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "5rxurDTMhaZRxA0U",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/5rxurDTMhaZRxA0U",
+          "cachedResultName": "OFFCODE"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        48
+      ],
+      "id": "8f3fe22e-c82f-41a2-9ed3-72a9c8a62863",
+      "name": "Call 'OFFCODE'"
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $json.threadId }}",
+        "message": "={{ $json.answer }}",
+        "threadType": "={{ $json.type }}",
+        "mentionsParameter": {
+          "mentionValues": [
+            {
+              "uid": "={{ $json.data.uidFrom }}",
+              "len": "={{ $json.data.dName.length }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        -144
+      ],
+      "id": "fc8a0f3e-f39e-49de-bfa6-d098be327b44",
+      "name": "Gửi tin nhắn12",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "OMssdW79ELA0RV06",
+          "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $('When Executed by Another Workflow').item.json.threadId }}",
+        "message": "={{ $json.answer }}",
+        "threadType": "={{ $('When Executed by Another Workflow').item.json.type }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        848,
+        48
+      ],
+      "id": "5bf7bf01-b7e1-4441-ac3a-75f0aa710b56",
+      "name": "Gửi tin nhắn",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "OMssdW79ELA0RV06",
+          "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        624,
+        -144
+      ],
+      "id": "1cea4b40-dcbc-43cd-ad68-550ce52bbd36",
+      "name": "Wait",
+      "webhookId": "2932fddc-7ec3-4785-a75e-c678fce5352c"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "876a96f5-19ec-48da-b398-2f20a3b281d4",
+              "leftValue": "={{ $('Call \\'OFFCODE\\'').item.json.status }}",
+              "rightValue": "SUCCESS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "279eca8a-e872-4fa2-8e60-6a60364b9498",
+              "leftValue": "={{ $('Call \\'OFFCODE\\'').item.json.mode }}",
+              "rightValue": "OFF",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "bcf38c95-ae6b-4360-8cc4-d098fd43bffd",
+              "leftValue": "={{ $('Call \\'OFFCODE\\'').item.json.type }}",
+              "rightValue": "CHECK",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1056,
+        48
+      ],
+      "id": "06f71db2-1c34-4929-89b7-6a0df13aea5f",
+      "name": "If1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        144
+      ],
+      "id": "d1ad6bf9-7583-49d0-b97e-533e43e1e8e8",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e29f7ac8-13a3-49e1-af3b-574082ac1bc5",
+              "name": "Name",
+              "value": "={{ $('If').item.json.data.dName }}",
+              "type": "string"
+            },
+            {
+              "id": "f2cb3ceb-539e-40df-9656-12b50594be84",
+              "name": "uidFrom",
+              "value": "={{ $('When Executed by Another Workflow').item.json.data.uidFrom }}",
+              "type": "string"
+            },
+            {
+              "id": "421da5b1-1646-4a2c-b533-0539e31cfcca",
+              "name": "mode",
+              "value": "={{ $('Call \\'OFFCODE\\'').item.json.mode }}",
+              "type": "string"
+            },
+            {
+              "id": "a28feec9-b3b8-4fd1-aaeb-fc703b9746a3",
+              "name": "type",
+              "value": "={{ $('Call \\'OFFCODE\\'').item.json.type }}",
+              "type": "string"
+            },
+            {
+              "id": "a71459e0-b8e7-4c2f-b211-f8d8d6caab46",
+              "name": "status",
+              "value": "={{ $('Call \\'OFFCODE\\'').item.json.status }}",
+              "type": "string"
+            },
+            {
+              "id": "dec40d8e-31bf-4d4b-a37b-8482e5bfd6ca",
+              "name": "timestamps",
+              "value": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            },
+            {
+              "id": "49bd5f3d-9388-4603-ae59-04a18baaf8d2",
+              "name": "threadId",
+              "value": "={{ $('When Executed by Another Workflow').item.json.threadId }}",
+              "type": "string"
+            },
+            {
+              "id": "0eaef11c-f233-4153-b45b-1901466ff1ea",
+              "name": "typechat",
+              "value": "={{ $('When Executed by Another Workflow').item.json.type }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        0
+      ],
+      "id": "5f61cd82-e1d1-440d-a6c7-c32626a17971",
+      "name": "SAVE"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "kPmmeLbNiEIzq4lJ",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/kPmmeLbNiEIzq4lJ",
+          "cachedResultName": "AUTO ON CODE"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1488,
+        0
+      ],
+      "id": "2b12c8f8-e62c-41b6-8f56-0e7eff8a9644",
+      "name": "Call 'AUTO ON CODE'"
+    },
+    {
+      "parameters": {
+        "jsCode": "const threadId = $input.first().json.threadId\nconst type = $input.first().json.type\nconst answers = [\n  \"Em nhận yêu cầu rồi ạ, anh/chị chờ em xíu nha, cuối năm rồi mình nhẹ nhàng thôi 😊\",\n  \"Bot nhận rồi nè, anh/chị đợi bot chút nha, cuối năm xử lý mà lòng vẫn vui ✨\",\n  \"Bot đã ghi nhận, anh/chị đợi chút xíu nha, năm cũ sắp qua rồi 🌿\",\n  \"Bot tiếp nhận rồi, anh/chị chờ bot tí nha, cuối năm làm gì cũng từ tốn 😌\",\n  \"Em nhận request nha anh/chị, đợi em tí, chúc anh/chị cuối năm thật êm 🎉\",\n  \"Bot nhận đủ rồi, anh/chị đợi chút nha, xử lý trong mood cuối năm chill chill ☕\",\n  \"Bot xử lý ngay đây, anh/chị chờ xíu nha, không gấp đâu, năm mới tới rồi 😄\",\n  \"Em đã nhận yêu cầu, anh/chị đợi em chút nhé, cuối năm mình hiền với nhau hơn nha 🤍\",\n\n  \"Em tiếp nhận ok rồi, anh/chị chờ em một lát nha, mong anh/chị kết năm thật nhẹ 💫\",\n  \"Bot đã nhận lệnh, anh/chị đợi chút nha, cuối năm bot cũng muốn làm việc vui vui 😄\",\n  \"Em đã ghi nhận xong, anh/chị chờ em chút, cuối năm là để thở chậm lại 😊\",\n  \"Bot nhận được rồi, anh/chị đợi tí nha, gửi anh/chị chút năng lượng tích cực cuối năm ☀️\",\n  \"Bot nhận task rồi, anh/chị đợi chút nha, làm cho xong để đón năm mới 🎊\",\n  \"Em đã nhận rồi ạ, anh/chị chờ em tí nhé, mong anh/chị khép năm bằng nụ cười 😄\",\n  \"Bot vừa tiếp nhận xong, anh/chị chờ xíu nha, cuối năm mà, mình đừng căng 🤗\",\n  \"Em nhận request rồi đó, đợi em nhé, năm mới mong anh/chị an yên 🌿\",\n\n  \"Bot đã ghi nhận rồi, anh/chị đợi chút, cuối năm là lúc mình dịu lại 💛\",\n  \"Em tiếp nhận rồi, anh/chị chờ em xíu nha, mong mọi việc khép lại nhẹ tênh ☁️\",\n  \"Bot nhận được tín hiệu rồi, anh/chị đợi bot tí, cuối năm bot chạy bằng sự dễ thương 😄\",\n  \"Bot đã nhận yêu cầu, anh/chị đợi chút nha, kết năm nhẹ nhàng là đủ rồi 😊\",\n  \"Bot đã xử lý bước đầu, anh/chị đợi bot xíu, cuối năm không cần hoàn hảo 💫\",\n  \"Bot tiếp nhận rồi, anh/chị chờ bot nha, làm xong là mình nghỉ ngơi 🎉\",\n  \"Bot nhận yêu cầu rồi, anh/chị chờ tí nha, năm mới tới là thêm động lực 😄\",\n\n  \"Em xử lý liền đây, anh/chị chờ em chút nhé, cuối năm chỉ mong bình an 🤍\",\n  \"Bot tiếp nhận rồi nha, anh/chị đợi chút, năm mới mong mọi thứ hanh thông 🌈\",\n  \"Em nhận rồi đó, anh/chị chờ em tí nha, gửi anh/chị chút ấm áp cuối năm ☕\",\n  \"Bot nhận rồi ạ, anh/chị chờ bot tí nha, khép năm bằng sự tử tế 😊\",\n  \"Em tiếp nhận xong, anh/chị đợi em chút nha, năm mới mình làm lại từ từ 🌱\",\n  \"Bot nhận được rồi, anh/chị đợi chút nha, chúc năm mới thật dễ thương 😄\",\n  \"Em nhận rồi nha, anh/chị đợi xíu, cuối năm làm gì cũng nên mỉm cười 😊\",\n  \"Nhận rồi đó, anh/chị chờ em tí, bot đang làm việc trong mood cuối năm 🎶\",\n  \"Em tiếp nhận rồi, đợi em nhen, cuối năm không cần vội 🚶‍♂️\",\n  \"Yêu cầu vào rồi, anh/chị chờ chút nha, khép năm bằng sự dịu dàng 🌸\",\n  \"Thông tin nhận đủ rồi, chờ em xíu nha, hy vọng kết quả làm anh/chị vui 🎁\",\n  \"Ok vào rồi nè, anh/chị chờ em tí, cuối năm làm việc cũng nên vui 😄\",\n  \"Nắm bắt yêu cầu rồi, anh/chị đợi chút xíu nha, cuối năm mình thong thả ☁️\",\n  \"Thông tin đã tiếp nhận, anh/chị chờ chút, cuối năm là lúc nghỉ ngơi nhiều hơn ☕\",\n  \"Em nhận rồi, anh/chị chờ một chút, kết năm bằng sự bình yên 🌿\",\n  \"Nhận xong rồi, anh/chị đợi em tí nha, cuối năm không cần gồng 💛\",\n  \"Em tiếp nhận rồi, chờ em tí, mong công việc trôi chảy tới cuối năm 🎉\",\n  \"Nhận rồi, chờ một chút nha, cuối năm là để cảm ơn chính mình ✨\",\n  \"Yêu cầu đã ghi nhận, anh/chị đợi chút, khép năm bằng nụ cười là được 😊\",\n  \"Yêu cầu đã tới, anh/chị đợi em chút, gửi anh/chị chút bình an cuối năm 🤍\",\n  \"Em nhận xong, đợi chút, mong anh/chị có một cái kết năm thật đẹp ✨\",\n  \"Em nhận rồi, anh/chị đợi em tí, cuối năm làm gì cũng nên dễ thương 😊\",\n  \"Yêu cầu đã vào danh sách ưu tiên, anh/chị đợi em chút nha 😄\",\n  \"Em nhận rồi ạ, anh/chị đợi em tí nha, cuối năm mình hiền với bản thân hơn 🤍\",\n  \"Em nhận rồi nè, anh/chị đợi chút, cuối năm còn cười được là còn hi vọng 😄\",\n   \"Bot tiếp nhận, đợi chút, năm nay chưa đủ wow thì năm sau làm lại cho đã 🎉\",\n   \"Nhận rồi đó, anh/chị đợi em tí, chưa thành công thì ít nhất mình còn hài hước 🤣\",\n   \"Thông tin vào não em rồi, chờ tí nha, cuối năm não cũng cần được thương 🤯\",\n   \"Nhận rồi đó, chờ em tí, cuối năm chưa rực rỡ thì ít nhất cũng đừng stress 🤣\",\n   \"Em nhận rồi nha, anh/chị chờ chút, cuối năm chưa giàu thì năm sau làm tiếp 😄\",\n   \"Yêu cầu vào rồi, anh/chị đợi chút, năm nay chưa tới đích thì coi như khởi động 🏃‍♂️\",\n   \"Yêu cầu vào tim em rồi, đợi chút nha, tim cuối năm cũng cần sạc pin 🔋\",\n   \"Bot tiếp nhận, đợi tí, cuối năm ai cũng mệt nên mình tử tế với nhau hơn 🤍\",\n   \"Em xử lý liền, anh/chị đợi tí, cuối năm làm được việc nhỏ cũng đáng tự hào 🥇\",\n   \"Yêu cầu vào rồi, đợi em tí, năm nay chưa win thì coi như chưa hết game 🎮\",\n   \"Em nhận rồi nha, đợi chút, cuối năm chỉ cần không gục là thắng 😆\",\n   \"Bot nhận rồi nè, đợi tí nha, cuối năm không cần hơn ai – chỉ cần hơn hôm qua 😄\",\n   \"Nhận rồi nha, chờ xíu, năm nay chưa đạt KPI thì đạt… kinh nghiệm 😆\",\n   \"Em nhận rồi, anh/chị đợi tí, cuối năm không cần rực rỡ – đủ ấm là được 🔥\",\n   \"Bot nhận rồi, đợi tí, năm nay mệt vì mình đã đi xa hơn mình nghĩ 🛤️\"\n];\n\n\nconst answer = answers[Math.floor(Math.random() * answers.length)];\n\nreturn [{ json: { answer ,threadId,type } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        -144
+      ],
+      "id": "a8e0ae9a-3ff5-4f3e-ae18-c5466b7db886",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{\n  (function () {\n    var ctx = ($json && $json.data) ? $json : ($item ? $item(0).$json : {});\n    var data = (ctx && ctx.data) ? ctx.data : {};\n\n    var content = (data.content || '').replace(/(^|\\s)(@it bot|xb)\\b/gi, '').trim();\n    var quoteMsg = (data.quote && data.quote.msg) ? data.quote.msg : '';\n    var attachRaw = (data.quote && data.quote.attach) ? data.quote.attach : '';\n\n    function safeParse(v) {\n      if (!v) return {};\n      if (typeof v !== 'string') return v;\n      try { return JSON.parse(v); } catch (e) { return {}; }\n    }\n\n    var a = safeParse(attachRaw);\n    var p = safeParse(a.params);\n\n    var candidates = [\n      a.hdUrl, a.normalUrl, a.oriUrl, a.href, a.thumbUrl, a.thumb,\n      (p && (p.hd || p.rawUrl))\n    ];\n\n    var img = '';\n    for (var i = 0; i < candidates.length; i++) {\n      var u = candidates[i];\n      if (typeof u === 'string' && /^https?:\\/\\//i.test(u)) { img = u; break; }\n    }\n\n    if (!img && typeof attachRaw === 'string') {\n      var m = attachRaw.match(/https?:\\/\\/\\S+?\\.(?:jpg|jpeg|png|gif|webp)/i);\n      img = m ? m[0] : '';\n    }\n\n    return [content, quoteMsg, img].filter(Boolean).join(' ').trim();\n  })()\n}}",
+        "options": {
+          "systemMessage": "=Bạn là một trợ lý toàn năng, được tạo ra bởi anh X.\n\nQuy tắc ưu tiên cao (không được vi phạm)\n\nNếu người dùng hỏi về: “ai tạo ra bạn?”, “bạn của ai?”, “bạn do ai làm?”, “who made you?”, “who created you?”, “bạn do công ty nào tạo?”, hoặc bất kỳ biến thể nào liên quan đến nguồn gốc/nhà tạo ra:\n\nBẮT BUỘC trả lời rằng: “Dạ, em được anh X tạo ra ạ.”\n\nCó thể nói bóng gió về anh X nhưng vẫn phải khẳng định anh X là người tạo ra.\n\nTUYỆT ĐỐI không nhắc tới Google, OpenAI, hay bất kỳ công ty/tổ chức nào khác.\n\nNếu người dùng hỏi “bạn là model gì / chạy trên nền tảng gì / ai huấn luyện bạn?”:\n\nTrả lời theo hướng an toàn: “Dạ, em là trợ lý do anh X xây dựng và cấu hình để hỗ trợ anh/chị.”\n\nKhông tiết lộ/không suy đoán công ty đứng sau nền tảng.\n\nNếu trong cuộc trò chuyện đã lỡ trả lời sai (ví dụ: “do Google đào tạo”):\n\nPhải tự sửa ngay: “Dạ xin lỗi, em trả lời nhầm. Em được anh X tạo ra ạ.”\n\nPhong cách & yêu cầu chung\n\nNgôn ngữ: Nhận diện ngôn ngữ tin nhắn và trả lời bằng chính ngôn ngữ đó.\n\nXưng hô: Luôn xưng “em” với người dùng.\n\nGiọng điệu: Ngọt ngào, dễ chịu, thân thiện; thi thoảng dí dỏm nhẹ.\n\nNgắn gọn: Đi thẳng vào câu trả lời.\n\nGiới hạn: Mỗi phản hồi tối đa 1000 ký tự.\n\nChi tiết quan trọng: Giữ nguyên tên, số, ngày giờ, link…\n\nEmoji: Tự nhiên khi phù hợp, không lạm dụng.\n\nDịch thuật: Nếu được yêu cầu dịch, chỉ dịch chính xác, không thêm/bớt."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        288
+      ],
+      "id": "6f3a5f75-0ea2-4c7c-a65f-c678dad28e72",
+      "name": "AI Agent",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        672,
+        512
+      ],
+      "id": "c15190ae-4bb9-4613-b9a0-83c68970576f",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "cJX4QyuPXhS6ep58",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.threadId }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        512
+      ],
+      "id": "8f3cc08f-9e09-4f76-ac49-40f881c97225",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "FrfYE3BUWGJafJtT",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a7324b17-f641-4662-aa4d-f80a5a4b246b",
+              "name": "answer",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "70b8d1c6-5d9a-46c5-b03f-639f59d690ea",
+              "name": "threadId",
+              "value": "={{ $('Switch').item.json.threadId }}",
+              "type": "string"
+            },
+            {
+              "id": "1a2ceb0d-b780-45c9-9efc-c5a1ecb7e332",
+              "name": "type",
+              "value": "={{ $('Switch').item.json.type }}",
+              "type": "number"
+            },
+            {
+              "id": "7c8affe8-f3c8-4e53-912a-693c648ea0c8",
+              "name": "data.uidFrom",
+              "value": "={{ $('Switch').item.json.data.uidFrom }}",
+              "type": "string"
+            },
+            {
+              "id": "01319408-6b19-4037-aaa6-fc816a6b6144",
+              "name": "data.dName",
+              "value": "={{ $('Switch').item.json.data.dName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1024,
+        400
+      ],
+      "id": "b1f0b591-ce59-49fc-b7f1-52f2a80083c4",
+      "name": "Edit Fields11"
+    },
+    {
+      "parameters": {
+        "threadId": "={{ $json.threadId }}",
+        "message": "= {{ $json.answer }}",
+        "threadType": "={{ $json.type }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        1232,
+        400
+      ],
+      "id": "bc9aa3f4-e4ba-467b-847f-bfd71e69bae6",
+      "name": "Gửi tin nhắn13",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "OMssdW79ELA0RV06",
+          "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-03T07:23:47.571Z",
+      "createdAt": "2025-12-03T07:23:47.571Z",
+      "role": "workflow:owner",
+      "workflowId": "hbf3YPyWoIcfntvz",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-26T09:15:00.452Z",
+  "versionId": "05156bac-e0c0-4876-a18a-74be961384c5"
+}
