@@ -1,0 +1,133 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Tạo âm thanh từ văn bản",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tạo âm thanh từ văn bản": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-06T04:34:00.522Z",
+  "id": "K7UjiGKZOIMspk7Y",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9a34b715-4e21-47e4-a9e8-f49b790c8cb1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "tool",
+        "operation": "createTTS",
+        "text": "Tắt code thành công"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "fc700cc1-c6c4-41ac-aa4f-e4f0a689aafe",
+      "name": "Tạo âm thanh từ văn bản",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "gfZNfo551orsNMqh",
+          "name": "Zalo Xuân Nguyễn - 2025-08-27T07:02:15.037Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "2091898082743203663"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "8f9769af-0c06-4ab6-8899-bd8ad4c409c3",
+      "name": "Gửi tin nhắn",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "gfZNfo551orsNMqh",
+          "name": "Zalo Xuân Nguyễn - 2025-08-27T07:02:15.037Z"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "voice.mp3",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "8857d409-e3b0-446d-a1bf-e0f6ba026f03",
+      "name": "Read/Write Files from Disk"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-06T04:34:00.522Z",
+      "createdAt": "2025-12-06T04:34:00.522Z",
+      "role": "workflow:owner",
+      "workflowId": "K7UjiGKZOIMspk7Y",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-06T04:43:09.388Z",
+  "versionId": "a65aa641-1282-4de8-84ce-b36c1496e629"
+}
