@@ -1,0 +1,418 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-11-25T10:50:57.084Z",
+  "id": "5xhHMV0Da5hYlCH0",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Set file and send email",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        0
+      ],
+      "id": "f3748505-b374-4185-975b-1d7c92830bab",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1kwMC7TJViMsth3LYCD1Ocm7RboT_tqIRKSyv8FlaLts/edit?gid=16190357#gid=16190357",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 16190357,
+          "mode": "list",
+          "cachedResultName": "LIST",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kwMC7TJViMsth3LYCD1Ocm7RboT_tqIRKSyv8FlaLts/edit#gid=16190357"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -384,
+        0
+      ],
+      "id": "d8af0bd7-8c09-4ec6-96bc-28102a179152",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HAuycisc2CDPvPSS",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1bba9866-5dfb-406b-b57a-4e0a6f1ef296",
+              "leftValue": "={{ $json.QTY }}",
+              "rightValue": 100,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -192,
+        0
+      ],
+      "id": "0b66ced3-b700-4940-a0ef-e408a033369f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0246e87-7449-40a4-b935-7a47cd074273",
+              "name": "Style Code",
+              "value": "={{ $json[\"Style Code\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "29f4bf65-2490-454b-b4cc-62192c7fbd82",
+              "name": "CUSTOMER NAME",
+              "value": "={{ $json[\"CUSTOMER NAME\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "191943c0-8085-4f95-b01a-31e97abaa3d6",
+              "name": "QTY",
+              "value": "={{ $json[\"QTY\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "b204cc32-83f7-44a2-9cfe-07ad70ffdb74",
+              "name": "REVENUE",
+              "value": "={{ $json[\"REVERNUE\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "8b802b6b-f511-45ce-b6c3-fe71700c2ad9",
+              "name": "FOB",
+              "value": "={{ $json.FOB }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        32,
+        -80
+      ],
+      "id": "cfa020aa-5b40-4a80-bf76-8e954bf5b35c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "80f3c806-f1f9-46fe-91ab-abb4893a16c6",
+              "name": "CUSTOMER NAME",
+              "value": "={{ $json['CUSTOMER NAME'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f744960f-4534-4b9f-aff8-10c5646e8f10",
+              "name": "Style Code",
+              "value": "={{ $json['Style Code'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f7a946b4-b4d3-4fec-b48b-2786ee653c19",
+              "name": "FOB",
+              "value": "={{ $json.FOB }}",
+              "type": "string"
+            },
+            {
+              "id": "33fc4781-5745-4655-a4ab-226d6b2f6bca",
+              "name": "REVERNUE",
+              "value": "={{ $json.REVERNUE }}",
+              "type": "string"
+            },
+            {
+              "id": "b33cdf04-b70e-4d33-bc31-80385293df3e",
+              "name": "QTY",
+              "value": "={{ $json.QTY }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        96
+      ],
+      "id": "c99db011-226c-48b0-ba83-6e787631867c",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1fThAKnxHdD9PSVS0AaAtAnoEq6t2AUMbPNLyVnk_h7s/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fThAKnxHdD9PSVS0AaAtAnoEq6t2AUMbPNLyVnk_h7s/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "STYLE CODE": "={{ $json['Style Code'] }}",
+            "CUSTOMER NAME": "={{ $json['CUSTOMER NAME'] }}",
+            "FOB": "={{ $json.FOB }}",
+            "REVENUE": "={{ $json.REVERNUE }}",
+            "QTY": "={{ $json.QTY }}"
+          },
+          "matchingColumns": [
+            "STYLE CODE"
+          ],
+          "schema": [
+            {
+              "id": "STYLE CODE",
+              "displayName": "STYLE CODE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CUSTOMER NAME",
+              "displayName": "CUSTOMER NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "QTY",
+              "displayName": "QTY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "REVENUE",
+              "displayName": "REVENUE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FOB",
+              "displayName": "FOB",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        96
+      ],
+      "id": "86bd805c-2fe7-43c2-8284-d4d2ced759fc",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HAuycisc2CDPvPSS",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {
+          "fileName": "Report qty more than 100pcs.xlsx",
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        -80
+      ],
+      "id": "12af849b-0fd2-4d2d-a9c4-96d7fec79e0e",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "sendTo": "hanh.nt@pro-sports.com.vn",
+        "subject": "MONTHLY QUANTITY REPORT-GREATER THAN 100PCS",
+        "message": "<p>Dear Julia,</p>  <p>Please find attached the revenue report for styles that have a quantity greater than 100 pcs.</p>  <p>Best regards,<br> Hanh</p>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        448,
+        -80
+      ],
+      "id": "c5c1dae8-dc88-4b27-af6b-c7230c605d90",
+      "name": "Send a message",
+      "webhookId": "e4b49bbb-97eb-4dee-868c-136c52abe145",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Zjn1pCHJ9PHlNT8x",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-11-25T10:50:57.084Z",
+      "createdAt": "2025-11-25T10:50:57.084Z",
+      "role": "workflow:owner",
+      "workflowId": "5xhHMV0Da5hYlCH0",
+      "projectId": "0KvFWNFJcnQ9XdQQ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-11-27T10:46:51.983Z",
+  "versionId": "da43877f-58c3-47a0-8a89-39a2b0c7e58c"
+}
