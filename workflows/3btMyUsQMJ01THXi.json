@@ -1,0 +1,238 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-01-09T11:30:57.670Z",
+    "createdAt": "2026-01-09T11:26:25.850Z",
+    "versionId": "3463eca0-8033-4dc1-acdd-3169c97c841c",
+    "workflowId": "3btMyUsQMJ01THXi",
+    "nodes": [
+      {
+        "parameters": {
+          "updates": [
+            "message"
+          ],
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          0,
+          0
+        ],
+        "id": "ba639c8e-2871-4a8c-af5f-77bfa29f2dfb",
+        "name": "Telegram Trigger",
+        "webhookId": "d83f53bb-3c5a-424e-96c5-d7ff5051f479",
+        "credentials": {
+          "telegramApi": {
+            "id": "kO5Gv1mXkPREdJUE",
+            "name": "Telegram account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "3942536f-2250-40d1-b477-2c35ff3af07e",
+                "name": "chat_id",
+                "value": "={{$json.message.chat.id}}",
+                "type": "string"
+              },
+              {
+                "id": "280d5974-4a6d-44b2-99fc-9b5bcda1af3e",
+                "name": "text",
+                "value": "Xin chào 👋 Bot của bạn đã hoạt động!",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          208,
+          0
+        ],
+        "id": "444afe0b-1113-455f-806e-b823e5210749",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "chatId": "=={{$json.chat_id}}",
+          "text": "=={{$json.text}}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          416,
+          0
+        ],
+        "id": "47f76b22-ce39-46d6-8d7b-31be46525f89",
+        "name": "Send a text message",
+        "webhookId": "b166bc32-b020-48ed-bc4b-200bd772b087",
+        "credentials": {
+          "telegramApi": {
+            "id": "kO5Gv1mXkPREdJUE",
+            "name": "Telegram account 2"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Telegram Trigger": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Send a text message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Hạnh Julia",
+    "name": "Version 3463eca0",
+    "description": ""
+  },
+  "activeVersionId": "3463eca0-8033-4dc1-acdd-3169c97c841c",
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-01-09T11:11:10.439Z",
+  "id": "3btMyUsQMJ01THXi",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Mikiotele_bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ba639c8e-2871-4a8c-af5f-77bfa29f2dfb",
+      "name": "Telegram Trigger",
+      "webhookId": "d83f53bb-3c5a-424e-96c5-d7ff5051f479",
+      "credentials": {
+        "telegramApi": {
+          "id": "kO5Gv1mXkPREdJUE",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3942536f-2250-40d1-b477-2c35ff3af07e",
+              "name": "chat_id",
+              "value": "={{$json.message.chat.id}}",
+              "type": "string"
+            },
+            {
+              "id": "280d5974-4a6d-44b2-99fc-9b5bcda1af3e",
+              "name": "text",
+              "value": "Xin chào 👋 Bot của bạn đã hoạt động!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "444afe0b-1113-455f-806e-b823e5210749",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "chatId": "=={{$json.chat_id}}",
+        "text": "=={{$json.text}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "47f76b22-ce39-46d6-8d7b-31be46525f89",
+      "name": "Send a text message",
+      "webhookId": "b166bc32-b020-48ed-bc4b-200bd772b087",
+      "credentials": {
+        "telegramApi": {
+          "id": "kO5Gv1mXkPREdJUE",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-09T11:11:10.439Z",
+      "createdAt": "2026-01-09T11:11:10.439Z",
+      "role": "workflow:owner",
+      "workflowId": "3btMyUsQMJ01THXi",
+      "projectId": "fGRIZ2vcPzOtJ2Hj"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-09T11:26:25.848Z",
+  "versionId": "3463eca0-8033-4dc1-acdd-3169c97c841c"
+}
