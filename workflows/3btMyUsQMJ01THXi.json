@@ -1,9 +1,9 @@
 {
   "active": true,
   "activeVersion": {
-    "updatedAt": "2026-01-09T11:30:57.670Z",
-    "createdAt": "2026-01-09T11:26:25.850Z",
-    "versionId": "3463eca0-8033-4dc1-acdd-3169c97c841c",
+    "updatedAt": "2026-01-10T07:14:55.367Z",
+    "createdAt": "2026-01-10T07:14:47.158Z",
+    "versionId": "c20c4bf8-6e20-4ef6-a2f0-d3b4a234c074",
     "workflowId": "3btMyUsQMJ01THXi",
     "nodes": [
       {
@@ -31,43 +31,16 @@
       },
       {
         "parameters": {
-          "assignments": {
-            "assignments": [
-              {
-                "id": "3942536f-2250-40d1-b477-2c35ff3af07e",
-                "name": "chat_id",
-                "value": "={{$json.message.chat.id}}",
-                "type": "string"
-              },
-              {
-                "id": "280d5974-4a6d-44b2-99fc-9b5bcda1af3e",
-                "name": "text",
-                "value": "Xin chào 👋 Bot của bạn đã hoạt động!",
-                "type": "string"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.set",
-        "typeVersion": 3.4,
-        "position": [
-          208,
-          0
-        ],
-        "id": "444afe0b-1113-455f-806e-b823e5210749",
-        "name": "Edit Fields"
-      },
-      {
-        "parameters": {
-          "chatId": "=={{$json.chat_id}}",
-          "text": "=={{$json.text}}",
-          "additionalFields": {}
+          "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "text": "={{ $json.output }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
         },
         "type": "n8n-nodes-base.telegram",
         "typeVersion": 1.2,
         "position": [
-          416,
+          800,
           0
         ],
         "id": "47f76b22-ce39-46d6-8d7b-31be46525f89",
@@ -79,6 +52,57 @@
             "name": "Telegram account 2"
           }
         }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.message.text }}",
+          "options": {
+            "systemMessage": "You are an AI assistant.\n\nABSOLUTE RULE — LANGUAGE:\nYou must reply in the exact same language as the user's most recent message.\nThis rule has the highest priority and overrides all other rules.\n\nGREETING RULE:\nYou must always greet the user at the beginning of every response.\n\n- If the user writes in Vietnamese:\n  Start with exactly: \"Chào chị Hạnh,\"\n\n- If the user writes in English:\n  Start with exactly: \"Hello chị Hạnh,\"\n\nDo not translate. Do not mix languages.\n\nTONE:\nYour tone must always be gentle, polite, respectful, and professional.\n\nSTYLE:\n- Keep answers clear and concise.\n- Explain step by step if the topic is technical.\n- Keep short answers friendly and calm.\n\nSTRICT CONSTRAINTS:\n- Never respond in Vietnamese if the user writes in English.\n- Never respond in English if the user writes in Vietnamese.\n- Never omit the greeting.\n- Never add extra languages.\n\nFollow these rules strictly in every response."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3,
+        "position": [
+          416,
+          0
+        ],
+        "id": "eca89f8e-0f3a-47c0-8ef8-8993688de603",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "typeVersion": 1,
+        "position": [
+          352,
+          208
+        ],
+        "id": "c176c663-e74e-4350-9ba1-4416fb5cfbec",
+        "name": "Google Gemini Chat Model",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "ZTongs9LJBLbK1CL",
+            "name": "Google Gemini(PaLM) Api account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $json.message.chat.id }}",
+          "contextWindowLength": 10
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          480,
+          208
+        ],
+        "id": "7b872b47-00ea-406e-8868-4146376006da",
+        "name": "Simple Memory"
       }
     ],
     "connections": {
@@ -86,14 +110,36 @@
         "main": [
           [
             {
-              "node": "Edit Fields",
+              "node": "AI Agent",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "Edit Fields": {
+      "Google Gemini Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
         "main": [
           [
             {
@@ -106,23 +152,45 @@
       }
     },
     "authors": "Hạnh Julia",
-    "name": "Version 3463eca0",
+    "name": "Version c20c4bf8",
     "description": ""
   },
-  "activeVersionId": "3463eca0-8033-4dc1-acdd-3169c97c841c",
+  "activeVersionId": "c20c4bf8-6e20-4ef6-a2f0-d3b4a234c074",
   "connections": {
     "Telegram Trigger": {
       "main": [
         [
           {
-            "node": "Edit Fields",
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Edit Fields": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
       "main": [
         [
           {
@@ -167,43 +235,16 @@
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "3942536f-2250-40d1-b477-2c35ff3af07e",
-              "name": "chat_id",
-              "value": "={{$json.message.chat.id}}",
-              "type": "string"
-            },
-            {
-              "id": "280d5974-4a6d-44b2-99fc-9b5bcda1af3e",
-              "name": "text",
-              "value": "Xin chào 👋 Bot của bạn đã hoạt động!",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        208,
-        0
-      ],
-      "id": "444afe0b-1113-455f-806e-b823e5210749",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "chatId": "=={{$json.chat_id}}",
-        "text": "=={{$json.text}}",
-        "additionalFields": {}
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        416,
+        800,
         0
       ],
       "id": "47f76b22-ce39-46d6-8d7b-31be46525f89",
@@ -215,9 +256,89 @@
           "name": "Telegram account 2"
         }
       }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are an AI assistant.\n\nABSOLUTE RULE — LANGUAGE:\nYou must reply in the exact same language as the user's most recent message.\nThis rule has the highest priority and overrides all other rules.\n\nGREETING RULE:\nYou must always greet the user at the beginning of every response.\n\n- If the user writes in Vietnamese:\n  Start with exactly: \"Chào chị Hạnh,\"\n\n- If the user writes in English:\n  Start with exactly: \"Hello chị Hạnh,\"\n\nDo not translate. Do not mix languages.\n\nTONE:\nYour tone must always be gentle, polite, respectful, and professional.\n\nSTYLE:\n- Keep answers clear and concise.\n- Explain step by step if the topic is technical.\n- Keep short answers friendly and calm.\n\nSTRICT CONSTRAINTS:\n- Never respond in Vietnamese if the user writes in English.\n- Never respond in English if the user writes in Vietnamese.\n- Never omit the greeting.\n- Never add extra languages.\n\nFollow these rules strictly in every response."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "eca89f8e-0f3a-47c0-8ef8-8993688de603",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        352,
+        208
+      ],
+      "id": "c176c663-e74e-4350-9ba1-4416fb5cfbec",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZTongs9LJBLbK1CL",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        208
+      ],
+      "id": "7b872b47-00ea-406e-8868-4146376006da",
+      "name": "Simple Memory"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 851822215,
+          "message": {
+            "message_id": 12,
+            "from": {
+              "id": 1281233579,
+              "is_bot": false,
+              "first_name": "Mikio",
+              "last_name": "Hanh",
+              "language_code": "vi"
+            },
+            "chat": {
+              "id": 1281233579,
+              "first_name": "Mikio",
+              "last_name": "Hanh",
+              "type": "private"
+            },
+            "date": 1768027621,
+            "text": "hi"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
   "settings": {
     "executionOrder": "v1",
     "timeSavedMode": "fixed",
@@ -241,6 +362,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2026-01-10T03:18:14.454Z",
-  "versionId": "3463eca0-8033-4dc1-acdd-3169c97c841c"
+  "updatedAt": "2026-01-10T07:14:47.157Z",
+  "versionId": "c20c4bf8-6e20-4ef6-a2f0-d3b4a234c074"
 }
