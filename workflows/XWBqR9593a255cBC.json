@@ -1,0 +1,257 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-01-10T07:48:20.634Z",
+    "createdAt": "2026-01-10T07:48:17.361Z",
+    "versionId": "dadf1773-75db-4352-9220-075e8d420c46",
+    "workflowId": "XWBqR9593a255cBC",
+    "nodes": [
+      {
+        "parameters": {
+          "pollTimes": {
+            "item": [
+              {
+                "mode": "everyMinute"
+              }
+            ]
+          },
+          "documentId": {
+            "__rl": true,
+            "value": "https://docs.google.com/spreadsheets/d/19bD5858kngtBrf5AaBWe-CfxuI3M0yDZ5RREtVvWlek/edit?gid=639329772#gid=639329772",
+            "mode": "url"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 639329772,
+            "mode": "list",
+            "cachedResultName": "Form Responses 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19bD5858kngtBrf5AaBWe-CfxuI3M0yDZ5RREtVvWlek/edit#gid=639329772"
+          },
+          "event": "rowAdded",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "e5fe6650-d923-4566-af73-2dc85d60804b",
+        "name": "Google Sheets Trigger",
+        "credentials": {
+          "googleSheetsTriggerOAuth2Api": {
+            "id": "TUdZbqsBo6rnjQYn",
+            "name": "Google Sheets Trigger account 5"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sendTo": "={{ $json.EMAIL }}",
+          "subject": "ORDER CONFIRMATION",
+          "message": "=Dear  {{ $json.NAME }}\n\nI would like to confirm your order as following\nITEM:{{ $json.ITEM }}\nSIZE:{{ $json.SIZE }}\nQUANTITY:{{ $json['QUANTITY '] }}\nCOLOR:{{ $json.COLOR }}\n\nYour order will be sent within 3-5 days to following address:\nAtt:{{ $json.NAME }}\nPhone no:{{ $json['PHONE NO'] }}\nAddresss:{{ $json.ADDRESS }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          208,
+          0
+        ],
+        "id": "653cbf72-05bb-4665-b9fd-9c697f9ef7b0",
+        "name": "Send a message",
+        "webhookId": "8ffc24f8-053c-44d0-a4a1-3f7a41a093f2",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "Ej4Qfj4BlCO77qKt",
+            "name": "Gmail account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "1281233579",
+          "text": "=Hi Mikio, today you have received 1 more order with detail below:\nCustomer name: \nItem:{{ $json.ITEM }}\nSize:{{ $json.SIZE }}\nColor:{{ $json.COLOR }}\nPhone no:{{ $json['PHONE NO'] }}\nAddress:{{ $json.ADDRESS }}\ndue date: {{ $json['DUE DATE'] }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          288,
+          176
+        ],
+        "id": "f9c1332b-3dad-4146-bf43-1798c709d265",
+        "name": "Send a text message",
+        "webhookId": "d0914896-8baa-4083-adb9-b2b8880ff97c",
+        "credentials": {
+          "telegramApi": {
+            "id": "kO5Gv1mXkPREdJUE",
+            "name": "Telegram account 2"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Google Sheets Trigger": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Send a text message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Hạnh Julia",
+    "name": "Version dadf1773",
+    "description": ""
+  },
+  "activeVersionId": "dadf1773-75db-4352-9220-075e8d420c46",
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-01-10T07:27:39.255Z",
+  "id": "XWBqR9593a255cBC",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "AUTO UPDATE EMAIL AND SEND MESSAGE",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/19bD5858kngtBrf5AaBWe-CfxuI3M0yDZ5RREtVvWlek/edit?gid=639329772#gid=639329772",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 639329772,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19bD5858kngtBrf5AaBWe-CfxuI3M0yDZ5RREtVvWlek/edit#gid=639329772"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e5fe6650-d923-4566-af73-2dc85d60804b",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "TUdZbqsBo6rnjQYn",
+          "name": "Google Sheets Trigger account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.EMAIL }}",
+        "subject": "ORDER CONFIRMATION",
+        "message": "=Dear  {{ $json.NAME }}\n\nI would like to confirm your order as following\nITEM:{{ $json.ITEM }}\nSIZE:{{ $json.SIZE }}\nQUANTITY:{{ $json['QUANTITY '] }}\nCOLOR:{{ $json.COLOR }}\n\nYour order will be sent within 3-5 days to following address:\nAtt:{{ $json.NAME }}\nPhone no:{{ $json['PHONE NO'] }}\nAddresss:{{ $json.ADDRESS }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "653cbf72-05bb-4665-b9fd-9c697f9ef7b0",
+      "name": "Send a message",
+      "webhookId": "8ffc24f8-053c-44d0-a4a1-3f7a41a093f2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ej4Qfj4BlCO77qKt",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1281233579",
+        "text": "=Hi Mikio, today you have received 1 more order with detail below:\nCustomer name: \nItem:{{ $json.ITEM }}\nSize:{{ $json.SIZE }}\nColor:{{ $json.COLOR }}\nPhone no:{{ $json['PHONE NO'] }}\nAddress:{{ $json.ADDRESS }}\ndue date: {{ $json['DUE DATE'] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        288,
+        176
+      ],
+      "id": "f9c1332b-3dad-4146-bf43-1798c709d265",
+      "name": "Send a text message",
+      "webhookId": "d0914896-8baa-4083-adb9-b2b8880ff97c",
+      "credentials": {
+        "telegramApi": {
+          "id": "kO5Gv1mXkPREdJUE",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "timeSavedPerExecution": 1
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-10T07:27:39.255Z",
+      "createdAt": "2026-01-10T07:27:39.255Z",
+      "role": "workflow:owner",
+      "workflowId": "XWBqR9593a255cBC",
+      "projectId": "fGRIZ2vcPzOtJ2Hj"
+    }
+  ],
+  "staticData": {
+    "node:Google Sheets Trigger": {
+      "documentId": "19bD5858kngtBrf5AaBWe-CfxuI3M0yDZ5RREtVvWlek",
+      "sheetId": 639329772,
+      "lastIndexChecked": 5
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-10T07:50:19.943Z",
+  "versionId": "dadf1773-75db-4352-9220-075e8d420c46"
+}
