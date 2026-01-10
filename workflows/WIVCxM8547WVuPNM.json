@@ -1,0 +1,376 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-01-10T09:38:50.394Z",
+    "createdAt": "2026-01-10T09:38:38.523Z",
+    "versionId": "c3be5370-9b78-42d5-89e9-1ab52734b124",
+    "workflowId": "WIVCxM8547WVuPNM",
+    "nodes": [
+      {
+        "parameters": {
+          "pollTimes": {
+            "item": [
+              {
+                "mode": "everyMinute"
+              }
+            ]
+          },
+          "output": "fields",
+          "fields": [
+            "body",
+            "bodyPreview",
+            "from",
+            "subject"
+          ],
+          "filters": {
+            "foldersToInclude": [
+              "AQMkADBjMmE3ZWE1LWI0MTYtNDQBMi05NTQ0AC1hNzliZTdhMGU2ZmQALgAAA9p__ME9fN5NqwLdB-rHxBABAGmr4r9a2dFDrcUC6swUMWMAAAIBDAAAAA=="
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.microsoftOutlookTrigger",
+        "typeVersion": 1,
+        "position": [
+          -240,
+          0
+        ],
+        "id": "df179aab-a211-4418-b1fd-6252e81cb091",
+        "name": "Microsoft Outlook Trigger",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "dEU6TLkk6OITytAr",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Input:\n// - item.json.from.emailAddress.name\n// - item.json.subject\n// - item.json.bodyPreview\n//\n// Output:\n// - item.json.ai_input\n\nfunction cleanBodyPreview(text) {\n  let t = text || \"\";\n\n  // normalize line breaks\n  t = t.replace(/\\r\\n/g, \"\\n\");\n\n  // remove PRO SPORTS signature (from name/title block to end)\n  t = t.replace(\n    /\\n?[^\\n]{0,80}\\n\\s*[^\\n]{0,80}\\n[\\s\\S]*?PRO\\s+SPORTS\\s+HEADQUARTERS[\\s\\S]*$/i,\n    \"\"\n  );\n\n  // remove contact leftovers\n  t = t\n    .replace(/^\\s*[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\s*$/gim, \"\")\n    .replace(/^\\s*\\+?\\d[\\d\\s().-]{7,}\\d\\s*$/gim, \"\")\n    .replace(/^\\s*https?:\\/\\/\\S+\\s*$/gim, \"\");\n\n  // cleanup spacing\n  t = t\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .replace(/^\\s+|\\s+$/g, \"\")\n    .trim();\n\n  return t;\n}\n\n// Simple heuristic to guess email purpose\nfunction detectPurpose(subject, content) {\n  const text = `${subject}\\n${content}`.toLowerCase();\n\n  if (/(duyệt|approve|approval)/i.test(text)) return \"Xin duyệt / approval\";\n  if (/(costing|giá|price)/i.test(text)) return \"Trao đổi costing / giá\";\n  if (/(đặt vải|issue đơn|đặt hàng|po)/i.test(text)) return \"Chuẩn bị đặt hàng / PO\";\n  if (/(nhắc|follow|remind)/i.test(text)) return \"Follow-up / nhắc việc\";\n  if (/(fyi|tham khảo)/i.test(text)) return \"FYI / tham khảo\";\n\n  return \"Trao đổi công việc\";\n}\n\nreturn items.map(item => {\n  const senderName = item.json?.from?.emailAddress?.name || \"Unknown sender\";\n  const subject = item.json?.subject || \"(Không có subject)\";\n  const preview = item.json?.bodyPreview || \"\";\n\n  const cleanedContent = cleanBodyPreview(preview);\n  const purpose = detectPurpose(subject, cleanedContent);\n\n  const aiInput = [\n    `Email từ: ${senderName}`,\n    `Subject: ${subject}`,\n    `Mục đích: ${purpose}`,\n    \"\",\n    cleanedContent\n  ]\n    .filter(Boolean)\n    .join(\"\\n\");\n\n  item.json.ai_input = aiInput;\n  return item;\n});\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -32,
+          0
+        ],
+        "id": "0a264fd3-bb12-41cc-a63a-fb0362ef18a2",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.ai_input }}",
+          "options": {
+            "systemMessage": "Email từ: Stella Tham (MD)\nSubject: PARAGON SS26 - XIN DUYỆT COSTING\n\nTÓM TẮT:\n- Gửi chị Hiền xin duyệt costing cho đơn Core 2605 để kịp đặt vải."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3,
+        "position": [
+          176,
+          0
+        ],
+        "id": "764a2761-92d7-442f-82c9-d0b3931d5479",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "typeVersion": 1,
+        "position": [
+          80,
+          224
+        ],
+        "id": "cb9a5a03-d006-42d9-8e2b-911dbe5dd999",
+        "name": "Google Gemini Chat Model",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "ZTongs9LJBLbK1CL",
+            "name": "Google Gemini(PaLM) Api account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "threadId": "2091898082743203663",
+          "message": "={{ $json.output }}"
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          528,
+          0
+        ],
+        "id": "8bda27f2-ae06-4139-b26b-be15134f5d4f",
+        "name": "Gửi tin nhắn1",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Microsoft Outlook Trigger": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Gemini Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": "Version c3be5370",
+    "description": ""
+  },
+  "activeVersionId": "c3be5370-9b78-42d5-89e9-1ab52734b124",
+  "connections": {
+    "Microsoft Outlook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gửi tin nhắn1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-01-10T08:16:39.374Z",
+  "id": "WIVCxM8547WVuPNM",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "AUTO Email summary",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "output": "fields",
+        "fields": [
+          "body",
+          "bodyPreview",
+          "from",
+          "subject"
+        ],
+        "filters": {
+          "foldersToInclude": [
+            "AQMkADBjMmE3ZWE1LWI0MTYtNDQBMi05NTQ0AC1hNzliZTdhMGU2ZmQALgAAA9p__ME9fN5NqwLdB-rHxBABAGmr4r9a2dFDrcUC6swUMWMAAAIBDAAAAA=="
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        0
+      ],
+      "id": "df179aab-a211-4418-b1fd-6252e81cb091",
+      "name": "Microsoft Outlook Trigger",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "dEU6TLkk6OITytAr",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input:\n// - item.json.from.emailAddress.name\n// - item.json.subject\n// - item.json.bodyPreview\n//\n// Output:\n// - item.json.ai_input\n\nfunction cleanBodyPreview(text) {\n  let t = text || \"\";\n\n  // normalize line breaks\n  t = t.replace(/\\r\\n/g, \"\\n\");\n\n  // remove PRO SPORTS signature (from name/title block to end)\n  t = t.replace(\n    /\\n?[^\\n]{0,80}\\n\\s*[^\\n]{0,80}\\n[\\s\\S]*?PRO\\s+SPORTS\\s+HEADQUARTERS[\\s\\S]*$/i,\n    \"\"\n  );\n\n  // remove contact leftovers\n  t = t\n    .replace(/^\\s*[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\s*$/gim, \"\")\n    .replace(/^\\s*\\+?\\d[\\d\\s().-]{7,}\\d\\s*$/gim, \"\")\n    .replace(/^\\s*https?:\\/\\/\\S+\\s*$/gim, \"\");\n\n  // cleanup spacing\n  t = t\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .replace(/^\\s+|\\s+$/g, \"\")\n    .trim();\n\n  return t;\n}\n\n// Simple heuristic to guess email purpose\nfunction detectPurpose(subject, content) {\n  const text = `${subject}\\n${content}`.toLowerCase();\n\n  if (/(duyệt|approve|approval)/i.test(text)) return \"Xin duyệt / approval\";\n  if (/(costing|giá|price)/i.test(text)) return \"Trao đổi costing / giá\";\n  if (/(đặt vải|issue đơn|đặt hàng|po)/i.test(text)) return \"Chuẩn bị đặt hàng / PO\";\n  if (/(nhắc|follow|remind)/i.test(text)) return \"Follow-up / nhắc việc\";\n  if (/(fyi|tham khảo)/i.test(text)) return \"FYI / tham khảo\";\n\n  return \"Trao đổi công việc\";\n}\n\nreturn items.map(item => {\n  const senderName = item.json?.from?.emailAddress?.name || \"Unknown sender\";\n  const subject = item.json?.subject || \"(Không có subject)\";\n  const preview = item.json?.bodyPreview || \"\";\n\n  const cleanedContent = cleanBodyPreview(preview);\n  const purpose = detectPurpose(subject, cleanedContent);\n\n  const aiInput = [\n    `Email từ: ${senderName}`,\n    `Subject: ${subject}`,\n    `Mục đích: ${purpose}`,\n    \"\",\n    cleanedContent\n  ]\n    .filter(Boolean)\n    .join(\"\\n\");\n\n  item.json.ai_input = aiInput;\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "0a264fd3-bb12-41cc-a63a-fb0362ef18a2",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.ai_input }}",
+        "options": {
+          "systemMessage": "Email từ: Stella Tham (MD)\nSubject: PARAGON SS26 - XIN DUYỆT COSTING\n\nTÓM TẮT:\n- Gửi chị Hiền xin duyệt costing cho đơn Core 2605 để kịp đặt vải."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        176,
+        0
+      ],
+      "id": "764a2761-92d7-442f-82c9-d0b3931d5479",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        224
+      ],
+      "id": "cb9a5a03-d006-42d9-8e2b-911dbe5dd999",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZTongs9LJBLbK1CL",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "threadId": "2091898082743203663",
+        "message": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-social-zalo.zaloUserInteract",
+      "typeVersion": 1,
+      "position": [
+        528,
+        0
+      ],
+      "id": "8bda27f2-ae06-4139-b26b-be15134f5d4f",
+      "name": "Gửi tin nhắn1",
+      "credentials": {
+        "zaloUserCredentialsApi": {
+          "id": "OMssdW79ELA0RV06",
+          "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Microsoft Outlook Trigger": [
+      {
+        "json": {
+          "@odata.etag": "W/\"CQAAABYAAABpq+K/WtnRQ63FAurMFDFjAAG37AHp\"",
+          "id": "AAMkADBjMmE3ZWE1LWI0MTYtNDQ0Mi05NTQ0LWE3OWJlN2EwZTZmZABGAAAAAADafvjBPXzeTasC3Qf6x8QQBwBpq_K-WtnRQ63FAurMFDFjAAAAAAEMAABpq_K-WtnRQ63FAurMFDFjAAG4-j91AAA=",
+          "subject": "Duyệt costing",
+          "bodyPreview": "Dear chị Hiền, c Yến\r\n\r\nCC. a Xuân\r\n\r\n\r\n\r\nHôm nay em có costing đơn July Collection và đơn Core 2605 đã hoàn thiện định mức và phối màu\r\n\r\nTuy nhiên vẫn pending BOM, phối màu cho phụ liệu sau\r\n\r\nEm xin duyệt trước costing để re-check lại đơn vải đã đặt hô",
+          "body": {
+            "contentType": "html",
+            "content": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><style type=\"text/css\" style=\"display:none\">\r\n<!--\r\np\r\n\t{margin-top:0;\r\n\tmargin-bottom:0}\r\n-->\r\n</style></head><body dir=\"ltr\"><p class=\"elementToProof\" style=\"text-align:left; text-indent:0px; background-color:rgb(255,255,255); margin:0px\"><span style=\"font-family:Aptos,sans-serif; font-size:12pt; color:rgb(36,36,36)\">Dear chị Hiền, c Yến</span></p><p class=\"elementToProof\" style=\"text-align:left; text-indent:0px; background-color:rgb(255,255,255); margin:0px\"><span style=\"font-family:Aptos,sans-serif; font-size:12pt; color:rgb(36,36,36)\">CC. a Xuân</span></p><p class=\"elementToProof\" style=\"text-align:left; text-indent:0px; background-color:rgb(255,255,255); margin:0px\"><span style=\"font-family:Aptos,sans-serif; font-size:12pt; color:rgb(36,36,36)\">&nbsp;</span></p><p class=\"elementToProof\" style=\"text-align:left; text-indent:0px; background-color:rgb(255,255,255); margin:0px\"><span style=\"font-family:Aptos,sans-serif; font-size:12pt; color:rgb(36,36,36)\">Hôm nay em có costing đơn July Collection và đơn Core 2605 đã hoàn thiện định mức và phối màu</span></p><p class=\"elementToProof\" style=\"text-align:left; text-indent:0px; background-color:rgb(255,255,255); margin:0px\"><span style=\"font-family:Aptos,sans-serif; font-size:12pt; color:rgb(36,36,36)\">Tuy nhiên vẫn pending BOM, phối màu cho phụ liệu sau</span></p><p class=\"elementToProof\" style=\"text-align:left; text-indent:0px; background-color:rgb(255,255,255); margin:0px\"><span style=\"font-family:Aptos,sans-serif; font-size:12pt; color:rgb(36,36,36)\">Em xin duyệt trước costing để re-check lại đơn vải đã đặt hôm trước nhé ạ</span></p><p class=\"elementToProof\" style=\"text-align:left; text-indent:0px; background-color:rgb(255,255,255); margin:0px\"><span style=\"font-family:Aptos,sans-serif; font-size:12pt; color:rgb(36,36,36)\">&nbsp;</span></p><p class=\"elementToProof\" style=\"text-align:left; text-indent:0px; background-color:rgb(255,255,255); margin:0px\"><span style=\"font-family:Aptos,sans-serif; font-size:12pt; color:rgb(36,36,36)\">Em cảm ơn chị!</span></p><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div class=\"elementToProof\" id=\"Signature\"><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><table id=\"table_0\" style=\"box-sizing:border-box; border-collapse:collapse; border-spacing:0px\"><tbody><tr><td style=\"padding:0.75pt; width:65.4375px; height:60px; box-sizing:border-box\"><p class=\"elementToProof\" align=\"center\" style=\"line-height:normal; margin:0cm\"><span style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:14.6667px; color:rgb(0,0,0); background-color:white\"><img height=\"36\" width=\"50\" id=\"image_0\" data-outlook-trace=\"F:1|T:1\" src=\"cid:aeb960cf-fbf1-4dd2-b101-f13374e06315\" style=\"width:50.7692px; height:36px; max-width:742px; margin:0px\"></span></p></td><td style=\"padding:0.75pt; width:304.925px; height:60px; box-sizing:border-box\"><p class=\"elementToProof\" style=\"line-height:normal; margin:0cm; font-family:Aptos,sans-serif; font-size:11pt\"><span style=\"font-size:14pt; color:rgb(102,153,0); background-color:white\"><b>Xavier - Nguyễn Đại Xuân (Mr.)</b></span></p><p class=\"elementToProof\" style=\"line-height:normal; margin:0cm\"><span style=\"font-family:Arial,sans-serif; font-size:11pt; color:rgb(0,0,0); background-color:white\"><b>&nbsp; &nbsp;IT &amp; Data Executive</b></span></p></td><td style=\"padding:0.75pt; width:167.238px; height:60px; box-sizing:border-box\"><div class=\"elementToProof\"><br></div></td></tr></tbody></table><div class=\"elementToProof\" style=\"font-family:Arial,Helvetica,sans-serif; font-size:11pt; color:rgb(89,134,0)\"><b>PRO SPORTS HEADQUARTERS</b></div><p class=\"elementToProof\" style=\"margin:0cm\"><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:12pt\"><img height=\"13\" width=\"14\" data-outlook-trace=\"F:1|T:1\" src=\"cid:ef9bbfe8-fb79-42a7-90fc-781151fe90dc\" style=\"width:0.152in; height:0.145in; margin-top:0px; margin-bottom:0px\"></span><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:10pt\">&nbsp; </span><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:13.3333px; color:rgb(36,36,36); background-color:rgb(255,255,255)\">15</span><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:10pt; color:rgb(36,36,36); background-color:rgb(255,255,255)\"><sup>th</sup></span><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:13.3333px; color:rgb(36,36,36); background-color:rgb(255,255,255)\">&nbsp;Floor, Lilama 10 Tower, To Huu street, Nam Tu Liem Dist., Hanoi, Vietnam</span></p><p class=\"elementToProof\" style=\"margin:0cm; font-family:Calibri,sans-serif; font-size:11pt\"><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:12pt\"><img height=\"15\" width=\"15\" data-outlook-trace=\"F:1|T:1\" src=\"cid:c0b9c80a-1ad0-445f-91db-d745ba28e98c\" style=\"width:0.166in; height:0.166in; margin-top:0px; margin-bottom:0px\"></span><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:10pt\">&nbsp; <a href=\"mailto:xuan.nd@pro-sports.com.vn\" style=\"margin-top:0px; margin-bottom:0px\">xuan.nd@pro-sports.com.vn</a></span></p><p class=\"elementToProof\" style=\"margin:0cm; font-family:Calibri,sans-serif; font-size:11pt\"><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:12pt\"><img height=\"14\" width=\"14\" data-outlook-trace=\"F:1|T:1\" src=\"cid:bc8c9729-4297-4da5-9db2-994eba3c48f7\" style=\"width:0.152in; height:0.152in; margin-top:0px; margin-bottom:0px\">&nbsp; </span><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:10pt\">+84 972 172 444</span></p><p class=\"elementToProof\" style=\"margin:0cm; font-family:Calibri,sans-serif; font-size:11pt\"><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:12pt\"><img height=\"13\" width=\"14\" data-outlook-trace=\"F:1|T:1\" src=\"cid:b3f467f9-2041-41ed-b40f-009e865c8ffa\" style=\"width:0.152in; height:0.145in; margin-top:0px; margin-bottom:0px\"></span><span style=\"font-family:Arial,Helvetica,sans-serif; font-size:10pt\">&nbsp; <a href=\"https://pro-sports.com.vn/\" style=\"margin-top:0px; margin-bottom:0px\">https://pro-sports.com.vn</a></span></p><p class=\"elementToProof\" style=\"margin:0cm\"><span style=\"font-family:Calibri,sans-serif; font-size:11pt; color:rgb(0,0,0)\"><br></span></p></div></body></html>"
+          },
+          "from": {
+            "emailAddress": {
+              "name": "Xavier Xuan (IT)",
+              "address": "xuan.nd@pro-sports.com.vn"
+            }
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-10T08:16:39.374Z",
+      "createdAt": "2026-01-10T08:16:39.374Z",
+      "role": "workflow:owner",
+      "workflowId": "WIVCxM8547WVuPNM",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": {
+    "node:Microsoft Outlook Trigger": {
+      "lastTimeChecked": "2026-01-10T09:38:49.762+00:00"
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-10T09:38:38.522Z",
+  "versionId": "c3be5370-9b78-42d5-89e9-1ab52734b124"
+}
