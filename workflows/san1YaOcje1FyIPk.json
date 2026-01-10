@@ -1,0 +1,517 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-01-10T09:44:25.082Z",
+    "createdAt": "2026-01-10T09:44:22.787Z",
+    "versionId": "50a49e2f-dd11-4c53-8467-15be581af530",
+    "workflowId": "san1YaOcje1FyIPk",
+    "nodes": [
+      {
+        "parameters": {
+          "formTitle": "New order submission",
+          "formDescription": "Please fill in full information for our best service",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Name",
+                "placeholder": "Enter your full name",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "Email: ",
+                "fieldType": "email",
+                "placeholder": "Enter your email address",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "STYLE NO",
+                "fieldType": "dropdown",
+                "fieldOptions": {
+                  "values": [
+                    {
+                      "option": "1-T-shrit"
+                    },
+                    {
+                      "option": "2-PANTS"
+                    },
+                    {
+                      "option": "3-SHORTS"
+                    },
+                    {
+                      "option": "4-SKORT"
+                    },
+                    {
+                      "option": "5-JACKET"
+                    },
+                    {
+                      "option": "6-LEGGING"
+                    }
+                  ]
+                },
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "PHONE NO",
+                "fieldType": "number",
+                "placeholder": "Enter your phone number"
+              },
+              {
+                "fieldLabel": "YOUR ADDRESS",
+                "placeholder": "Enter your address to ship the good",
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "SIZE",
+                "fieldType": "checkbox",
+                "fieldOptions": {
+                  "values": [
+                    {
+                      "option": "S"
+                    },
+                    {
+                      "option": "M"
+                    },
+                    {
+                      "option": "L"
+                    },
+                    {
+                      "option": "XL"
+                    },
+                    {
+                      "option": "2XL"
+                    },
+                    {
+                      "option": "3XL"
+                    }
+                  ]
+                },
+                "requiredField": true
+              },
+              {
+                "fieldLabel": "COLOR",
+                "fieldType": "dropdown",
+                "fieldOptions": {
+                  "values": [
+                    {
+                      "option": "Black 01"
+                    },
+                    {
+                      "option": "Red 02"
+                    },
+                    {
+                      "option": "Blue 03"
+                    },
+                    {
+                      "option": "Yellow 04"
+                    }
+                  ]
+                }
+              },
+              {
+                "fieldLabel": "QUANTITY",
+                "fieldType": "number",
+                "placeholder": "Enter quantity you want"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.3,
+        "position": [
+          0,
+          0
+        ],
+        "id": "e5172340-8e74-490e-8c29-bf34f2ca9a24",
+        "name": "On form submission",
+        "webhookId": "b3e0f407-095a-42dd-ba2d-33c6dc279d08"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          208,
+          0
+        ],
+        "id": "a0099be5-94d2-4e5e-aaf4-891e43712bc1",
+        "name": "Loop Over Items"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "name": "Replace Me",
+        "typeVersion": 1,
+        "position": [
+          416,
+          208
+        ],
+        "id": "5b2359be-a9b1-4064-a260-f659ba5d3ff4"
+      },
+      {
+        "parameters": {
+          "sendTo": "={{ $json['Email: '] }}",
+          "subject": "ORDER CONFIRMATION",
+          "message": "=Dear {{ $json.Name }},\n\nThank you for order in our store.\nI would like to confirm your order as following information:\nSTYLE NO:{{ $json['STYLE NO'] }}\nCOLOR:{{ $('On form submission').item.json.COLOR }}\nSIZE:{{ $json.SIZE[0] }}\nQUANTITY:{{ $('On form submission').item.json.QUANTITY }}\n\nWe will ship your goods to following address within {{ $now.plus({ days: 5 }).toISO() }}\n\nAtt: {{ $('On form submission').item.json.Name }}\nPhone no: {{ $('On form submission').item.json['PHONE NO'] }}\nAddress: {{ $('On form submission').item.json['YOUR ADDRESS'] }}\nthank you",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          416,
+          -64
+        ],
+        "id": "dab69a1f-7fa0-492d-abb8-38630c03dc97",
+        "name": "Send a message",
+        "webhookId": "941344ce-a273-4911-94f6-5ffb7f3f6ac7",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "Ej4Qfj4BlCO77qKt",
+            "name": "Gmail account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "1281233579",
+          "text": "=Hi Mikio, you received 1 order as detail below:\nCustomer name:{{ $('On form submission').item.json.Name }}\nStyle no:{{ $('On form submission').item.json['STYLE NO'] }}\nColor:{{ $('On form submission').item.json.COLOR }}\nSize: {{ $('On form submission').item.json.SIZE[0] }}\nQuantity:{{ $('On form submission').item.json.QUANTITY }}\nDue date:{{ $now.plus({ days: 5 }).toISO() }}\n\nPhone no:{{ $('On form submission').item.json['PHONE NO'] }}\nAddress: {{ $('On form submission').item.json['YOUR ADDRESS'] }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          608,
+          128
+        ],
+        "id": "d0d3bc73-906d-43bf-97ad-a2f212c72b36",
+        "name": "Send a text message",
+        "webhookId": "389a2b0f-b1d1-4109-a11c-cf9225a982f0",
+        "credentials": {
+          "telegramApi": {
+            "id": "kO5Gv1mXkPREdJUE",
+            "name": "Telegram account 2"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "On form submission": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Send a text message",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Replace Me",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Replace Me": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Hạnh Julia",
+    "name": "Version 50a49e2f",
+    "description": ""
+  },
+  "activeVersionId": "50a49e2f-dd11-4c53-8467-15be581af530",
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-01-10T09:25:53.106Z",
+  "id": "san1YaOcje1FyIPk",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "n8n form",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "New order submission",
+        "formDescription": "Please fill in full information for our best service",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Enter your full name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email: ",
+              "fieldType": "email",
+              "placeholder": "Enter your email address",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "STYLE NO",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "1-T-shrit"
+                  },
+                  {
+                    "option": "2-PANTS"
+                  },
+                  {
+                    "option": "3-SHORTS"
+                  },
+                  {
+                    "option": "4-SKORT"
+                  },
+                  {
+                    "option": "5-JACKET"
+                  },
+                  {
+                    "option": "6-LEGGING"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "PHONE NO",
+              "fieldType": "number",
+              "placeholder": "Enter your phone number"
+            },
+            {
+              "fieldLabel": "YOUR ADDRESS",
+              "placeholder": "Enter your address to ship the good",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "SIZE",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "S"
+                  },
+                  {
+                    "option": "M"
+                  },
+                  {
+                    "option": "L"
+                  },
+                  {
+                    "option": "XL"
+                  },
+                  {
+                    "option": "2XL"
+                  },
+                  {
+                    "option": "3XL"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "COLOR",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Black 01"
+                  },
+                  {
+                    "option": "Red 02"
+                  },
+                  {
+                    "option": "Blue 03"
+                  },
+                  {
+                    "option": "Yellow 04"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "QUANTITY",
+              "fieldType": "number",
+              "placeholder": "Enter quantity you want"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e5172340-8e74-490e-8c29-bf34f2ca9a24",
+      "name": "On form submission",
+      "webhookId": "b3e0f407-095a-42dd-ba2d-33c6dc279d08"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "a0099be5-94d2-4e5e-aaf4-891e43712bc1",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        416,
+        208
+      ],
+      "id": "5b2359be-a9b1-4064-a260-f659ba5d3ff4"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email: '] }}",
+        "subject": "ORDER CONFIRMATION",
+        "message": "=Dear {{ $json.Name }},\n\nThank you for order in our store.\nI would like to confirm your order as following information:\nSTYLE NO:{{ $json['STYLE NO'] }}\nCOLOR:{{ $('On form submission').item.json.COLOR }}\nSIZE:{{ $json.SIZE[0] }}\nQUANTITY:{{ $('On form submission').item.json.QUANTITY }}\n\nWe will ship your goods to following address within {{ $now.plus({ days: 5 }).toISO() }}\n\nAtt: {{ $('On form submission').item.json.Name }}\nPhone no: {{ $('On form submission').item.json['PHONE NO'] }}\nAddress: {{ $('On form submission').item.json['YOUR ADDRESS'] }}\nthank you",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        -64
+      ],
+      "id": "dab69a1f-7fa0-492d-abb8-38630c03dc97",
+      "name": "Send a message",
+      "webhookId": "941344ce-a273-4911-94f6-5ffb7f3f6ac7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ej4Qfj4BlCO77qKt",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "1281233579",
+        "text": "=Hi Mikio, you received 1 order as detail below:\nCustomer name:{{ $('On form submission').item.json.Name }}\nStyle no:{{ $('On form submission').item.json['STYLE NO'] }}\nColor:{{ $('On form submission').item.json.COLOR }}\nSize: {{ $('On form submission').item.json.SIZE[0] }}\nQuantity:{{ $('On form submission').item.json.QUANTITY }}\nDue date:{{ $now.plus({ days: 5 }).toISO() }}\n\nPhone no:{{ $('On form submission').item.json['PHONE NO'] }}\nAddress: {{ $('On form submission').item.json['YOUR ADDRESS'] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        608,
+        128
+      ],
+      "id": "d0d3bc73-906d-43bf-97ad-a2f212c72b36",
+      "name": "Send a text message",
+      "webhookId": "389a2b0f-b1d1-4109-a11c-cf9225a982f0",
+      "credentials": {
+        "telegramApi": {
+          "id": "kO5Gv1mXkPREdJUE",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-10T09:25:53.106Z",
+      "createdAt": "2026-01-10T09:25:53.106Z",
+      "role": "workflow:owner",
+      "workflowId": "san1YaOcje1FyIPk",
+      "projectId": "fGRIZ2vcPzOtJ2Hj"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-10T09:52:48.852Z",
+  "versionId": "50a49e2f-dd11-4c53-8467-15be581af530"
+}
