@@ -1,9 +1,9 @@
 {
   "active": true,
   "activeVersion": {
-    "updatedAt": "2026-01-10T07:48:20.634Z",
-    "createdAt": "2026-01-10T07:48:17.361Z",
-    "versionId": "dadf1773-75db-4352-9220-075e8d420c46",
+    "updatedAt": "2026-01-10T08:20:48.176Z",
+    "createdAt": "2026-01-10T08:20:45.281Z",
+    "versionId": "a2d9d123-0cc3-4acf-b6c2-1bbb036a6f6c",
     "workflowId": "XWBqR9593a255cBC",
     "nodes": [
       {
@@ -33,7 +33,7 @@
         "type": "n8n-nodes-base.googleSheetsTrigger",
         "typeVersion": 1,
         "position": [
-          0,
+          -224,
           0
         ],
         "id": "e5fe6650-d923-4566-af73-2dc85d60804b",
@@ -71,7 +71,7 @@
       {
         "parameters": {
           "chatId": "1281233579",
-          "text": "=Hi Mikio, today you have received 1 more order with detail below:\nCustomer name: \nItem:{{ $json.ITEM }}\nSize:{{ $json.SIZE }}\nColor:{{ $json.COLOR }}\nPhone no:{{ $json['PHONE NO'] }}\nAddress:{{ $json.ADDRESS }}\ndue date: {{ $json['DUE DATE'] }}",
+          "text": "=Hi Mikio, today you have received 1 more order with detail below:\nCustomer name: {{ $json.NAME }}\nItem:{{ $json.ITEM }}\nSize:{{ $json.SIZE }}\nColor:{{ $json.COLOR }}\nPhone no:{{ $json['PHONE NO'] }}\nAddress:{{ $json.ADDRESS }}\ndue date: {{ $json['DUE DATE'] }}",
           "additionalFields": {}
         },
         "type": "n8n-nodes-base.telegram",
@@ -89,10 +89,36 @@
             "name": "Telegram account 2"
           }
         }
+      },
+      {
+        "parameters": {
+          "options": {
+            "reset": false
+          }
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          -48,
+          0
+        ],
+        "id": "bc62b1ee-69c1-45da-aef5-e3e3d77602f2",
+        "name": "Loop Over Items"
       }
     ],
     "connections": {
       "Google Sheets Trigger": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
         "main": [
           [
             {
@@ -105,17 +131,35 @@
               "type": "main",
               "index": 0
             }
+          ],
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
           ]
         ]
       }
     },
     "authors": "Hạnh Julia",
-    "name": "Version dadf1773",
+    "name": "Version a2d9d123",
     "description": ""
   },
-  "activeVersionId": "dadf1773-75db-4352-9220-075e8d420c46",
+  "activeVersionId": "a2d9d123-0cc3-4acf-b6c2-1bbb036a6f6c",
   "connections": {
     "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
       "main": [
         [
           {
@@ -125,6 +169,13 @@
           },
           {
             "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -167,7 +218,7 @@
       "type": "n8n-nodes-base.googleSheetsTrigger",
       "typeVersion": 1,
       "position": [
-        0,
+        -224,
         0
       ],
       "id": "e5fe6650-d923-4566-af73-2dc85d60804b",
@@ -205,7 +256,7 @@
     {
       "parameters": {
         "chatId": "1281233579",
-        "text": "=Hi Mikio, today you have received 1 more order with detail below:\nCustomer name: \nItem:{{ $json.ITEM }}\nSize:{{ $json.SIZE }}\nColor:{{ $json.COLOR }}\nPhone no:{{ $json['PHONE NO'] }}\nAddress:{{ $json.ADDRESS }}\ndue date: {{ $json['DUE DATE'] }}",
+        "text": "=Hi Mikio, today you have received 1 more order with detail below:\nCustomer name: {{ $json.NAME }}\nItem:{{ $json.ITEM }}\nSize:{{ $json.SIZE }}\nColor:{{ $json.COLOR }}\nPhone no:{{ $json['PHONE NO'] }}\nAddress:{{ $json.ADDRESS }}\ndue date: {{ $json['DUE DATE'] }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegram",
@@ -223,6 +274,21 @@
           "name": "Telegram account 2"
         }
       }
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "bc62b1ee-69c1-45da-aef5-e3e3d77602f2",
+      "name": "Loop Over Items"
     }
   ],
   "pinData": {},
@@ -247,11 +313,11 @@
     "node:Google Sheets Trigger": {
       "documentId": "19bD5858kngtBrf5AaBWe-CfxuI3M0yDZ5RREtVvWlek",
       "sheetId": 639329772,
-      "lastIndexChecked": 5
+      "lastIndexChecked": 6
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2026-01-10T07:50:19.943Z",
-  "versionId": "dadf1773-75db-4352-9220-075e8d420c46"
+  "updatedAt": "2026-01-10T08:20:45.280Z",
+  "versionId": "a2d9d123-0cc3-4acf-b6c2-1bbb036a6f6c"
 }
