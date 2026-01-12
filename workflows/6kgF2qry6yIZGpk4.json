@@ -1,0 +1,248 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-01-12T03:50:58.833Z",
+    "createdAt": "2026-01-12T03:50:52.462Z",
+    "versionId": "bd876357-4250-4054-a566-c72d2a32d8e9",
+    "workflowId": "6kgF2qry6yIZGpk4",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -240,
+          112
+        ],
+        "id": "49ed93ef-ad19-4899-9aed-818ae7bbdc77",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "operation": "getAll",
+          "filtersUI": {
+            "values": {
+              "filters": {
+                "foldersToInclude": [
+                  "AQMkADBjMmE3ZWE1LWI0MTYtNDQBMi05NTQ0AC1hNzliZTdhMGU2ZmQALgAAA9p__ME9fN5NqwLdB-rHxBABAGmr4r9a2dFDrcUC6swUMWMAAAIBDAAAAA=="
+                ],
+                "receivedAfter": ""
+              }
+            }
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          464,
+          0
+        ],
+        "id": "254c86d3-a942-46da-902b-80a3ee1f77bb",
+        "name": "Get many messages",
+        "webhookId": "328c466c-f664-4dfe-865d-8f0fc49f8d46",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "dEU6TLkk6OITytAr",
+            "name": "Microsoft Outlook account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Expect input text at item.json.text (tuỳ platform bạn đổi lại)\n// Output:\n// item.json.range.start (ISO)\n// item.json.range.end (ISO)\n// item.json.range.label\n\nfunction startOfDay(d) {\n  const x = new Date(d);\n  x.setHours(0, 0, 0, 0);\n  return x;\n}\nfunction endOfDay(d) {\n  const x = new Date(d);\n  x.setHours(23, 59, 59, 999);\n  return x;\n}\nfunction startOfWeekMonday(d) {\n  const x = startOfDay(d);\n  const day = x.getDay(); // 0=Sun,1=Mon...\n  const diff = (day === 0 ? -6 : 1 - day); // Monday-based\n  x.setDate(x.getDate() + diff);\n  return x;\n}\nfunction toISO(d) {\n  return new Date(d).toISOString();\n}\n\n// Force VN timezone behavior by shifting \"now\" to VN-like local time\n// Simple approach: use UTC and offset +07:00\nconst nowUtc = new Date();\nconst vnNow = new Date(nowUtc.getTime() + 7 * 60 * 60 * 1000);\n\nconst text = (items[0].json.text || \"\").trim().toLowerCase();\n\nlet start, end, label;\n\nif (text.includes(\"today\")) {\n  start = startOfDay(vnNow);\n  end = endOfDay(vnNow);\n  label = \"today\";\n} else if (text.includes(\"yesterday\")) {\n  const y = new Date(vnNow);\n  y.setDate(y.getDate() - 1);\n  start = startOfDay(y);\n  end = endOfDay(y);\n  label = \"yesterday\";\n} else if (text.includes(\"this week\") || text.includes(\"week\")) {\n  start = startOfWeekMonday(vnNow);\n  end = endOfDay(vnNow);\n  label = \"this week\";\n} else {\n  // default fallback\n  start = startOfDay(vnNow);\n  end = endOfDay(vnNow);\n  label = \"today (default)\";\n}\n\n// Convert back to UTC ISO (Graph usually expects ISO/UTC)\nconst startUtc = new Date(start.getTime() - 7 * 60 * 60 * 1000);\nconst endUtc = new Date(end.getTime() - 7 * 60 * 60 * 1000);\n\nitems[0].json.range = {\n  label,\n  start: toISO(startUtc),\n  end: toISO(endUtc),\n};\n\nreturn items;"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          208,
+          0
+        ],
+        "id": "ce3270f2-f9d5-4433-9b8b-1e13e20f536d",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -96,
+          -48
+        ],
+        "id": "ad7b9e61-5080-41a2-aad4-a0ea8a57a5f8",
+        "name": "When Executed by Another Workflow"
+      }
+    ],
+    "connections": {
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Get many messages",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": "Version bd876357",
+    "description": ""
+  },
+  "activeVersionId": "bd876357-4250-4054-a566-c72d2a32d8e9",
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Get many messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-01-12T03:49:22.763Z",
+  "id": "6kgF2qry6yIZGpk4",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Email Summary",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        112
+      ],
+      "id": "49ed93ef-ad19-4899-9aed-818ae7bbdc77",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "filtersUI": {
+          "values": {
+            "filters": {
+              "foldersToInclude": [
+                "AQMkADBjMmE3ZWE1LWI0MTYtNDQBMi05NTQ0AC1hNzliZTdhMGU2ZmQALgAAA9p__ME9fN5NqwLdB-rHxBABAGmr4r9a2dFDrcUC6swUMWMAAAIBDAAAAA=="
+              ],
+              "receivedAfter": ""
+            }
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        464,
+        0
+      ],
+      "id": "254c86d3-a942-46da-902b-80a3ee1f77bb",
+      "name": "Get many messages",
+      "webhookId": "328c466c-f664-4dfe-865d-8f0fc49f8d46",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "dEU6TLkk6OITytAr",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Expect input text at item.json.text (tuỳ platform bạn đổi lại)\n// Output:\n// item.json.range.start (ISO)\n// item.json.range.end (ISO)\n// item.json.range.label\n\nfunction startOfDay(d) {\n  const x = new Date(d);\n  x.setHours(0, 0, 0, 0);\n  return x;\n}\nfunction endOfDay(d) {\n  const x = new Date(d);\n  x.setHours(23, 59, 59, 999);\n  return x;\n}\nfunction startOfWeekMonday(d) {\n  const x = startOfDay(d);\n  const day = x.getDay(); // 0=Sun,1=Mon...\n  const diff = (day === 0 ? -6 : 1 - day); // Monday-based\n  x.setDate(x.getDate() + diff);\n  return x;\n}\nfunction toISO(d) {\n  return new Date(d).toISOString();\n}\n\n// Force VN timezone behavior by shifting \"now\" to VN-like local time\n// Simple approach: use UTC and offset +07:00\nconst nowUtc = new Date();\nconst vnNow = new Date(nowUtc.getTime() + 7 * 60 * 60 * 1000);\n\nconst text = (items[0].json.text || \"\").trim().toLowerCase();\n\nlet start, end, label;\n\nif (text.includes(\"today\")) {\n  start = startOfDay(vnNow);\n  end = endOfDay(vnNow);\n  label = \"today\";\n} else if (text.includes(\"yesterday\")) {\n  const y = new Date(vnNow);\n  y.setDate(y.getDate() - 1);\n  start = startOfDay(y);\n  end = endOfDay(y);\n  label = \"yesterday\";\n} else if (text.includes(\"this week\") || text.includes(\"week\")) {\n  start = startOfWeekMonday(vnNow);\n  end = endOfDay(vnNow);\n  label = \"this week\";\n} else {\n  // default fallback\n  start = startOfDay(vnNow);\n  end = endOfDay(vnNow);\n  label = \"today (default)\";\n}\n\n// Convert back to UTC ISO (Graph usually expects ISO/UTC)\nconst startUtc = new Date(start.getTime() - 7 * 60 * 60 * 1000);\nconst endUtc = new Date(end.getTime() - 7 * 60 * 60 * 1000);\n\nitems[0].json.range = {\n  label,\n  start: toISO(startUtc),\n  end: toISO(endUtc),\n};\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ce3270f2-f9d5-4433-9b8b-1e13e20f536d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -96,
+        -48
+      ],
+      "id": "ad7b9e61-5080-41a2-aad4-a0ea8a57a5f8",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-12T03:49:22.763Z",
+      "createdAt": "2026-01-12T03:49:22.763Z",
+      "role": "workflow:owner",
+      "workflowId": "6kgF2qry6yIZGpk4",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-01-12T03:50:52.460Z",
+  "versionId": "bd876357-4250-4054-a566-c72d2a32d8e9"
+}
