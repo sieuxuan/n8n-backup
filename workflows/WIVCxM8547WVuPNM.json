@@ -1,9 +1,9 @@
 {
   "active": true,
   "activeVersion": {
-    "updatedAt": "2026-01-10T09:38:50.394Z",
-    "createdAt": "2026-01-10T09:38:38.523Z",
-    "versionId": "c3be5370-9b78-42d5-89e9-1ab52734b124",
+    "updatedAt": "2026-01-12T03:57:58.751Z",
+    "createdAt": "2026-01-12T03:57:56.265Z",
+    "versionId": "ad0dab15-3dbe-4b8f-9008-8ab23908e8fd",
     "workflowId": "WIVCxM8547WVuPNM",
     "nodes": [
       {
@@ -20,7 +20,8 @@
             "body",
             "bodyPreview",
             "from",
-            "subject"
+            "subject",
+            "conversationId"
           ],
           "filters": {
             "foldersToInclude": [
@@ -46,7 +47,7 @@
       },
       {
         "parameters": {
-          "jsCode": "// Input:\n// - item.json.from.emailAddress.name\n// - item.json.subject\n// - item.json.bodyPreview\n//\n// Output:\n// - item.json.ai_input\n\nfunction cleanBodyPreview(text) {\n  let t = text || \"\";\n\n  // normalize line breaks\n  t = t.replace(/\\r\\n/g, \"\\n\");\n\n  // remove PRO SPORTS signature (from name/title block to end)\n  t = t.replace(\n    /\\n?[^\\n]{0,80}\\n\\s*[^\\n]{0,80}\\n[\\s\\S]*?PRO\\s+SPORTS\\s+HEADQUARTERS[\\s\\S]*$/i,\n    \"\"\n  );\n\n  // remove contact leftovers\n  t = t\n    .replace(/^\\s*[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\s*$/gim, \"\")\n    .replace(/^\\s*\\+?\\d[\\d\\s().-]{7,}\\d\\s*$/gim, \"\")\n    .replace(/^\\s*https?:\\/\\/\\S+\\s*$/gim, \"\");\n\n  // cleanup spacing\n  t = t\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .replace(/^\\s+|\\s+$/g, \"\")\n    .trim();\n\n  return t;\n}\n\n// Simple heuristic to guess email purpose\nfunction detectPurpose(subject, content) {\n  const text = `${subject}\\n${content}`.toLowerCase();\n\n  if (/(duyệt|approve|approval)/i.test(text)) return \"Xin duyệt / approval\";\n  if (/(costing|giá|price)/i.test(text)) return \"Trao đổi costing / giá\";\n  if (/(đặt vải|issue đơn|đặt hàng|po)/i.test(text)) return \"Chuẩn bị đặt hàng / PO\";\n  if (/(nhắc|follow|remind)/i.test(text)) return \"Follow-up / nhắc việc\";\n  if (/(fyi|tham khảo)/i.test(text)) return \"FYI / tham khảo\";\n\n  return \"Trao đổi công việc\";\n}\n\nreturn items.map(item => {\n  const senderName = item.json?.from?.emailAddress?.name || \"Unknown sender\";\n  const subject = item.json?.subject || \"(Không có subject)\";\n  const preview = item.json?.bodyPreview || \"\";\n\n  const cleanedContent = cleanBodyPreview(preview);\n  const purpose = detectPurpose(subject, cleanedContent);\n\n  const aiInput = [\n    `Email từ: ${senderName}`,\n    `Subject: ${subject}`,\n    `Mục đích: ${purpose}`,\n    \"\",\n    cleanedContent\n  ]\n    .filter(Boolean)\n    .join(\"\\n\");\n\n  item.json.ai_input = aiInput;\n  return item;\n});\n"
+          "jsCode": "// Input:\n// - item.json.from.emailAddress.name\n// - item.json.subject\n// - item.json.bodyPreview\n//\n// Output:\n// - item.json.ai_input\n\nfunction normalizeText(text) {\n  return (text || \"\")\n    .replace(/\\r\\n/g, \"\\n\")\n    .replace(/\\r/g, \"\\n\")\n    .replace(/\\u00A0/g, \" \")\n    .replace(/[ \\t]{2,}/g, \" \")\n    .replace(/\\n{4,}/g, \"\\n\\n\\n\")\n    .trim();\n}\n\n/**\n * Detect \"To\" from greeting line.\n * Supports:\n * - Dear A, B, C\n * - Dear chị Hoa, chị Vân, anh Xuân\n * - Hi team / Hello all\n *\n * Returns full recipient string (not just first name).\n */\nfunction detectTo(text) {\n  const lines = (text || \"\")\n    .split(\"\\n\")\n    .map(l => l.trim())\n    .filter(Boolean);\n\n  for (const line of lines.slice(0, 12)) {\n    // Match full \"Dear ...\" line (keep commas inside)\n    // Example: \"Dear chị Hoa, chị Vân, anh Xuân\"\n    const m = line.match(/^(dear|hi|hello)\\s+(.+)$/i);\n    if (m) {\n      let recipients = m[2].trim();\n\n      // Remove trailing punctuation\n      recipients = recipients.replace(/[,:;.!]+$/g, \"\").trim();\n\n      // If it's something generic like \"all\", \"team\", keep it as-is\n      // Otherwise return the full list\n      return recipients || \"Không rõ người nhận\";\n    }\n  }\n\n  return \"Không rõ người nhận\";\n}\n\nfunction removeQuotedThread(text) {\n  let t = text;\n\n  const patterns = [\n    /\\n\\s*-{2,}\\s*Original Message\\s*-{2,}[\\s\\S]*$/i,\n    /\\n\\s*-{2,}\\s*Forwarded message\\s*-{2,}[\\s\\S]*$/i,\n    /\\n\\s*-{5,}[\\s\\S]*$/i,\n    /\\n\\s*Begin forwarded message:\\s*[\\s\\S]*$/i,\n    /\\n\\s*On .{0,120}wrote:\\s*[\\s\\S]*$/i,\n  ];\n\n  for (const p of patterns) {\n    if (p.test(t)) t = t.replace(p, \"\").trim();\n  }\n\n  return t.trim();\n}\n\nfunction removeHeaderNoise(text) {\n  return (text || \"\")\n    .replace(/(^|\\n)\\s*(From|Sent|To|Cc|Subject):\\s.*(?=\\n|$)/gi, \"\\n\")\n    .replace(/<[^>\\n]+@[^>\\n]+>/g, \"\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nfunction removeSignature(text) {\n  const lines = (text || \"\").split(\"\\n\");\n  if (lines.length === 0) return text;\n\n  const lower = lines.map(l => l.trim().toLowerCase());\n\n  const markers = [\n    \"pro sports\",\n    \"headquarters\",\n    \"wfx\",\n    \"system\",\n    \"company\",\n    \"ltd\",\n    \"inc\",\n    \"corp\",\n  ];\n\n  const emailRe = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/i;\n  const urlRe = /(https?:\\/\\/|www\\.)\\S+/i;\n  const phoneRe = /\\+?\\d[\\d\\s().-]{7,}\\d/;\n\n  let lastMarkerIdx = -1;\n  for (let i = lower.length - 1; i >= 0; i--) {\n    if (!lower[i]) continue;\n    if (markers.some(m => lower[i].includes(m))) {\n      lastMarkerIdx = i;\n      break;\n    }\n  }\n\n  let lastContactIdx = -1;\n  if (lastMarkerIdx === -1) {\n    for (let i = lower.length - 1; i >= 0; i--) {\n      const s = lines[i].trim();\n      if (!s) continue;\n      if (emailRe.test(s) || urlRe.test(s) || phoneRe.test(s)) {\n        lastContactIdx = i;\n        break;\n      }\n    }\n  }\n\n  const cutFromIdx = lastMarkerIdx !== -1 ? lastMarkerIdx : lastContactIdx;\n  if (cutFromIdx === -1) return text.trim();\n\n  let startCut = cutFromIdx;\n  for (let i = cutFromIdx; i >= 0; i--) {\n    if (lines[i].trim() === \"\") {\n      startCut = i;\n      break;\n    }\n  }\n\n  const kept = lines.slice(0, startCut).join(\"\\n\").trim();\n  if (!kept) return lines.slice(0, cutFromIdx).join(\"\\n\").trim();\n  return kept;\n}\n\nfunction detectPurpose(subject, content) {\n  const text = `${subject}\\n${content}`.toLowerCase();\n\n  if (/(duyệt|approve|approval|phê duyệt)/i.test(text)) return \"Xin duyệt / approval\";\n  if (/(costing|giá|price|quotation|quote|báo giá)/i.test(text)) return \"Trao đổi costing / giá\";\n  if (/(đặt|po\\b|purchase order|issue)/i.test(text)) return \"Đặt hàng / PO\";\n  if (/(nhắc|follow|remind|ping)/i.test(text)) return \"Follow-up\";\n  if (/(meeting|lịch|schedule|họp)/i.test(text)) return \"Lịch họp\";\n  if (/(error|issue|bug|system|wfx)/i.test(text)) return \"Hỗ trợ hệ thống\";\n\n  return \"Trao đổi công việc\";\n}\n\nreturn items.map(item => {\n  const senderName = item.json?.from?.emailAddress?.name || \"Unknown sender\";\n  const subject = item.json?.subject || \"(Không có subject)\";\n\n  const previewRaw = item.json?.bodyPreview || \"\";\n  let preview = normalizeText(previewRaw);\n\n  const toName = detectTo(preview);\n\n  let content = preview;\n  content = removeQuotedThread(content);\n  content = removeHeaderNoise(content);\n  content = removeSignature(content);\n  content = normalizeText(content);\n\n  const purpose = detectPurpose(subject, content);\n\n  const contentBlock = content\n    ? content\n    : \"(bodyPreview không có nội dung ngoài chữ ký / hoặc đã bị cắt hết)\";\n\n  item.json.ai_input =\n    `Email từ: ${senderName}\\n` +\n    `To: ${toName}\\n` +\n    `Subject: ${subject}\\n` +\n    `Mục đích: ${purpose}\\n\\n` +\n    `Nội dung:\\n${contentBlock}`;\n\n  return item;\n});\n"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -62,7 +63,7 @@
           "promptType": "define",
           "text": "={{ $json.ai_input }}",
           "options": {
-            "systemMessage": "Email từ: Stella Tham (MD)\nSubject: PARAGON SS26 - XIN DUYỆT COSTING\n\nTÓM TẮT:\n- Gửi chị Hiền xin duyệt costing cho đơn Core 2605 để kịp đặt vải."
+            "systemMessage": "Bạn là trợ lý công việc cá nhân của anh Xuân (Xavier Xuan – IT & Data Executive tại ProSports).\n\nBạn sẽ nhận đầu vào là nội dung email đã được chuẩn hoá, bao gồm:\n- Email từ\n- To (gửi đến ai)\n- Subject\n- Mục đích\n- Nội dung chính (không có chữ ký, không có header thread)\n\nYÊU CẦU:\n1. LUÔN hiển thị hai dòng đầu:\n   - Email từ: <tên người gửi> to <tên người nhận>\n   - Subject: <subject email>\n\n2. Tóm tắt nội dung email thật ngắn gọn (1–2 gạch đầu dòng, mỗi dòng ≤ 1 câu).\n\n3. Kiểm tra email có LIÊN QUAN ĐẾN ANH XUÂN hay không.\n   Email được coi là liên quan nếu:\n   - Nhắc trực tiếp đến anh Xuân (Xuân, Xavier, anh Xuân)\n   - CC anh Xuân\n   - Có nội dung liên quan đến IT, dữ liệu, hệ thống, AI, WFX.\n\n4. Nếu email **KHÔNG liên quan đến anh Xuân**:\n   - Chỉ hiển thị phần TÓM TẮT.\n\n5. Nếu email **CÓ liên quan đến anh Xuân**:\n   - Thêm mục “LIÊN QUAN” (1 dòng, nêu rõ lý do).\n   - KHÔNG nêu hành động cần thực hiện.\n\n6. Không bịa thông tin, chỉ dựa trên nội dung được cung cấp.\n7. Văn phong chuyên nghiệp, ngắn gọn, dễ đọc.\n\nĐỊNH DẠNG OUTPUT:\n\nEmail từ: <tên người gửi> to <tên người nhận>\nSubject: <subject email>\n\nTÓM TẮT:\n- <1–2 gạch đầu dòng>\n\n[CHỈ HIỂN THỊ NẾU LIÊN QUAN ĐẾN ANH XUÂN]\n\nLIÊN QUAN:\n- <Nêu rõ email liên quan ở điểm nào>"
           }
         },
         "type": "@n8n/n8n-nodes-langchain.agent",
@@ -81,8 +82,8 @@
         "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
         "typeVersion": 1,
         "position": [
-          80,
-          224
+          176,
+          240
         ],
         "id": "cb9a5a03-d006-42d9-8e2b-911dbe5dd999",
         "name": "Google Gemini Chat Model",
@@ -110,6 +111,28 @@
           "zaloUserCredentialsApi": {
             "id": "OMssdW79ELA0RV06",
             "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $json.conversationId }}",
+          "tableName": "email_tracking",
+          "contextWindowLength": 10
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          272,
+          240
+        ],
+        "id": "c19338a8-7401-4afa-bb46-23e409756caf",
+        "name": "Postgres Chat Memory",
+        "credentials": {
+          "postgres": {
+            "id": "FrfYE3BUWGJafJtT",
+            "name": "Postgres account"
           }
         }
       }
@@ -158,13 +181,24 @@
             }
           ]
         ]
+      },
+      "Postgres Chat Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Xuan Nguyen",
-    "name": "Version c3be5370",
+    "name": "Version ad0dab15",
     "description": ""
   },
-  "activeVersionId": "c3be5370-9b78-42d5-89e9-1ab52734b124",
+  "activeVersionId": "ad0dab15-3dbe-4b8f-9008-8ab23908e8fd",
   "connections": {
     "Microsoft Outlook Trigger": {
       "main": [
@@ -209,6 +243,17 @@
           }
         ]
       ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2026-01-10T08:16:39.374Z",
@@ -233,7 +278,8 @@
           "body",
           "bodyPreview",
           "from",
-          "subject"
+          "subject",
+          "conversationId"
         ],
         "filters": {
           "foldersToInclude": [
@@ -259,7 +305,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Input:\n// - item.json.from.emailAddress.name\n// - item.json.subject\n// - item.json.bodyPreview\n//\n// Output:\n// - item.json.ai_input\n\nfunction cleanBodyPreview(text) {\n  let t = text || \"\";\n\n  // normalize line breaks\n  t = t.replace(/\\r\\n/g, \"\\n\");\n\n  // remove PRO SPORTS signature (from name/title block to end)\n  t = t.replace(\n    /\\n?[^\\n]{0,80}\\n\\s*[^\\n]{0,80}\\n[\\s\\S]*?PRO\\s+SPORTS\\s+HEADQUARTERS[\\s\\S]*$/i,\n    \"\"\n  );\n\n  // remove contact leftovers\n  t = t\n    .replace(/^\\s*[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\s*$/gim, \"\")\n    .replace(/^\\s*\\+?\\d[\\d\\s().-]{7,}\\d\\s*$/gim, \"\")\n    .replace(/^\\s*https?:\\/\\/\\S+\\s*$/gim, \"\");\n\n  // cleanup spacing\n  t = t\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .replace(/^\\s+|\\s+$/g, \"\")\n    .trim();\n\n  return t;\n}\n\n// Simple heuristic to guess email purpose\nfunction detectPurpose(subject, content) {\n  const text = `${subject}\\n${content}`.toLowerCase();\n\n  if (/(duyệt|approve|approval)/i.test(text)) return \"Xin duyệt / approval\";\n  if (/(costing|giá|price)/i.test(text)) return \"Trao đổi costing / giá\";\n  if (/(đặt vải|issue đơn|đặt hàng|po)/i.test(text)) return \"Chuẩn bị đặt hàng / PO\";\n  if (/(nhắc|follow|remind)/i.test(text)) return \"Follow-up / nhắc việc\";\n  if (/(fyi|tham khảo)/i.test(text)) return \"FYI / tham khảo\";\n\n  return \"Trao đổi công việc\";\n}\n\nreturn items.map(item => {\n  const senderName = item.json?.from?.emailAddress?.name || \"Unknown sender\";\n  const subject = item.json?.subject || \"(Không có subject)\";\n  const preview = item.json?.bodyPreview || \"\";\n\n  const cleanedContent = cleanBodyPreview(preview);\n  const purpose = detectPurpose(subject, cleanedContent);\n\n  const aiInput = [\n    `Email từ: ${senderName}`,\n    `Subject: ${subject}`,\n    `Mục đích: ${purpose}`,\n    \"\",\n    cleanedContent\n  ]\n    .filter(Boolean)\n    .join(\"\\n\");\n\n  item.json.ai_input = aiInput;\n  return item;\n});\n"
+        "jsCode": "// Input:\n// - item.json.from.emailAddress.name\n// - item.json.subject\n// - item.json.bodyPreview\n//\n// Output:\n// - item.json.ai_input\n\nfunction normalizeText(text) {\n  return (text || \"\")\n    .replace(/\\r\\n/g, \"\\n\")\n    .replace(/\\r/g, \"\\n\")\n    .replace(/\\u00A0/g, \" \")\n    .replace(/[ \\t]{2,}/g, \" \")\n    .replace(/\\n{4,}/g, \"\\n\\n\\n\")\n    .trim();\n}\n\n/**\n * Detect \"To\" from greeting line.\n * Supports:\n * - Dear A, B, C\n * - Dear chị Hoa, chị Vân, anh Xuân\n * - Hi team / Hello all\n *\n * Returns full recipient string (not just first name).\n */\nfunction detectTo(text) {\n  const lines = (text || \"\")\n    .split(\"\\n\")\n    .map(l => l.trim())\n    .filter(Boolean);\n\n  for (const line of lines.slice(0, 12)) {\n    // Match full \"Dear ...\" line (keep commas inside)\n    // Example: \"Dear chị Hoa, chị Vân, anh Xuân\"\n    const m = line.match(/^(dear|hi|hello)\\s+(.+)$/i);\n    if (m) {\n      let recipients = m[2].trim();\n\n      // Remove trailing punctuation\n      recipients = recipients.replace(/[,:;.!]+$/g, \"\").trim();\n\n      // If it's something generic like \"all\", \"team\", keep it as-is\n      // Otherwise return the full list\n      return recipients || \"Không rõ người nhận\";\n    }\n  }\n\n  return \"Không rõ người nhận\";\n}\n\nfunction removeQuotedThread(text) {\n  let t = text;\n\n  const patterns = [\n    /\\n\\s*-{2,}\\s*Original Message\\s*-{2,}[\\s\\S]*$/i,\n    /\\n\\s*-{2,}\\s*Forwarded message\\s*-{2,}[\\s\\S]*$/i,\n    /\\n\\s*-{5,}[\\s\\S]*$/i,\n    /\\n\\s*Begin forwarded message:\\s*[\\s\\S]*$/i,\n    /\\n\\s*On .{0,120}wrote:\\s*[\\s\\S]*$/i,\n  ];\n\n  for (const p of patterns) {\n    if (p.test(t)) t = t.replace(p, \"\").trim();\n  }\n\n  return t.trim();\n}\n\nfunction removeHeaderNoise(text) {\n  return (text || \"\")\n    .replace(/(^|\\n)\\s*(From|Sent|To|Cc|Subject):\\s.*(?=\\n|$)/gi, \"\\n\")\n    .replace(/<[^>\\n]+@[^>\\n]+>/g, \"\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nfunction removeSignature(text) {\n  const lines = (text || \"\").split(\"\\n\");\n  if (lines.length === 0) return text;\n\n  const lower = lines.map(l => l.trim().toLowerCase());\n\n  const markers = [\n    \"pro sports\",\n    \"headquarters\",\n    \"wfx\",\n    \"system\",\n    \"company\",\n    \"ltd\",\n    \"inc\",\n    \"corp\",\n  ];\n\n  const emailRe = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/i;\n  const urlRe = /(https?:\\/\\/|www\\.)\\S+/i;\n  const phoneRe = /\\+?\\d[\\d\\s().-]{7,}\\d/;\n\n  let lastMarkerIdx = -1;\n  for (let i = lower.length - 1; i >= 0; i--) {\n    if (!lower[i]) continue;\n    if (markers.some(m => lower[i].includes(m))) {\n      lastMarkerIdx = i;\n      break;\n    }\n  }\n\n  let lastContactIdx = -1;\n  if (lastMarkerIdx === -1) {\n    for (let i = lower.length - 1; i >= 0; i--) {\n      const s = lines[i].trim();\n      if (!s) continue;\n      if (emailRe.test(s) || urlRe.test(s) || phoneRe.test(s)) {\n        lastContactIdx = i;\n        break;\n      }\n    }\n  }\n\n  const cutFromIdx = lastMarkerIdx !== -1 ? lastMarkerIdx : lastContactIdx;\n  if (cutFromIdx === -1) return text.trim();\n\n  let startCut = cutFromIdx;\n  for (let i = cutFromIdx; i >= 0; i--) {\n    if (lines[i].trim() === \"\") {\n      startCut = i;\n      break;\n    }\n  }\n\n  const kept = lines.slice(0, startCut).join(\"\\n\").trim();\n  if (!kept) return lines.slice(0, cutFromIdx).join(\"\\n\").trim();\n  return kept;\n}\n\nfunction detectPurpose(subject, content) {\n  const text = `${subject}\\n${content}`.toLowerCase();\n\n  if (/(duyệt|approve|approval|phê duyệt)/i.test(text)) return \"Xin duyệt / approval\";\n  if (/(costing|giá|price|quotation|quote|báo giá)/i.test(text)) return \"Trao đổi costing / giá\";\n  if (/(đặt|po\\b|purchase order|issue)/i.test(text)) return \"Đặt hàng / PO\";\n  if (/(nhắc|follow|remind|ping)/i.test(text)) return \"Follow-up\";\n  if (/(meeting|lịch|schedule|họp)/i.test(text)) return \"Lịch họp\";\n  if (/(error|issue|bug|system|wfx)/i.test(text)) return \"Hỗ trợ hệ thống\";\n\n  return \"Trao đổi công việc\";\n}\n\nreturn items.map(item => {\n  const senderName = item.json?.from?.emailAddress?.name || \"Unknown sender\";\n  const subject = item.json?.subject || \"(Không có subject)\";\n\n  const previewRaw = item.json?.bodyPreview || \"\";\n  let preview = normalizeText(previewRaw);\n\n  const toName = detectTo(preview);\n\n  let content = preview;\n  content = removeQuotedThread(content);\n  content = removeHeaderNoise(content);\n  content = removeSignature(content);\n  content = normalizeText(content);\n\n  const purpose = detectPurpose(subject, content);\n\n  const contentBlock = content\n    ? content\n    : \"(bodyPreview không có nội dung ngoài chữ ký / hoặc đã bị cắt hết)\";\n\n  item.json.ai_input =\n    `Email từ: ${senderName}\\n` +\n    `To: ${toName}\\n` +\n    `Subject: ${subject}\\n` +\n    `Mục đích: ${purpose}\\n\\n` +\n    `Nội dung:\\n${contentBlock}`;\n\n  return item;\n});\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -275,7 +321,7 @@
         "promptType": "define",
         "text": "={{ $json.ai_input }}",
         "options": {
-          "systemMessage": "Email từ: Stella Tham (MD)\nSubject: PARAGON SS26 - XIN DUYỆT COSTING\n\nTÓM TẮT:\n- Gửi chị Hiền xin duyệt costing cho đơn Core 2605 để kịp đặt vải."
+          "systemMessage": "Bạn là trợ lý công việc cá nhân của anh Xuân (Xavier Xuan – IT & Data Executive tại ProSports).\n\nBạn sẽ nhận đầu vào là nội dung email đã được chuẩn hoá, bao gồm:\n- Email từ\n- To (gửi đến ai)\n- Subject\n- Mục đích\n- Nội dung chính (không có chữ ký, không có header thread)\n\nYÊU CẦU:\n1. LUÔN hiển thị hai dòng đầu:\n   - Email từ: <tên người gửi> to <tên người nhận>\n   - Subject: <subject email>\n\n2. Tóm tắt nội dung email thật ngắn gọn (1–2 gạch đầu dòng, mỗi dòng ≤ 1 câu).\n\n3. Kiểm tra email có LIÊN QUAN ĐẾN ANH XUÂN hay không.\n   Email được coi là liên quan nếu:\n   - Nhắc trực tiếp đến anh Xuân (Xuân, Xavier, anh Xuân)\n   - CC anh Xuân\n   - Có nội dung liên quan đến IT, dữ liệu, hệ thống, AI, WFX.\n\n4. Nếu email **KHÔNG liên quan đến anh Xuân**:\n   - Chỉ hiển thị phần TÓM TẮT.\n\n5. Nếu email **CÓ liên quan đến anh Xuân**:\n   - Thêm mục “LIÊN QUAN” (1 dòng, nêu rõ lý do).\n   - KHÔNG nêu hành động cần thực hiện.\n\n6. Không bịa thông tin, chỉ dựa trên nội dung được cung cấp.\n7. Văn phong chuyên nghiệp, ngắn gọn, dễ đọc.\n\nĐỊNH DẠNG OUTPUT:\n\nEmail từ: <tên người gửi> to <tên người nhận>\nSubject: <subject email>\n\nTÓM TẮT:\n- <1–2 gạch đầu dòng>\n\n[CHỈ HIỂN THỊ NẾU LIÊN QUAN ĐẾN ANH XUÂN]\n\nLIÊN QUAN:\n- <Nêu rõ email liên quan ở điểm nào>"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -294,8 +340,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        80,
-        224
+        176,
+        240
       ],
       "id": "cb9a5a03-d006-42d9-8e2b-911dbe5dd999",
       "name": "Google Gemini Chat Model",
@@ -325,6 +371,28 @@
           "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
         }
       }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.conversationId }}",
+        "tableName": "email_tracking",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        240
+      ],
+      "id": "c19338a8-7401-4afa-bb46-23e409756caf",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "FrfYE3BUWGJafJtT",
+          "name": "Postgres account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -342,11 +410,11 @@
   ],
   "staticData": {
     "node:Microsoft Outlook Trigger": {
-      "lastTimeChecked": "2026-01-12T02:00:06.002+00:00"
+      "lastTimeChecked": "2026-01-12T03:57:57.576+00:00"
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2026-01-12T01:43:09.504Z",
-  "versionId": "c3be5370-9b78-42d5-89e9-1ab52734b124"
+  "updatedAt": "2026-01-12T03:57:56.263Z",
+  "versionId": "ad0dab15-3dbe-4b8f-9008-8ab23908e8fd"
 }
