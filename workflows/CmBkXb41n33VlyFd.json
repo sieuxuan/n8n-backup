@@ -722,7 +722,7 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "name": "ITHELPDESK",
+  "name": "ITBOT MAIN WF",
   "nodes": [
     {
       "parameters": {
@@ -1271,6 +1271,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2025-12-18T17:00:05.787Z",
+  "updatedAt": "2026-01-12T03:51:31.943Z",
   "versionId": "f5daab36-b6fd-4aa1-9252-9d057e62c5af"
 }
