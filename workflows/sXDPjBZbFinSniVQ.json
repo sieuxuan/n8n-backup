@@ -1,0 +1,231 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-01-14T09:51:27.637Z",
+    "createdAt": "2026-01-14T09:51:25.836Z",
+    "versionId": "868534c4-9c8c-4a07-a592-f18092b41723",
+    "workflowId": "sXDPjBZbFinSniVQ",
+    "nodes": [
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "67d20038-0a8e-40ac-81d6-ccf4814bc449",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "resource": "audio",
+          "operation": "analyze",
+          "modelId": {
+            "__rl": true,
+            "value": "models/gemini-2.5-flash",
+            "mode": "list",
+            "cachedResultName": "models/gemini-2.5-flash"
+          },
+          "text": "Chuyển giọng nói thành văn bản",
+          "audioUrls": "={{ $json.link }}",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.googleGemini",
+        "typeVersion": 1,
+        "position": [
+          448,
+          0
+        ],
+        "id": "654324c3-e8dd-4da9-aa38-348c1effa46f",
+        "name": "Analyze audio",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "ZTongs9LJBLbK1CL",
+            "name": "Google Gemini(PaLM) Api account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "b39513f6-2fe6-4d0a-afa7-a0aabf8d7faf",
+                "name": "answer",
+                "value": "={{ $json.content.parts[0].text }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          656,
+          0
+        ],
+        "id": "0fdba360-e494-4e85-b77b-af1176a7e3d6",
+        "name": "Edit Fields"
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Analyze audio",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Analyze audio": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": "Version 868534c4",
+    "description": ""
+  },
+  "activeVersionId": "868534c4-9c8c-4a07-a592-f18092b41723",
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Analyze audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze audio": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-01-14T09:45:26.782Z",
+  "id": "sXDPjBZbFinSniVQ",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "zalo voice",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "67d20038-0a8e-40ac-81d6-ccf4814bc449",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "Chuyển giọng nói thành văn bản",
+        "audioUrls": "={{ $json.link }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "654324c3-e8dd-4da9-aa38-348c1effa46f",
+      "name": "Analyze audio",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZTongs9LJBLbK1CL",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b39513f6-2fe6-4d0a-afa7-a0aabf8d7faf",
+              "name": "answer",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        656,
+        0
+      ],
+      "id": "0fdba360-e494-4e85-b77b-af1176a7e3d6",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "link": "https://voice-aac-dl.zdn.vn/4160194948125942069/2f8f61eb3e28df768639.aac"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-14T09:45:26.782Z",
+      "createdAt": "2026-01-14T09:45:26.782Z",
+      "role": "workflow:owner",
+      "workflowId": "sXDPjBZbFinSniVQ",
+      "projectId": "KwaSwzGupikfluvZ"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-01-14T09:59:02.855Z",
+  "versionId": "868534c4-9c8c-4a07-a592-f18092b41723"
+}
