@@ -1,9 +1,9 @@
 {
   "active": true,
   "activeVersion": {
-    "updatedAt": "2026-01-13T10:55:32.293Z",
-    "createdAt": "2026-01-13T10:55:28.247Z",
-    "versionId": "613349ee-5bed-4032-bc36-29c74f97d844",
+    "updatedAt": "2026-01-14T08:54:40.880Z",
+    "createdAt": "2026-01-14T08:54:37.911Z",
+    "versionId": "037c07e2-3a7c-4f80-aa93-e1248d171417",
     "workflowId": "WEZxHXW9F8lWTIGj",
     "nodes": [
       {
@@ -17,11 +17,11 @@
           },
           "calendarId": {
             "__rl": true,
-            "value": "ngohanhxinhgai96@gmail.com",
+            "value": "1ir11o6atr057tp00uhotdifoe7lj9vg@import.calendar.google.com",
             "mode": "list",
-            "cachedResultName": "ngohanhxinhgai96@gmail.com"
+            "cachedResultName": "Calendar"
           },
-          "triggerOn": "eventUpdated",
+          "triggerOn": "eventStarted",
           "options": {}
         },
         "type": "n8n-nodes-base.googleCalendarTrigger",
@@ -126,10 +126,10 @@
       }
     },
     "authors": "Hạnh Julia",
-    "name": "Version 613349ee",
+    "name": "Version 037c07e2",
     "description": ""
   },
-  "activeVersionId": "613349ee-5bed-4032-bc36-29c74f97d844",
+  "activeVersionId": "037c07e2-3a7c-4f80-aa93-e1248d171417",
   "connections": {
     "Google Calendar Trigger": {
       "main": [
@@ -184,11 +184,11 @@
         },
         "calendarId": {
           "__rl": true,
-          "value": "ngohanhxinhgai96@gmail.com",
+          "value": "1ir11o6atr057tp00uhotdifoe7lj9vg@import.calendar.google.com",
           "mode": "list",
-          "cachedResultName": "ngohanhxinhgai96@gmail.com"
+          "cachedResultName": "Calendar"
         },
-        "triggerOn": "eventUpdated",
+        "triggerOn": "eventStarted",
         "options": {}
       },
       "type": "n8n-nodes-base.googleCalendarTrigger",
@@ -275,11 +275,11 @@
   ],
   "staticData": {
     "node:Google Calendar Trigger": {
-      "lastTimeChecked": "2026-01-13T10:55:38Z"
+      "lastTimeChecked": "2026-01-14T08:54:40Z"
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2026-01-13T10:55:38.286Z",
-  "versionId": "613349ee-5bed-4032-bc36-29c74f97d844"
+  "updatedAt": "2026-01-14T08:55:50.363Z",
+  "versionId": "037c07e2-3a7c-4f80-aa93-e1248d171417"
 }
