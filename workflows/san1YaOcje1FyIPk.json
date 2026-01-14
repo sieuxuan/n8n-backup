@@ -1,9 +1,9 @@
 {
   "active": true,
   "activeVersion": {
-    "updatedAt": "2026-01-10T09:44:25.082Z",
-    "createdAt": "2026-01-10T09:44:22.787Z",
-    "versionId": "50a49e2f-dd11-4c53-8467-15be581af530",
+    "updatedAt": "2026-01-14T09:00:56.821Z",
+    "createdAt": "2026-01-14T09:00:54.776Z",
+    "versionId": "055c516c-974e-4a1d-a76f-5275f99ddd17",
     "workflowId": "san1YaOcje1FyIPk",
     "nodes": [
       {
@@ -114,7 +114,10 @@
               }
             ]
           },
-          "options": {}
+          "options": {
+            "appendAttribution": false,
+            "path": "order"
+          }
         },
         "type": "n8n-nodes-base.formTrigger",
         "typeVersion": 2.3,
@@ -244,10 +247,10 @@
       }
     },
     "authors": "Hạnh Julia",
-    "name": "Version 50a49e2f",
+    "name": "Version 055c516c",
     "description": ""
   },
-  "activeVersionId": "50a49e2f-dd11-4c53-8467-15be581af530",
+  "activeVersionId": "055c516c-974e-4a1d-a76f-5275f99ddd17",
   "connections": {
     "On form submission": {
       "main": [
@@ -411,7 +414,10 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "appendAttribution": false,
+          "path": "order"
+        }
       },
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.3,
@@ -512,6 +518,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2026-01-10T09:52:48.852Z",
-  "versionId": "50a49e2f-dd11-4c53-8467-15be581af530"
+  "updatedAt": "2026-01-14T09:00:54.774Z",
+  "versionId": "055c516c-974e-4a1d-a76f-5275f99ddd17"
 }
