@@ -1,9 +1,9 @@
 {
   "active": true,
   "activeVersion": {
-    "updatedAt": "2026-01-14T08:54:40.880Z",
-    "createdAt": "2026-01-14T08:54:37.911Z",
-    "versionId": "037c07e2-3a7c-4f80-aa93-e1248d171417",
+    "updatedAt": "2026-01-15T11:12:01.345Z",
+    "createdAt": "2026-01-15T11:11:40.361Z",
+    "versionId": "192b65a0-3f64-4d2f-9264-cf0e58576ea2",
     "workflowId": "WEZxHXW9F8lWTIGj",
     "nodes": [
       {
@@ -41,7 +41,7 @@
       },
       {
         "parameters": {
-          "jsCode": "const event = $json;\n\n// Bỏ all-day event\nif (!event.start || !event.start.dateTime) {\n  return [];\n}\n\n// Thời gian bắt đầu event\nconst startTime = new Date(event.start.dateTime);\n\n// Trừ 30 phút\nconst remindAt = new Date(startTime.getTime() - 30 * 60 * 1000);\n\n// Nếu thời điểm nhắc đã qua → bỏ\nif (remindAt <= new Date()) {\n  return [];\n}\n\n// Trả dữ liệu đã chuẩn bị sẵn\nreturn [{\n  json: {\n    ...event,\n    remind_at: remindAt.toISOString(),\n    minutes_left: Math.round((startTime - new Date()) / 60000)\n  }\n}];\n"
+          "jsCode": "// Input: bundles from Google Calendar module\n// Make sẽ tự map các event vào array `items`\n\nlet events = items;\n\nif (!events || events.length === 0) {\n  return {\n    message: \"📅 *Hôm nay bạn không có lịch nào* 🎉\"\n  };\n}\n\nlet text = \"📅 *LỊCH HÔM NAY*\\n\\n\";\n\nevents.forEach((event, index) => {\n  let title = event.summary || \"No title\";\n\n  let startTime = event.start?.dateTime || event.start?.date || \"\";\n  let endTime = event.end?.dateTime || event.end?.date || \"\";\n\n  // Format time\n  let start = startTime ? new Date(startTime).toLocaleTimeString(\"vi-VN\", {\n    hour: \"2-digit\",\n    minute: \"2-digit\"\n  }) : \"All day\";\n\n  let end = endTime ? new Date(endTime).toLocaleTimeString(\"vi-VN\", {\n    hour: \"2-digit\",\n    minute: \"2-digit\"\n  }) : \"\";\n\n  text += `🕘 *${start}${end ? \" - \" + end : \"\"}*\\n`;\n  text += `📌 ${title}\\n\\n`;\n});\n\nreturn {\n  message: text\n};\n"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -54,29 +54,16 @@
       },
       {
         "parameters": {
-          "resume": "specificTime",
-          "dateTime": "={{$json.remind_at}}"
-        },
-        "type": "n8n-nodes-base.wait",
-        "typeVersion": 1.1,
-        "position": [
-          416,
-          0
-        ],
-        "id": "fc487bfe-e69e-4de6-89e6-ec523d024c96",
-        "name": "Wait",
-        "webhookId": "48da29d7-f994-4e88-a286-343fdd7954a1"
-      },
-      {
-        "parameters": {
           "chatId": "1281233579",
-          "text": "=🔔 NHẮC LỊCH  📅 {{$json.summary}} ⏰ {{$json.start.dateTime}} – {{$json.end.dateTime}} 📍 {{$json.location || 'Online'}}  👤 Organizer: {{$json.organizer?.email || 'N/A'}} ⏳ Còn {{$json.minutes_left}} phút nữa",
-          "additionalFields": {}
+          "text": "={{\n(() => {\n  const title = $json.summary || 'Không có tiêu đề';\n\n  // Thời gian\n  const start = $json.start?.dateTime || $json.start?.date;\n  const end = $json.end?.dateTime || $json.end?.date;\n\n  let timeText = 'All day';\n  if (start && end && start.includes('T')) {\n    const s = new Date(start).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });\n    const e = new Date(end).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });\n    timeText = `${s}–${e}`;\n  }\n\n  const booker =\n    $json.creator?.displayName ||\n    $json.organizer?.displayName ||\n    $json.creator?.email ||\n    'Unknown';\n\n  return `SỰ KIỆN\n🕘 ${timeText}\n📌 ${title}\n👤 ${booker}`;\n})()\n}}\n",
+          "additionalFields": {
+            "appendAttribution": false
+          }
         },
         "type": "n8n-nodes-base.telegram",
         "typeVersion": 1.2,
         "position": [
-          624,
+          432,
           0
         ],
         "id": "d6397e93-ecf5-408d-8a14-4ce1bf1aff67",
@@ -106,17 +93,6 @@
         "main": [
           [
             {
-              "node": "Wait",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Wait": {
-        "main": [
-          [
-            {
               "node": "Send a text message",
               "type": "main",
               "index": 0
@@ -126,10 +102,10 @@
       }
     },
     "authors": "Hạnh Julia",
-    "name": "Version 037c07e2",
+    "name": "Version 192b65a0",
     "description": ""
   },
-  "activeVersionId": "037c07e2-3a7c-4f80-aa93-e1248d171417",
+  "activeVersionId": "192b65a0-3f64-4d2f-9264-cf0e58576ea2",
   "connections": {
     "Google Calendar Trigger": {
       "main": [
@@ -143,17 +119,6 @@
       ]
     },
     "Code in JavaScript": {
-      "main": [
-        [
-          {
-            "node": "Wait",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait": {
       "main": [
         [
           {
@@ -208,7 +173,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const event = $json;\n\n// Bỏ all-day event\nif (!event.start || !event.start.dateTime) {\n  return [];\n}\n\n// Thời gian bắt đầu event\nconst startTime = new Date(event.start.dateTime);\n\n// Trừ 30 phút\nconst remindAt = new Date(startTime.getTime() - 30 * 60 * 1000);\n\n// Nếu thời điểm nhắc đã qua → bỏ\nif (remindAt <= new Date()) {\n  return [];\n}\n\n// Trả dữ liệu đã chuẩn bị sẵn\nreturn [{\n  json: {\n    ...event,\n    remind_at: remindAt.toISOString(),\n    minutes_left: Math.round((startTime - new Date()) / 60000)\n  }\n}];\n"
+        "jsCode": "// Input: bundles from Google Calendar module\n// Make sẽ tự map các event vào array `items`\n\nlet events = items;\n\nif (!events || events.length === 0) {\n  return {\n    message: \"📅 *Hôm nay bạn không có lịch nào* 🎉\"\n  };\n}\n\nlet text = \"📅 *LỊCH HÔM NAY*\\n\\n\";\n\nevents.forEach((event, index) => {\n  let title = event.summary || \"No title\";\n\n  let startTime = event.start?.dateTime || event.start?.date || \"\";\n  let endTime = event.end?.dateTime || event.end?.date || \"\";\n\n  // Format time\n  let start = startTime ? new Date(startTime).toLocaleTimeString(\"vi-VN\", {\n    hour: \"2-digit\",\n    minute: \"2-digit\"\n  }) : \"All day\";\n\n  let end = endTime ? new Date(endTime).toLocaleTimeString(\"vi-VN\", {\n    hour: \"2-digit\",\n    minute: \"2-digit\"\n  }) : \"\";\n\n  text += `🕘 *${start}${end ? \" - \" + end : \"\"}*\\n`;\n  text += `📌 ${title}\\n\\n`;\n});\n\nreturn {\n  message: text\n};\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -221,29 +186,16 @@
     },
     {
       "parameters": {
-        "resume": "specificTime",
-        "dateTime": "={{$json.remind_at}}"
-      },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [
-        416,
-        0
-      ],
-      "id": "fc487bfe-e69e-4de6-89e6-ec523d024c96",
-      "name": "Wait",
-      "webhookId": "48da29d7-f994-4e88-a286-343fdd7954a1"
-    },
-    {
-      "parameters": {
         "chatId": "1281233579",
-        "text": "=🔔 NHẮC LỊCH  📅 {{$json.summary}} ⏰ {{$json.start.dateTime}} – {{$json.end.dateTime}} 📍 {{$json.location || 'Online'}}  👤 Organizer: {{$json.organizer?.email || 'N/A'}} ⏳ Còn {{$json.minutes_left}} phút nữa",
-        "additionalFields": {}
+        "text": "={{\n(() => {\n  const title = $json.summary || 'Không có tiêu đề';\n\n  // Thời gian\n  const start = $json.start?.dateTime || $json.start?.date;\n  const end = $json.end?.dateTime || $json.end?.date;\n\n  let timeText = 'All day';\n  if (start && end && start.includes('T')) {\n    const s = new Date(start).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });\n    const e = new Date(end).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });\n    timeText = `${s}–${e}`;\n  }\n\n  const booker =\n    $json.creator?.displayName ||\n    $json.organizer?.displayName ||\n    $json.creator?.email ||\n    'Unknown';\n\n  return `SỰ KIỆN\n🕘 ${timeText}\n📌 ${title}\n👤 ${booker}`;\n})()\n}}\n",
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        624,
+        432,
         0
       ],
       "id": "d6397e93-ecf5-408d-8a14-4ce1bf1aff67",
@@ -275,11 +227,11 @@
   ],
   "staticData": {
     "node:Google Calendar Trigger": {
-      "lastTimeChecked": "2026-01-14T08:54:40Z"
+      "lastTimeChecked": "2026-01-15T11:12:00Z"
     }
   },
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2026-01-14T08:55:50.363Z",
-  "versionId": "037c07e2-3a7c-4f80-aa93-e1248d171417"
+  "updatedAt": "2026-01-15T11:11:40.360Z",
+  "versionId": "192b65a0-3f64-4d2f-9264-cf0e58576ea2"
 }
