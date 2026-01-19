@@ -1,9 +1,9 @@
 {
   "active": true,
   "activeVersion": {
-    "updatedAt": "2025-12-11T11:16:22.619Z",
-    "createdAt": "2025-12-11T11:16:22.619Z",
-    "versionId": "ff7362ab-c733-42e1-9b73-a668eb6972c4",
+    "updatedAt": "2026-01-19T09:30:48.291Z",
+    "createdAt": "2026-01-19T09:30:46.461Z",
+    "versionId": "909cbd1b-850e-474e-8ac5-f79014ca01af",
     "workflowId": "5rxurDTMhaZRxA0U",
     "nodes": [
       {
@@ -33,8 +33,8 @@
         "name": "Execute Command",
         "retryOnFail": true,
         "alwaysOutputData": false,
-        "waitBetweenTries": 2000,
-        "maxTries": 2,
+        "waitBetweenTries": 3000,
+        "maxTries": 3,
         "onError": "continueErrorOutput"
       },
       {
@@ -181,10 +181,10 @@
       }
     },
     "authors": "Xuan Nguyen",
-    "name": null,
-    "description": null
+    "name": "Version 909cbd1b",
+    "description": ""
   },
-  "activeVersionId": "ff7362ab-c733-42e1-9b73-a668eb6972c4",
+  "activeVersionId": "909cbd1b-850e-474e-8ac5-f79014ca01af",
   "connections": {
     "When Executed by Another Workflow": {
       "main": [
@@ -276,8 +276,8 @@
       "name": "Execute Command",
       "retryOnFail": true,
       "alwaysOutputData": false,
-      "waitBetweenTries": 2000,
-      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "maxTries": 3,
       "onError": "continueErrorOutput"
     },
     {
@@ -381,6 +381,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-12-18T18:28:37.482Z",
-  "versionId": "ff7362ab-c733-42e1-9b73-a668eb6972c4"
+  "updatedAt": "2026-01-19T09:30:46.459Z",
+  "versionId": "909cbd1b-850e-474e-8ac5-f79014ca01af"
 }
