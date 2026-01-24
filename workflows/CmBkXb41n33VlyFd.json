@@ -1,7 +1,634 @@
 {
-  "active": false,
-  "activeVersion": null,
-  "activeVersionId": null,
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-16T08:39:33.753Z",
+    "createdAt": "2025-12-16T08:39:33.753Z",
+    "versionId": "f5daab36-b6fd-4aa1-9252-9d057e62c5af",
+    "workflowId": "CmBkXb41n33VlyFd",
+    "nodes": [
+      {
+        "parameters": {
+          "getMetadata": true
+        },
+        "type": "n8n-nodes-social-zalo.zaloUser",
+        "typeVersion": 1,
+        "position": [
+          -1424,
+          2096
+        ],
+        "id": "8240200c-5afc-4500-9804-d0242c3516bc",
+        "name": "Zalo Event Trigger",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "Q155AxMmPU3euzY2",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/Q155AxMmPU3euzY2",
+            "cachedResultName": "IT WF"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          -752,
+          2336
+        ],
+        "id": "2de30656-57fb-4527-8a2e-2b92fb6ca650",
+        "name": "Call 'IT WF'"
+      },
+      {
+        "parameters": {
+          "threadId": "={{ $('Input').item.json.threadId }}",
+          "message": "={{ $json.answer }}",
+          "threadType": "={{ $('Input').item.json.type }}",
+          "attachmentsParameter": {
+            "attachmentPaths": [
+              {
+                "attachmentPath": "={{ $json.file }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          -528,
+          2336
+        ],
+        "id": "da82a1af-13d8-437d-b217-8327a1bbad17",
+        "name": "Gửi tin nhắn12",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ecd382fe-bf4f-4162-adc2-85b0d135258a",
+                "name": "data.msgType",
+                "value": "={{ $json.data.msgType }}",
+                "type": "string"
+              },
+              {
+                "id": "1ff437d8-c2f0-43f2-b1c8-2b22dffb1bb3",
+                "name": "data.uidFrom",
+                "value": "={{ $json.data.uidFrom }}",
+                "type": "string"
+              },
+              {
+                "id": "85d11d06-3e60-4460-aa4c-1674ab1848b3",
+                "name": "data.dName",
+                "value": "={{ $json.data.dName }}",
+                "type": "string"
+              },
+              {
+                "id": "a683b995-c591-4070-b7c8-67043f120c31",
+                "name": "threadId",
+                "value": "={{ $json.threadId }}",
+                "type": "string"
+              },
+              {
+                "id": "344202d8-6e91-4f31-9cb0-61a504bc8494",
+                "name": "type",
+                "value": "={{ $json.type }}",
+                "type": "number"
+              },
+              {
+                "id": "90a76cc6-c6d6-47c6-9bbc-5d9f4dc437d0",
+                "name": "data.content",
+                "value": "={{ $json.data.content }}",
+                "type": "object"
+              },
+              {
+                "id": "c72b4809-95be-42b6-aee9-630a2daf2af8",
+                "name": "data.quote.msg",
+                "value": "={{ $json.data.quote.msg }}",
+                "type": "string"
+              },
+              {
+                "id": "81d2a1cd-802e-4317-908c-e8205a921069",
+                "name": "data.quote.globalMsgId",
+                "value": "={{ $json.data.quote.globalMsgId }}",
+                "type": "number"
+              },
+              {
+                "id": "d66ea45f-54f2-47d7-8a09-f728a06e783a",
+                "name": "data.quote.fromD",
+                "value": "={{ $json.data.quote.fromD }}",
+                "type": "string"
+              },
+              {
+                "id": "b6338456-71da-40a4-99c8-47972b865f8c",
+                "name": "data.quote.cliMsgType",
+                "value": "={{ $json.data.quote.cliMsgType }}",
+                "type": "number"
+              },
+              {
+                "id": "f8b89a52-744e-4853-96bc-e3619926c41b",
+                "name": "data.quote.ts",
+                "value": "={{ $json.data.quote.ts }}",
+                "type": "number"
+              },
+              {
+                "id": "f341cb6c-bcab-44f1-b758-a8eea7c76feb",
+                "name": "data.quote.attach",
+                "value": "={{ $json.data.quote.attach }}",
+                "type": "string"
+              },
+              {
+                "id": "ed6f9702-8614-428a-b3d2-15dc195b8939",
+                "name": "data.msgId",
+                "value": "={{ $json.data.msgId }}",
+                "type": "string"
+              },
+              {
+                "id": "2bbb155b-e180-457d-b974-53d2b420c366",
+                "name": "metadata.zaloName",
+                "value": "={{ $json.metadata.zaloName }}",
+                "type": "string"
+              },
+              {
+                "id": "b219e6a6-1416-4992-a32c-cf64027d7a78",
+                "name": "metadata.globalId",
+                "value": "={{ $json.metadata.globalId }}",
+                "type": "string"
+              },
+              {
+                "id": "5ddd1657-2065-418e-a11b-1f68e5d13de6",
+                "name": "metadata.avatar",
+                "value": "={{ $json.metadata.avatar }}",
+                "type": "string"
+              },
+              {
+                "id": "70a5fada-58d7-4c98-a103-56c72ffb504a",
+                "name": "metadata.sdob",
+                "value": "={{ $json.metadata.sdob }}",
+                "type": "string"
+              },
+              {
+                "id": "8ea2683c-71a1-4d18-9925-6d95372cec8c",
+                "name": "metadata.gender",
+                "value": "={{ $json.metadata.gender }}",
+                "type": "number"
+              },
+              {
+                "id": "f3fd1e71-a8a4-4d50-9ae9-52feef33d147",
+                "name": "content",
+                "value": "={{  (() => {    try {      const c = typeof $json.data.content === 'object' ? $json.data.content : JSON.parse($json.data.content);      return c.title && c.title.trim() !== '' ? c.title : (c.href || '');    } catch(e) {      return $json.data.content;    }  })()  }}",
+                "type": "string"
+              },
+              {
+                "id": "45353ced-ad5d-4f99-bd0a-46a873695ffc",
+                "name": "link",
+                "value": "={{ $json.data.content.href }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {
+            "ignoreConversionErrors": true
+          }
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1200,
+          2096
+        ],
+        "id": "b4e7da9d-41c6-442c-b974-f50ba12c0624",
+        "name": "Input"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "0a709988-3a0a-41c0-942d-637d8d27b982",
+                "leftValue": "={{ $json.threadId }}",
+                "rightValue": "6075261485404698119",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              },
+              {
+                "id": "5e2a9819-8579-44a8-a6b3-ceb3babb489f",
+                "leftValue": "={{ $json.threadId }}",
+                "rightValue": "6762311442252972027",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              },
+              {
+                "id": "9ba1ff1e-512b-49e6-b146-cb33604e8328",
+                "leftValue": "={{ $json.threadId }}",
+                "rightValue": "1",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "or"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -976,
+          2240
+        ],
+        "id": "5db9a9de-e51b-4380-87a4-3239c3b9557d",
+        "name": "If5"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "hbf3YPyWoIcfntvz",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/hbf3YPyWoIcfntvz",
+            "cachedResultName": "PUBLIC BOT"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          -752,
+          2144
+        ],
+        "id": "7701e76a-dc50-462b-91af-cc9467a4b897",
+        "name": "Call 'PUBLIC BOT'"
+      },
+      {
+        "parameters": {
+          "resource": "get",
+          "operation": "getGroupInfo",
+          "groupIdsParameter": {
+            "groupIdValues": [
+              {
+                "groupId": "={{ $json.threadId }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          -752,
+          1856
+        ],
+        "id": "ea501e9a-95ed-4d02-9465-28ef4ab54034",
+        "name": "Lấy thông tin nhóm",
+        "retryOnFail": true,
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "dataTableId": {
+            "__rl": true,
+            "value": "Tp4QKsQmamZE3mpb",
+            "mode": "list",
+            "cachedResultName": "ZALO SAVE",
+            "cachedResultUrl": "/projects/KwaSwzGupikfluvZ/datatables/Tp4QKsQmamZE3mpb"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "groupname": "={{ $json.response.gridInfoMap[$json.response.gridInfoMap[Object.keys($json.response.gridInfoMap)[0]].groupId].name }}",
+              "msgId": "={{ $('Input').item.json.data.msgId }}",
+              "msgType": "={{ $('Input').item.json.data.msgType }}",
+              "uidFrom": "={{ $('Input').item.json.data.uidFrom }}",
+              "dName": "={{ $('Input').item.json.data.dName }}",
+              "content": "={{ $('Input').item.json.content }}",
+              "threadId": "={{ $('Input').item.json.threadId }}",
+              "type": "={{ $('Input').item.json.type }}",
+              "avatar": "={{ $('Input').item.json.metadata.avatar }}",
+              "gender": "={{ $('Input').item.json.metadata.gender }}",
+              "dob": "={{ $('Input').item.json.metadata.sdob }}",
+              "link": "={{ $json.link }}",
+              "globalId": "={{ $('Zalo Event Trigger').item.json.metadata.userInfo.changed_profiles[\"3266757489410168093\"].globalId }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "msgId",
+                "displayName": "msgId",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "msgType",
+                "displayName": "msgType",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "uidFrom",
+                "displayName": "uidFrom",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "dName",
+                "displayName": "dName",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "content",
+                "displayName": "content",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "threadId",
+                "displayName": "threadId",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "type",
+                "displayName": "type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "avatar",
+                "displayName": "avatar",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "gender",
+                "displayName": "gender",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "dob",
+                "displayName": "dob",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "groupname",
+                "displayName": "groupname",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "link",
+                "displayName": "link",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "globalId",
+                "displayName": "globalId",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.dataTable",
+        "typeVersion": 1,
+        "position": [
+          -528,
+          1936
+        ],
+        "id": "41329dca-7d37-45b9-82a8-c0555aafb007",
+        "name": "Insert row"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "7044f054-ba9f-4924-af9e-6352212b888e",
+                "leftValue": "={{ $json.type }}",
+                "rightValue": 1,
+                "operator": {
+                  "type": "number",
+                  "operation": "equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -976,
+          1936
+        ],
+        "id": "ce6db200-9b99-4464-b399-80e93703b73a",
+        "name": "If"
+      }
+    ],
+    "connections": {
+      "Zalo Event Trigger": {
+        "main": [
+          [
+            {
+              "node": "Input",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Call 'IT WF'": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn12",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Input": {
+        "main": [
+          [
+            {
+              "node": "If5",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If5": {
+        "main": [
+          [
+            {
+              "node": "Call 'PUBLIC BOT'",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Call 'IT WF'",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Lấy thông tin nhóm": {
+        "main": [
+          [
+            {
+              "node": "Insert row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Lấy thông tin nhóm",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Insert row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "f5daab36-b6fd-4aa1-9252-9d057e62c5af",
   "connections": {
     "Zalo Event Trigger": {
       "main": [
