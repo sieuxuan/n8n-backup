@@ -1,7 +1,175 @@
 {
-  "active": false,
-  "activeVersion": null,
-  "activeVersionId": null,
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2025-12-06T08:38:16.040Z",
+    "createdAt": "2025-12-06T08:38:16.040Z",
+    "versionId": "8f404f70-753a-4a38-9d53-ac2234f42162",
+    "workflowId": "jJZHdpvMYNCn4QoY",
+    "nodes": [
+      {
+        "parameters": {
+          "pollTimes": {
+            "item": [
+              {
+                "mode": "everyMinute"
+              }
+            ]
+          },
+          "documentId": {
+            "__rl": true,
+            "value": "1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg",
+            "mode": "list",
+            "cachedResultName": "IT HELP DESK",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1979763952,
+            "mode": "list",
+            "cachedResultName": "ADD NEW SUPPLIER",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIh0H_SIV0-TewfNrkGjCRlxS0Hl7ogN6a4HObMu4Vg/edit#gid=1979763952"
+          },
+          "event": "rowAdded",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          96
+        ],
+        "id": "5d8efb17-73a6-4076-97b5-af88ea636245",
+        "name": "Google Sheets Trigger",
+        "credentials": {
+          "googleSheetsTriggerOAuth2Api": {
+            "id": "3KLUaAaxMncvxTT2",
+            "name": "Google Sheets Trigger account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const data = items[items.length - 1].json;\n\nconst lines = [];\n\nlines.push(\"📢 [YÊU CẦU TẠO NHÀ CUNG CẤP MỚI]\");\n\nif (data[\"SUPPLIER_ID\"]) lines.push(`🆔 Supplier ID: ${data[\"SUPPLIER_ID\"]}`);\nif (data[\"USER NAME\"] || data[\"TEAM\"]) {\n  lines.push(`👤 Người gửi: ${data[\"USER NAME\"] || \"\"} (${data[\"TEAM\"] || \"\"})`);\n}\nif (data[\"Timestamp\"]) lines.push(`🕒 Thời gian gửi: ${data[\"Timestamp\"]}`);\nif (data[\"STATUS\"]) lines.push(`📌 Trạng thái: ${data[\"STATUS\"]}`);\n\nif (data[\"TÊN CÔNG TY\"]) lines.push(`🏢 Tên công ty: ${data[\"TÊN CÔNG TY\"]}`);\nif (data[\"TÊN VIẾT TẮT\"]) lines.push(`🔤 Viết tắt: ${data[\"TÊN VIẾT TẮT\"]}`);\nif (data[\"ĐỊA CHỈ\"]) lines.push(`📍 Địa chỉ: ${data[\"ĐỊA CHỈ\"]}`);\n\nif (data[\"CÔNG TY THUỘC CATALOG TYPE GÌ:\"]) lines.push(`📦 Catalog: ${data[\"CÔNG TY THUỘC CATALOG TYPE GÌ:\"]}`);\nif (data[\"CÔNG TY LÀ TRONG NƯỚC HAY NƯỚC NGOÀI\"]) lines.push(`🌍 Trong/Ngoài nước: ${data[\"CÔNG TY LÀ TRONG NƯỚC HAY NƯỚC NGOÀI\"]}`);\n\nif (data[\"NGƯỜI LIÊN LẠC\"]) lines.push(`📞 Liên hệ: ${data[\"NGƯỜI LIÊN LẠC\"]}`);\nif (data[\"EMAIL\"]) lines.push(`✉️ Email: ${data[\"EMAIL\"]}`);\nif (data[\"CURRENCY\"]) lines.push(`💱 Loại tiền: ${data[\"CURRENCY\"]}`);\nif (data[\"MÃ SỐ THUẾ CÔNG TY\"]) lines.push(`🧾 MST: ${data[\"MÃ SỐ THUẾ CÔNG TY\"]}`);\nif (data[\"PIC\"]) lines.push(`👨‍💼 PIC: ${data[\"PIC\"]}`);\nif (data[\"FINISH TIME\"]) lines.push(`✅ Thời gian hoàn thành: ${data[\"FINISH TIME\"]}`);\nif (data[\"THÊM LỜI NHẮN NHỦ VỚI ADMIN\"]) lines.push(`📝 Ghi chú: ${data[\"THÊM LỜI NHẮN NHỦ VỚI ADMIN\"]}`);\nif (data[\"TYPE\"]) lines.push(`📑 Loại NCC: ${data[\"TYPE\"]}`);\n\n// Kết quả\nconst message = lines.join('\\n');\n\nreturn [\n  {\n    json: {\n      message: message\n    }\n  }\n];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          224,
+          0
+        ],
+        "id": "e6f18307-c132-4410-a77c-150ccfec3efc",
+        "name": "Code"
+      },
+      {
+        "parameters": {
+          "threadId": "4798747745907374032",
+          "message": "={{ $json.message }}",
+          "threadType": 1
+        },
+        "type": "n8n-nodes-social-zalo.zaloUserInteract",
+        "typeVersion": 1,
+        "position": [
+          448,
+          0
+        ],
+        "id": "37cd0eda-325e-4930-9c5e-7d9157281cd2",
+        "name": "Gửi tin nhắn1",
+        "credentials": {
+          "zaloUserCredentialsApi": {
+            "id": "OMssdW79ELA0RV06",
+            "name": "Zalo It Bot - 2025-12-06T08:34:23.063Z"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "chatMessage",
+          "chatId": {
+            "__rl": true,
+            "value": "19:50306837a8da409a8037298a6a62e68c@thread.v2",
+            "mode": "id"
+          },
+          "contentType": "html",
+          "message": "={{ $json.message }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.microsoftTeams",
+        "typeVersion": 2,
+        "position": [
+          448,
+          192
+        ],
+        "id": "6acd30fe-a93b-48d7-b1df-a392070742b0",
+        "name": "Create chat message",
+        "webhookId": "faf59007-3027-4e4f-b910-ecf2a74da822",
+        "credentials": {
+          "microsoftTeamsOAuth2Api": {
+            "id": "Iqzyk9veJ1J8eXou",
+            "name": "Microsoft Teams account"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "jsCode": "// ==== Helpers ====\nfunction esc(s = '') {\n  return String(s)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;');\n}\nfunction row(label, val) {\n  if (val === undefined || val === null || String(val).trim() === '') return '';\n  return `\n    <tr>\n      <td style=\"padding:6px 8px; color:#555; white-space:nowrap;\">${label}</td>\n      <td style=\"padding:6px 8px;\">${val}</td>\n    </tr>`;\n}\n\n// ==== Data nguồn ====\nconst data = items[items.length - 1]?.json || {};\n\n// Chuẩn hoá/escape\nconst supplierId   = data[\"SUPPLIER_ID\"]                 ? esc(data[\"SUPPLIER_ID\"]) : '';\nconst userName     = data[\"USER NAME\"]                   ? esc(data[\"USER NAME\"]) : '';\nconst teamName     = data[\"TEAM\"]                        ? esc(data[\"TEAM\"]) : '';\nconst sender       = (userName || teamName)\n  ? `${userName}${teamName ? ' (' + teamName + ')' : ''}`\n  : '';\nconst timestamp    = data[\"Timestamp\"]                    ? esc(data[\"Timestamp\"]) : '';\nconst status       = data[\"STATUS\"]                       ? esc(data[\"STATUS\"]) : '';\n\nconst companyName  = data[\"TÊN CÔNG TY\"]                  ? esc(data[\"TÊN CÔNG TY\"]) : '';\nconst shortName    = data[\"TÊN VIẾT TẮT\"]                 ? esc(data[\"TÊN VIẾT TẮT\"]) : '';\nconst address      = data[\"ĐỊA CHỈ\"]                      ? esc(data[\"ĐỊA CHỈ\"]) : '';\n\nconst catalogType  = data[\"CÔNG TY THUỘC CATALOG TYPE GÌ:\"] ? esc(data[\"CÔNG TY THUỘC CATALOG TYPE GÌ:\"]) : '';\nconst domestic     = data[\"CÔNG TY LÀ TRONG NƯỚC HAY NƯỚC NGOÀI\"] ? esc(data[\"CÔNG TY LÀ TRONG NƯỚC HAY NƯỚC NGOÀI\"]) : '';\n\nconst contact      = data[\"NGƯỜI LIÊN LẠC\"]               ? esc(data[\"NGƯỜI LIÊN LẠC\"]) : '';\nconst emailRaw     = data[\"EMAIL\"]                         ? String(data[\"EMAIL\"]).trim() : '';\nconst emailVal     = emailRaw ? `<a href=\"mailto:${esc(emailRaw)}\">${esc(emailRaw)}</a>` : '';\nconst currency     = data[\"CURRENCY\"]                      ? esc(data[\"CURRENCY\"]) : '';\nconst taxCode      = (data[\"MÃ SỐ THUẾ CÔNG TY\"] ?? '') !== '' ? esc(data[\"MÃ SỐ THUẾ CÔNG TY\"]) : '';\nconst pic          = data[\"PIC\"]                           ? esc(data[\"PIC\"]) : '';\nconst finishTime   = data[\"FINISH TIME\"]                   ? esc(data[\"FINISH TIME\"]) : '';\nconst note         = data[\"THÊM LỜI NHẮN NHỦ VỚI ADMIN\"]   ? esc(data[\"THÊM LỜI NHẮN NHỦ VỚI ADMIN\"]) : '';\nconst typeVal      = data[\"TYPE\"]                          ? esc(data[\"TYPE\"]) : '';\n\n// ==== Build HTML card ====\nconst header = `\n  <div style=\"font-size:15px; margin:0 0 8px;\">\n    📢 <strong>YÊU CẦU TẠO NHÀ CUNG CẤP MỚI</strong>\n  </div>`;\n\nconst table = `\n  <table style=\"border-collapse:collapse; width:100%; max-width:720px; background:#fff; border:1px solid #eee; border-radius:12px; overflow:hidden;\">\n    <tbody>\n      ${row('🆔 <strong>Supplier ID</strong>', supplierId)}\n      ${row('👤 <strong>Người gửi</strong>', sender)}\n      ${row('🕒 <strong>Thời gian gửi</strong>', timestamp)}\n      ${row('📌 <strong>Trạng thái</strong>', status)}\n\n      ${row('🏢 <strong>Tên công ty</strong>', companyName)}\n      ${row('🔤 <strong>Viết tắt</strong>', shortName)}\n      ${row('📍 <strong>Địa chỉ</strong>', address)}\n\n      ${row('📦 <strong>Catalog</strong>', catalogType)}\n      ${row('🌍 <strong>Trong/Ngoài nước</strong>', domestic)}\n\n      ${row('📞 <strong>Liên hệ</strong>', contact)}\n      ${row('✉️ <strong>Email</strong>', emailVal)}\n      ${row('💱 <strong>Loại tiền</strong>', currency)}\n      ${row('🧾 <strong>MST</strong>', taxCode)}\n      ${row('👨‍💼 <strong>PIC</strong>', pic)}\n      ${row('✅ <strong>Thời gian hoàn thành</strong>', finishTime)}\n      ${row('📝 <strong>Ghi chú</strong>', note)}\n      ${row('📑 <strong>Loại NCC</strong>', typeVal)}\n    </tbody>\n  </table>`;\n\n// ==== Kết quả ====\nconst message = `\n  <div style=\"font-family:Segoe UI, Arial, sans-serif; line-height:1.4;\">\n    ${header}\n    ${table}\n  </div>`.replace(/\\n\\s+/g, '\\n').trim();\n\nreturn [{\n  json: {\n    message // HTML để gửi với contentType: \"html\"\n  }\n}];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          224,
+          192
+        ],
+        "id": "3107e683-5f51-46f9-b647-291d1822f2f0",
+        "name": "Code1",
+        "disabled": true
+      }
+    ],
+    "connections": {
+      "Google Sheets Trigger": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Code1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Gửi tin nhắn1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code1": {
+        "main": [
+          [
+            {
+              "node": "Create chat message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Xuan Nguyen",
+    "name": null,
+    "description": null
+  },
+  "activeVersionId": "8f404f70-753a-4a38-9d53-ac2234f42162",
   "connections": {
     "Google Sheets Trigger": {
       "main": [
